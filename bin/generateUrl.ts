@@ -29,11 +29,11 @@ function parseSource(parentDir: string): Array<Page | Dir> {
     if (
       entry.isFile() &&
       entry.name.endsWith(".tsx") &&
-      !entry.name.startsWith("_")
+      entry.name.startsWith("page")
     ) {
       contents.push({
         kind: "page",
-        name: removeSuffix(entry.name, ".tsx"),
+        name: removeSuffix("index", ".tsx"),
       });
       continue;
     }
