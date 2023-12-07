@@ -1,7 +1,7 @@
 import path from "path";
 import * as fs from "fs";
 import prettier from "prettier";
-import { isNotBlank, removeSuffix } from "../src/ex/utils";
+import { isNotBlank, removeSuffix } from "@/ex/utils";
 
 // webstorm 에서 ts-node 설정을 읽지를 못한다.
 export {};
@@ -27,7 +27,11 @@ function parseSource(parentDir: string): Array<Page | Dir> {
     if (!entry) {
       continue;
     }
-    if (entry.isFile() && entry.name.endsWith(".tsx") && !entry.name.startsWith("_")) {
+    if (
+      entry.isFile() &&
+      entry.name.endsWith(".tsx") &&
+      !entry.name.startsWith("_")
+    ) {
       contents.push({
         kind: "page",
         name: removeSuffix(entry.name, ".tsx"),
@@ -46,7 +50,10 @@ function parseSource(parentDir: string): Array<Page | Dir> {
   return contents;
 }
 
-function generateSources(pages: Array<Page | Dir>, parents: string[]): string[] {
+function generateSources(
+  pages: Array<Page | Dir>,
+  parents: string[],
+): string[] {
   return pages.flatMap((page) => generateSource(page, parents));
 }
 
@@ -93,6 +100,6 @@ ts.push(...generateSources(pages, []));
 ts.push("};");
 
 const targetPath = path.join(__dirname, "..", "src/url/url.g.ts");
-prettier.format(ts.join("\n"), { filepath: targetPath }).then(res=> {
+prettier.format(ts.join("\n"), { filepath: targetPath }).then((res) => {
   fs.writeFileSync(targetPath, res);
 });
