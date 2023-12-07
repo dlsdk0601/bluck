@@ -7,8 +7,9 @@ setup:
 watch:
 	nix-shell --run 'bun --watch bin/generateUrl.ts'
 
+# --bun 옵션을 넣으면 에러가 난다. bun 자체의 버그인듯
 run:
-	bun --bun run dev
+	bun run dev
 
 cypress-open:
 	npx cypress open
