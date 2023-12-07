@@ -49,7 +49,7 @@
       "error",
       "double"
     ],
-    // endOfLine \n (o) \r\n (x), 맥을 더 많이 쓰는 듯?
+    // endOfLine 맥을 사용하기에 \n (o) \r\n (x),
     "linebreak-style": 0,
     // 사용안한 변수 경고 x
     "no-unused-vars": 0,
@@ -193,7 +193,9 @@
     // loop continue 사용 허용
     "no-continue": 0,
     // 자동 완성되는 interface는 빈 interface가 될수 있기에 비활성화
-    "no-empty-interface": 0
+    "no-empty-interface": 0,
+    // 상황에 따라 다르지만 @ path 를 사용하기 위해 비활성화
+    "import/no-unresolved": 0
   },
   "settings": {
     "import/resolver": {
@@ -205,6 +207,9 @@
           ".tsx",
           ".d.ts"
         ]
+      },
+      "typescript": {
+        "alwaysTryTypes": true // @/ path 를 사용하기 위해
       }
     },
     "eslint.workingDirectories": [
