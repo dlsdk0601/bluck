@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Urls } from "@/url/url.g";
 
 export default function Home() {
   const localStorageCheker = (): boolean => {
@@ -23,8 +25,7 @@ export default function Home() {
   useEffect(() => {
     if (
       localStorage.theme === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
       document.documentElement.classList.add("dark");
     } else {
@@ -38,6 +39,7 @@ export default function Home() {
       <button type="button" onClick={() => darkSetButton()}>
         toggle
       </button>
+      <Link href={Urls.about.index.url()}>about</Link>
     </main>
   );
 }
