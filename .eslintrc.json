@@ -25,7 +25,8 @@
     "jsx-a11y",
     "import",
     "@typescript-eslint",
-    "react-hooks"
+    "react-hooks",
+    "prettier"
   ],
   "rules": {
     // 들여쓰기 2칸
@@ -33,7 +34,7 @@
       "error",
       2,
       {
-        "SwitchCase":  1
+        "SwitchCase": 1
       }
     ],
     // string 처리
@@ -98,7 +99,6 @@
         "maxBOF": 1
       }
     ],
-
     // const function 허용
     "react/function-component-definition": 0,
     // html 닫는 태그 무시
@@ -209,7 +209,8 @@
         ]
       },
       "typescript": {
-        "alwaysTryTypes": true // @/ path 를 사용하기 위해
+        "alwaysTryTypes": true
+        // @/ path 를 사용하기 위해
       }
     },
     "eslint.workingDirectories": [
