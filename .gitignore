@@ -35,4 +35,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# generated typescript sources
+*.g.d.ts
+*.g.ts
+
+# IDE 설정 파일
 .idea/
+
+# 환경 변수
+.env
