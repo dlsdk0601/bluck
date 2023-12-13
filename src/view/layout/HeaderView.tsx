@@ -10,9 +10,11 @@ import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import { tokenSelector } from "@/store/token";
 import { Urls } from "@/url/url.g";
+import useDarkMode from "@/hooks/useDarkMode";
 
-const Header = () => {
+const HeaderView = () => {
   const router = useRouter();
+  const { isDarkMode } = useDarkMode();
   const [token, setToken] = useRecoilState(tokenSelector);
 
   const onClickSignOut = useCallback(() => {
@@ -49,7 +51,11 @@ const Header = () => {
         )}
         <li>
           <figure className="mobile:h-[15px] mobile:w-[15px] mobile:ml-5 relative ml-10 h-[20px] w-[20px] cursor-pointer">
-            <Image fill src="/assets/img/blackBell.png" alt="알림" />
+            <Image
+              fill
+              src={isDarkMode ? "/assets/img/whiteBell.png" : "/assets/img/blackBell.png"}
+              alt="알림"
+            />
           </figure>
         </li>
       </ul>
@@ -77,7 +83,7 @@ const HeaderLinkView = (props: {
       <span
         className={classNames("text-c1f295a dark:text-cffffff cursor-pointer", {
           "tablet:text-2xl mobile:text-xl text-3xl font-bold": props.logo,
-          "tablet:text-lg mobile:text-sm mobile:ml-5 ml-10 text-xl": !props.logo,
+          "tablet:text-lg mobile:text-sm mobile:ml-5 ml-10 text-lg": !props.logo,
         })}
       >
         {props.label}
@@ -86,4 +92,4 @@ const HeaderLinkView = (props: {
   );
 };
 
-export default Header;
+export default HeaderView;
