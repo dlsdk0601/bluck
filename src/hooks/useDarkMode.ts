@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { isNil } from "lodash";
+import { useRecoilState } from "recoil";
+import { isDark } from "@/store/isDark";
 
 const useDarkMode = (): {
   isDarkMode: boolean;
   onClickToggleButton: () => void;
 } => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useRecoilState(isDark);
 
   useEffect(() => {
     if (isNil(localStorage.theme)) {
