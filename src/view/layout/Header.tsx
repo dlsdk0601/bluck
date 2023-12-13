@@ -1,57 +1,88 @@
 "use client";
 
+import { UrlObject } from "url";
 import { useCallback } from "react";
 import Link from "next/link";
 import { useRecoilState } from "recoil";
 import { isNil } from "lodash";
+import Image from "next/image";
+import classNames from "classnames";
+import { useRouter } from "next/navigation";
 import { tokenSelector } from "@/store/token";
 import { Urls } from "@/url/url.g";
 
 const Header = () => {
+  const router = useRouter();
   const [token, setToken] = useRecoilState(tokenSelector);
 
   const onClickSignOut = useCallback(() => {
     setToken(null);
+    router.replace(Urls.index.pathname);
   }, []);
 
   return (
-    <header className="mt-1 flex w-full items-center justify-between pt-1 md:mt-2">
-      <Link href={Urls.index.url()}>
-        <span className="cursor-pointer text-[30px] font-bold text-[#1f295a] dark:text-white">
-          BLUCK
-        </span>
-      </Link>
-      <div>
+    <header className="flex w-full items-center justify-between px-10 py-5">
+      <HeaderLinkView label="BLUCK" url={Urls.index.url()} logo />
+      <ul className="flex w-1/2 items-center justify-end">
         {isNil(token) ? (
           <>
-            <Link href={Urls.index.url()}>
-              <span className="cursor-pointer text-[30px] font-bold text-[#1f295a] dark:text-white">
-                LOG_IN
-              </span>
-            </Link>
-            <Link href={Urls.index.url()}>
-              <span className="cursor-pointer text-[30px] font-bold text-[#1f295a] dark:text-white">
-                JOIN
-              </span>
-            </Link>
+            <li>
+              <HeaderLinkView label="LOG_IN" url={Urls.index.url()} />
+            </li>
+            <li>
+              <HeaderLinkView label="JOIN" url={Urls.index.url()} />
+            </li>
           </>
         ) : (
           <>
-            <Link href={Urls.index.url()}>
-              <span className="cursor-pointer text-[30px] font-bold text-[#1f295a] dark:text-white">
-                MY PAGE
-              </span>
-            </Link>
-            <Link href={Urls.index.url()}>
-              <span className="cursor-pointer text-[30px] font-bold text-[#1f295a] dark:text-white">
-                LOG-OUT
-              </span>
-            </Link>
+            <li>
+              <HeaderLinkView label="MY PAGE" url={Urls.index.url()} />
+            </li>
+            <li>
+              <HeaderLinkView
+                label="LOG_OUT"
+                url={Urls.index.url()}
+                onClick={() => onClickSignOut()}
+              />
+            </li>
           </>
         )}
-        <figure>{/* <img src="" alt=""/> */}</figure>
-      </div>
+        <li>
+          <figure className="mobile:h-[15px] mobile:w-[15px] mobile:ml-5 relative ml-10 h-[20px] w-[20px] cursor-pointer">
+            <Image fill src="/assets/img/blackBell.png" alt="알림" />
+          </figure>
+        </li>
+      </ul>
     </header>
+  );
+};
+
+const HeaderLinkView = (props: {
+  label: string;
+  logo?: boolean;
+  url: UrlObject;
+  onClick?: () => void;
+}) => {
+  return (
+    <Link
+      href={props.url}
+      onClick={(e) => {
+        if (isNil(props.onClick)) {
+          return;
+        }
+        e.preventDefault();
+        props.onClick();
+      }}
+    >
+      <span
+        className={classNames("text-c1f295a dark:text-cffffff cursor-pointer", {
+          "tablet:text-2xl mobile:text-xl text-3xl font-bold": props.logo,
+          "tablet:text-lg mobile:text-sm mobile:ml-5 ml-10 text-xl": !props.logo,
+        })}
+      >
+        {props.label}
+      </span>
+    </Link>
   );
 };
 
