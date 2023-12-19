@@ -1,6 +1,5 @@
 "use client";
 
-import { UrlObject } from "url";
 import { useCallback } from "react";
 import Link from "next/link";
 import { useRecoilState } from "recoil";
@@ -24,26 +23,26 @@ const HeaderView = () => {
 
   return (
     <header className="flex w-full items-center justify-between px-10 py-5">
-      <HeaderLinkView label="BLUCK" url={Urls.index.url()} logo />
+      <HeaderLinkView label="BLUCK" url={Urls.index.urlString()} logo />
       <ul className="flex w-1/2 items-center justify-end">
         {isNil(token) ? (
           <>
             <li>
-              <HeaderLinkView label="LOG_IN" url={Urls.index.url()} />
+              <HeaderLinkView label="LOG_IN" url={Urls["sign-in"].index.urlString()} />
             </li>
             <li>
-              <HeaderLinkView label="JOIN" url={Urls.index.url()} />
+              <HeaderLinkView label="JOIN" url={Urls["sign-up"].index.urlString()} />
             </li>
           </>
         ) : (
           <>
             <li>
-              <HeaderLinkView label="MY PAGE" url={Urls.index.url()} />
+              <HeaderLinkView label="MY PAGE" url={Urls.index.urlString()} />
             </li>
             <li>
               <HeaderLinkView
                 label="LOG_OUT"
-                url={Urls.index.url()}
+                url={Urls.index.urlString()}
                 onClick={() => onClickSignOut()}
               />
             </li>
@@ -53,6 +52,7 @@ const HeaderView = () => {
           <figure className="relative ml-10 h-[20px] w-[20px] cursor-pointer mobile:ml-5 mobile:h-[15px] mobile:w-[15px]">
             <Image
               fill
+              sizes="100vw"
               src={isDarkMode ? "/assets/img/whiteBell.png" : "/assets/img/blackBell.png"}
               alt="알림"
             />
@@ -66,7 +66,7 @@ const HeaderView = () => {
 const HeaderLinkView = (props: {
   label: string;
   logo?: boolean;
-  url: UrlObject;
+  url: string;
   onClick?: () => void;
 }) => {
   return (
