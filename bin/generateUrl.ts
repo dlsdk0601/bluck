@@ -26,14 +26,12 @@ function parseSource(parentDir: string): Array<Page | Dir> {
     if (!entry) {
       continue;
     }
-    if (
-      entry.isFile() &&
-      entry.name.endsWith(".tsx") &&
-      entry.name.startsWith("page")
-    ) {
+
+    if (entry.isFile() && entry.name.endsWith(".tsx") && !entry.name.startsWith("layout")) {
+      const name = entry.name.startsWith("page") ? "index" : entry.name;
       contents.push({
         kind: "page",
-        name: removeSuffix("index", ".tsx"),
+        name: removeSuffix(name, ".tsx"),
       });
       continue;
     }
@@ -41,7 +39,8 @@ function parseSource(parentDir: string): Array<Page | Dir> {
     if (entry.isDirectory()) {
       const children = parseSource(path.join(parentDir, entry.name));
       if (isNotBlank(children)) {
-        contents.push({ kind: "dir", name: entry.name, children });
+        const name = entry.name === "[pk]" ? "pk" : entry.name;
+        contents.push({ kind: "dir", name, children });
       }
     }
   }
@@ -49,10 +48,7 @@ function parseSource(parentDir: string): Array<Page | Dir> {
   return contents;
 }
 
-function generateSources(
-  pages: Array<Page | Dir>,
-  parents: string[],
-): string[] {
+function generateSources(pages: Array<Page | Dir>, parents: string[]): string[] {
   return pages.flatMap((page) => generateSource(page, parents));
 }
 
