@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import Link from "next/link";
 import { useRecoilState } from "recoil";
 import { isNil } from "lodash";
-import Image from "next/image";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import { tokenSelector } from "@/store/token";
@@ -48,16 +47,6 @@ const HeaderView = () => {
             </li>
           </>
         )}
-        <li>
-          <figure className="relative ml-10 h-[20px] w-[20px] cursor-pointer mobile:ml-5 mobile:h-[15px] mobile:w-[15px]">
-            <Image
-              fill
-              sizes="100vw"
-              src={isDarkMode ? "/assets/img/whiteBell.png" : "/assets/img/blackBell.png"}
-              alt="알림"
-            />
-          </figure>
-        </li>
       </ul>
     </header>
   );
