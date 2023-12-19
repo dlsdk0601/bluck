@@ -15,14 +15,13 @@ export function SelectBoxView<T>(props: {
   error?: string;
 }) {
   return (
-    <div className="lg:w-6/12 relative mb-3 w-full">
+    <div className="bold mt-[20px] w-[60px] cursor-pointer text-[12px] mobile:text-[8px]">
       {props.label && (
-        <label className="text-blueGray-600 mb-2 block text-xs font-bold uppercase">
+        <label>
           {props.label} <Image width={10} height={10} src="/assets/img/aroow.png" alt="arrow" />
         </label>
       )}
       <select
-        className={`${props.className} lg:w-10/12 w-full rounded`}
         value={stringify(props.value)}
         onChange={(event) => {
           // eslint-disable-next-line no-restricted-syntax
@@ -37,7 +36,11 @@ export function SelectBoxView<T>(props: {
       >
         {props.options.map(([value, label]) => {
           return (
-            <option key={`select-box-${label}`} value={stringify(value)}>
+            <option
+              className="w-full bg-c1f295a opacity-80"
+              key={`select-box-${label}`}
+              value={stringify(value)}
+            >
               {label}
             </option>
           );
