@@ -50,7 +50,7 @@ const HeaderView = () => {
           </>
         )}
         <li>
-          <figure className="mobile:h-[15px] mobile:w-[15px] mobile:ml-5 relative ml-10 h-[20px] w-[20px] cursor-pointer">
+          <figure className="relative ml-10 h-[20px] w-[20px] cursor-pointer mobile:ml-5 mobile:h-[15px] mobile:w-[15px]">
             <Image
               fill
               src={isDarkMode ? "/assets/img/whiteBell.png" : "/assets/img/blackBell.png"}
@@ -81,9 +81,9 @@ const HeaderLinkView = (props: {
       }}
     >
       <span
-        className={classNames("text-c1f295a dark:text-cffffff cursor-pointer", {
-          "tablet:text-2xl mobile:text-xl text-3xl font-bold": props.logo,
-          "tablet:text-lg mobile:text-sm mobile:ml-5 ml-10 text-lg": !props.logo,
+        className={classNames("cursor-pointer text-c1f295a dark:text-cffffff", {
+          "text-3xl font-bold tablet:text-2xl mobile:text-xl": props.logo,
+          "ml-10 text-lg tablet:text-lg mobile:ml-5 mobile:text-sm": !props.logo,
         })}
       >
         {props.label}
