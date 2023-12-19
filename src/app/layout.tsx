@@ -20,10 +20,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 const ClientLayout = (props: PropsWithChildren) => {
   return (
     <body className={`${roboto.className} gmarket bg-ccfd1dd py-8 dark:bg-c000000`}>
-      <section className="mx-auto my-0 h-[89vh] w-[96vw] overflow-hidden rounded-3xl bg-cffffff dark:bg-cFFFFFF4C">
+      <div className="mx-auto my-0 h-[89vh] w-[96vw] overflow-hidden rounded-3xl bg-cffffff dark:bg-cFFFFFF4C">
         <HeaderView />
         <main className="h-[100vh] w-full px-10">{props.children}</main>
-      </section>
+      </div>
       <FooterView />
     </body>
   );
