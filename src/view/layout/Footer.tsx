@@ -9,7 +9,7 @@ const FooterView = () => {
         <p className="text-right text-[12px] font-medium leading-normal text-c1f295a dark:text-cffffff mobile:text-[10px]">
           Made by 정인아 / Design by 이지현
         </p>
-        <p className="text-right text-[12px] font-medium leading-normal text-c1f295a dark:text-cffffff mobile:text-[10px]">
+        <p className="text-right text-[12px] font-medium leading-normal text-c1f295a dark:text-cffffff mobile:text-[8px]">
           Copyright © 2022 bluck. All rights reserved.
         </p>
       </div>
