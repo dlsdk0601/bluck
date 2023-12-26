@@ -61,7 +61,7 @@ export function SelectBoxView<T>(props: {
       </div>
       <ul
         className={classNames(
-          "absolute left-0 top-[150%] w-full rounded-xl bg-c1f295a opacity-80",
+          "absolute left-0 top-[150%] z-10 w-full rounded-xl bg-c1f295a opacity-80",
           {
             block: isOpen,
             hidden: !isOpen,
