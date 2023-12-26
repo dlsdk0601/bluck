@@ -7,7 +7,7 @@ import useDarkMode from "@/hooks/useDarkMode";
 const SearchBox = () => {
   const { isDarkMode } = useDarkMode();
   return (
-    <form className="flex h-[20px] w-56 items-center justify-center rounded-xl bg-ccfd1dd dark:bg-c000000 tablet:w-[25vw] mobile:w-[40vw]">
+    <form className="flex h-[20px] w-56 items-center justify-start rounded-xl bg-ccfd1dd dark:bg-c000000 tablet:w-60 mobile:w-40">
       <MainSelectBoxView
         value="H"
         options={[
@@ -18,7 +18,7 @@ const SearchBox = () => {
       />
       <input
         type="text"
-        className="h-full w-[45%] border-none bg-ccfd1dd text-[12px] text-c1f295a focus:outline-none dark:bg-c000000 dark:text-cffffff mobile:text-[8px]"
+        className="h-full w-[50%] border-none bg-ccfd1dd text-[12px] text-c1f295a focus:outline-none dark:bg-c000000 dark:text-cffffff mobile:w-[55%] mobile:text-[8px]"
       />
       <div className="ml-1 h-[15px] w-[15px] cursor-pointer mobile:top-1/3 mobile:ml-0 mobile:h-[10px] mobile:w-[10px]">
         <Image
