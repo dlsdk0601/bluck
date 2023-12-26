@@ -1,5 +1,6 @@
 import { MainSelectBoxView } from "@/view/SelectBoxView";
 import SearchBox from "@/view/SearchBox";
+import MainContentsView from "@/view/MainContentsView";
 
 export default function Home() {
   return (
@@ -26,10 +27,14 @@ export default function Home() {
           />
           <SearchBox />
         </div>
+        <button
+          type="button"
+          className="h-[30px] w-[85px] rounded-2xl border-2 border-c1f295a p-2 text-center text-[14px] text-c1f295a dark:border-cffffff dark:text-cffffff tablet:text-[12px] mobile:mx-auto mobile:mt-[20px] mobile:w-full mobile:text-[10px]"
+        >
+          글쓰기
+        </button>
       </div>
-      <div className="height-[67vh] mt-[10px] flex w-full flex-wrap justify-between overflow-y-auto pr-[1%] tablet:h-[72vh]">
-        {/*  content */}
-      </div>
+      <MainContentsView />
     </div>
   );
 }
