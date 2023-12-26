@@ -60,3 +60,17 @@ a {
 * {
     box-sizing: border-box;
 }
+
+*::-webkit-scrollbar {
+    width: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    background-clip: padding-box;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+*::-webkit-scrollbar-track {
+}
