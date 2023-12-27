@@ -34,33 +34,31 @@ const ContentsCardView = (props: { isFull: boolean }) => {
       >
         <div className="mt-[10px] flex items-center justify-start mobile:mt-0 mobile:pt-[10px]">
           <Image width={18} height={18} src="/assets/img/blackProfile.png" alt="profile" />
-          <span className="ml-1 text-[12px] dark:text-cffffff">작성자</span>
+          <span className="ml-1 text-[12px]">작성자</span>
         </div>
-        <p className="mt-[25px] font-bold dark:text-cffffff mobile:mt-[15px] mobile:text-[12px]">
-          제목을 적어주세요
-        </p>
-        <p className="mb-[35px] mt-[15px] h-[30px] w-[95%] overflow-hidden overflow-ellipsis whitespace-normal text-[14px] leading-4 dark:text-cffffff mobile:mb-[10px] mobile:mt-[10px] mobile:h-[23px] mobile:text-[10px] mobile:leading-5">
+        <p className="mt-[25px] font-bold mobile:mt-[15px] mobile:text-[12px]">제목을 적어주세요</p>
+        <p className="mb-[35px] mt-[15px] h-[30px] w-[95%] overflow-hidden overflow-ellipsis whitespace-normal text-[14px] leading-4 mobile:mb-[10px] mobile:mt-[10px] mobile:h-[23px] mobile:text-[10px] mobile:leading-5">
           내용입니다.
           쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라
         </p>
         <div className="mt-[4%] flex items-center justify-between mobile:mt-0 ">
-          <span className="text-[14px] dark:text-cffffff mobile:text-[10px]">2023-12-31</span>
+          <span className="text-[14px] mobile:text-[10px]">2023-12-31</span>
           <div className="flex items-center justify-end mobile:ml-2 mobile:w-[60%]">
             <figure className="mx-[5px] flex items-center justify-between">
               <Image width={14} height={14} src="/assets/img/blackCommend.png" alt="commend" />
-              <figcaption className="ml-[10px] text-[14px] dark:text-cffffff mobile:ml-[2px] mobile:text-[10px]">
+              <figcaption className="ml-[10px] text-[14px]  mobile:ml-[2px] mobile:text-[10px]">
                 1000
               </figcaption>
             </figure>
             <figure className="mx-[5px] flex items-center justify-between">
               <Image width={14} height={14} src="/assets/img/blackFind.png" alt="blackFind" />
-              <figcaption className="ml-[10px] text-[14px] dark:text-cffffff mobile:ml-[2px] mobile:text-[10px]">
+              <figcaption className="ml-[10px] text-[14px] mobile:ml-[2px] mobile:text-[10px]">
                 1000
               </figcaption>
             </figure>
             <figure className="mx-[5px] flex items-center justify-between">
               <Image width={14} height={14} src="/assets/img/blackLike.png" alt="blackLike" />
-              <figcaption className="ml-[10px] text-[14px] dark:text-cffffff mobile:ml-[2px] mobile:text-[10px]">
+              <figcaption className="ml-[10px] text-[14px] mobile:ml-[2px] mobile:text-[10px]">
                 1000
               </figcaption>
             </figure>
