@@ -1,34 +1,35 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Urls } from "@/url/url.g";
 
 const SignInPage = () => {
   return (
     <div className="h-full w-full">
       <section className="mx-auto my-0 flex h-4/5 w-2/5 flex-col items-center justify-center tablet:w-[75%] mobile:w-full">
-        <form className="w-4/5">
+        <form className="w-4/5 mobile:w-full">
           <div className="mt-5 flex items-center justify-center overflow-hidden rounded-xl bg-cedeff6">
             <label
               htmlFor="id"
-              className="bold w-1/5 pl-2 text-[14px] mobile:pl-3 mobile:text-[7px]"
+              className="bold w-1/5 pl-2 text-[14px] mobile:pl-3 mobile:text-[10px]"
             >
               아이디
             </label>
             <input
               id="id"
-              className="h-12 w-4/5 border-none bg-cedeff6 focus:bg-none focus:outline-none mobile:h-10"
+              className="h-12 w-4/5 bg-cedeff6 text-sm font-light focus:bg-none focus:outline-none mobile:h-10 "
               type="text"
             />
           </div>
           <div className="mt-5 flex items-center justify-center overflow-hidden rounded-xl bg-cedeff6">
             <label
               htmlFor="password"
-              className="bold w-1/5 pl-2 text-[14px] mobile:pl-3 mobile:text-[7px]"
+              className="bold w-1/5 pl-2 text-[14px] mobile:pl-3 mobile:text-[10px]"
             >
               비밀번호
             </label>
             <input
               id="password"
-              className="h-12 w-4/5 border-none bg-cedeff6 focus:bg-none focus:outline-none mobile:h-10"
+              className="h-12 w-4/5 bg-cedeff6 text-sm font-light focus:bg-none focus:outline-none mobile:h-10 mobile:text-[11px]"
               type="password"
             />
           </div>
@@ -52,21 +53,21 @@ const SignInPage = () => {
         <div className="mx-auto mt-8 flex w-4/5 items-center justify-around mobile:mt-5">
           <Link
             className="cursor-pointer text-xs font-medium tablet:text-[10px] mobile:text-[9px]"
-            href=""
+            href={Urls["find-password"].index.urlString()}
           >
             비밀번호 찾기
           </Link>
           &#183;
           <Link
             className="cursor-pointer text-xs font-medium tablet:text-[10px] mobile:text-[9px]"
-            href=""
+            href={Urls["find-id"].index.urlString()}
           >
             아이디 찾기
           </Link>
           &#183;
           <Link
             className="cursor-pointer text-xs font-medium tablet:text-[10px] mobile:text-[9px]"
-            href=""
+            href={Urls["sign-up"].index.urlString()}
           >
             회원가입
           </Link>
