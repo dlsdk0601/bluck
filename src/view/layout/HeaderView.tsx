@@ -21,7 +21,7 @@ const HeaderView = () => {
   }, []);
 
   return (
-    <header className="flex w-full items-center justify-between px-10 py-5">
+    <header className="flex w-full items-center justify-between px-10 pb-3 pt-5">
       <HeaderLinkView label="BLUCK" url={Urls.index.urlString()} logo />
       <ul className="flex w-1/2 items-center justify-end">
         {isNil(token) ? (
