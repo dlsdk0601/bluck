@@ -38,14 +38,7 @@ const config: Config = {
       cFFFFFF4C: "#FFFFFF4C", // dark_noticeColor
       c000000: "#000000", // dark_bgColor
       c000000CC: "#000000CC", // dark_ctBgColor
-      cff4500: "#FF4500",
-      // c1f295a: "#1f295a", // mainText
-      // ccfd1dd: "#cfd1dd", // bgColor
-      // cffffff: "#ffffff", // dark_navText
-      // c1f295a: "#1f295a", // dark_navBgColor
-      // cffffff: "#ffffff", // dark_mainText
-      // c4c547b: "#4c547b", // dark_menuBgColor
-      // cedeff6: "#edeff6", // dark_input
+      cff4500: "#FF4500", // error text
     },
   },
   plugins: [],
