@@ -17,13 +17,8 @@ const config: Config = {
       },
       keyframes: {
         loader: {
-          "0%": {
-            transform: "scale(0)",
-            opacity: "1",
-          },
           "100%": {
-            transform: "scale(1)",
-            opacity: "0",
+            transform: "translateX(100%)",
           },
         },
       },
@@ -39,6 +34,8 @@ const config: Config = {
       c000000: "#000000", // dark_bgColor
       c000000CC: "#000000CC", // dark_ctBgColor
       cff4500: "#FF4500", // error text
+      bgLoader: "rgb(243, 244, 246)",
+      loader: "rgb(229, 231, 235)",
     },
   },
   plugins: [],
