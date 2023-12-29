@@ -8,11 +8,9 @@ import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import { tokenSelector } from "@/store/token";
 import { Urls } from "@/url/url.g";
-import useDarkMode from "@/hooks/useDarkMode";
 
 const HeaderView = () => {
   const router = useRouter();
-  const { isDarkMode } = useDarkMode();
   const [token, setToken] = useRecoilState(tokenSelector);
 
   const onClickSignOut = useCallback(() => {
