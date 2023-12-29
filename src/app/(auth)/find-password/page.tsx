@@ -1,5 +1,10 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import { Urls } from "@/url/url.g";
+
+export const metadata: Metadata = {
+  title: "password",
+};
 
 const FindPassword = () => {
   return (

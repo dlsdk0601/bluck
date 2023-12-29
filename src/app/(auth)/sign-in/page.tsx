@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Metadata } from "next";
 import { Urls } from "@/url/url.g";
+
+export const metadata: Metadata = {
+  title: "sign-in",
+};
 
 const SignInPage = () => {
   return (
