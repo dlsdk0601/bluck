@@ -57,7 +57,7 @@ function generateSource(page: Page | Dir, parents: string[]): string[] {
   const newParents = [...parents, page.name === "index" ? "" : page.name];
   switch (page.kind) {
     case "page": {
-      const pathname = `/${newParents.join("/")}`;
+      const pathname = `/${newParents.join("/")}`.replace("/(auth)/", "");
       const key = `"${page.name}"`;
       lines.push(
         `${key}: new PageUrl("${
