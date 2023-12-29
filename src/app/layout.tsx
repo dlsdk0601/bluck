@@ -1,11 +1,20 @@
-"use client";
-
 import { PropsWithChildren, ReactNode } from "react";
+import { Metadata } from "next";
 import { RecoilRoot } from "recoil";
 import HeaderView from "@/view/layout/HeaderView";
 import { roboto } from "@/view/layout/fonts";
 import "./globals.css";
 import FooterView from "@/view/layout/Footer";
+import { config } from "@/config/config";
+
+export const metadata: Metadata = {
+  title: {
+    template: "BLUCK | %s",
+    default: "BLUCK",
+  },
+  description: "기술 블로그 BLCUK",
+  metadataBase: new URL(config.baseUrl),
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
