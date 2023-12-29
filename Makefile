@@ -5,7 +5,7 @@ setup:
 	nix-shell --run 'bun i'
 
 watch:
-	nix-shell --run 'bun --watch bin/generateUrl.ts'
+	bun --watch bin/generateUrl.ts
 
 # --bun 옵션을 넣으면 에러가 난다. bun 자체의 버그인듯
 run:
