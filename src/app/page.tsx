@@ -1,14 +1,19 @@
+import { Suspense } from "react";
 import { MainSelectBoxView } from "@/view/SelectBoxView";
 import SearchBox from "@/view/SearchBox";
 import MainContentsView from "@/view/MainContentsView";
+import MainContentsSkeleton from "@/view/skeleton/MainContentsSkeleton";
 
-export default function Home() {
+export default function Page(props: {
+  searchParams?: { searchType?: string; searchDateType?: string };
+}) {
   return (
     <div className="h-full w-full">
       <div className="flex items-center justify-between mobile:flex-wrap">
         {/*  menu */}
         <div className="flex items-center justify-between">
           <MainSelectBoxView
+            queryKey="searchType"
             value="A"
             options={[
               ["A", "인기순"],
@@ -17,6 +22,7 @@ export default function Home() {
             ]}
           />
           <MainSelectBoxView
+            queryKey="searchDateType"
             value="D"
             options={[
               ["D", "오늘"],
@@ -34,7 +40,12 @@ export default function Home() {
           글쓰기
         </button>
       </div>
-      <MainContentsView />
+      <Suspense fallback={<MainContentsSkeleton />}>
+        <MainContentsView
+          searchType={props.searchParams?.searchType}
+          searchDateType={props.searchParams?.searchDateType}
+        />
+      </Suspense>
     </div>
   );
 }
