@@ -2,10 +2,9 @@
 
 import { head, isNil } from "lodash";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import { Urls } from "@/url/url.g";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
 export function SelectBoxView<T>(props: {
@@ -94,13 +93,25 @@ export function MainSelectBoxView<T>(props: {
   value: T;
   options: Array<[value: T, label: string]>;
   className?: string;
+  queryKey: string;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const onChange = (value: T) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set(props.queryKey, stringify(value));
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <SelectBoxView
       value={props.value}
       options={props.options}
-      onChange={(value) => router.push(Urls.index.urlString({ a: stringify(value) }))}
+      onChange={(value) => onChange(value)}
       className={props.className}
     />
   );
