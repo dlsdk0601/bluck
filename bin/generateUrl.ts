@@ -17,6 +17,8 @@ type Dir = {
   readonly children: (Page | Dir)[];
 };
 
+const ignoreFiles = ["layout", "loading", "_"];
+
 function parseSource(parentDir: string): Array<Page | Dir> {
   const entries = fs.readdirSync(parentDir, { withFileTypes: true });
   const contents: (Page | Dir)[] = [];
@@ -27,7 +29,11 @@ function parseSource(parentDir: string): Array<Page | Dir> {
       continue;
     }
 
-    if (entry.isFile() && entry.name.endsWith(".tsx") && !entry.name.startsWith("layout")) {
+    if (
+      entry.isFile() &&
+      entry.name.endsWith(".tsx") &&
+      !ignoreFiles.includes(removeSuffix(entry.name, ".tsx"))
+    ) {
       const name = entry.name.startsWith("page") ? "page" : entry.name;
       contents.push({
         kind: "page",
@@ -38,9 +44,20 @@ function parseSource(parentDir: string): Array<Page | Dir> {
 
     if (entry.isDirectory()) {
       const children = parseSource(path.join(parentDir, entry.name));
-      if (isNotBlank(children)) {
+      if (isNotBlank(children) && !entry.name.startsWith("(")) {
         const name = entry.name === "[pk]" ? "pk" : entry.name;
         contents.push({ kind: "dir", name, children });
+      }
+
+      if (isNotBlank(children) && entry.name.startsWith("(")) {
+        (children as Dir[]).forEach((child) => {
+          const name = child.name === "[pk]" ? "pk" : child.name;
+          contents.push({
+            kind: "dir",
+            name,
+            children: child.children,
+          });
+        });
       }
     }
   }
