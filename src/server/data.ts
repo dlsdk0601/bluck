@@ -1,6 +1,6 @@
 import { range } from "lodash";
 
-export async function fetchMainContents() {
+export async function fetchMainContents(searchType?: string, searchDateType?: string) {
   await new Promise((resolve) => {
     setTimeout(resolve, 3000);
   });
