@@ -25,10 +25,10 @@ const HeaderView = () => {
         {isNil(token) ? (
           <>
             <li>
-              <HeaderLinkView label="LOG_IN" url={Urls["(auth)"]["sign-in"].page.url()} />
+              <HeaderLinkView label="LOG_IN" url={Urls["sign-in"].page.url()} />
             </li>
             <li>
-              <HeaderLinkView label="JOIN" url={Urls["(auth)"]["sign-up"].page.url()} />
+              <HeaderLinkView label="JOIN" url={Urls["sign-up"].page.url()} />
             </li>
           </>
         ) : (
