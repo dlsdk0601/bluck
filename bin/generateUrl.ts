@@ -28,7 +28,7 @@ function parseSource(parentDir: string): Array<Page | Dir> {
     }
 
     if (entry.isFile() && entry.name.endsWith(".tsx") && !entry.name.startsWith("layout")) {
-      const name = entry.name.startsWith("page") ? "index" : entry.name;
+      const name = entry.name.startsWith("page") ? "page" : entry.name;
       contents.push({
         kind: "page",
         name: removeSuffix(name, ".tsx"),
@@ -54,7 +54,7 @@ function generateSources(pages: Array<Page | Dir>, parents: string[]): string[] 
 
 function generateSource(page: Page | Dir, parents: string[]): string[] {
   const lines: string[] = [];
-  const newParents = [...parents, page.name === "index" ? "" : page.name];
+  const newParents = [...parents, page.name === "page" ? "" : page.name];
   switch (page.kind) {
     case "page": {
       const pathname = `/${newParents.join("/")}`.replace("/(auth)/", "");
