@@ -1,4 +1,3 @@
-import { UrlObject } from "url";
 import { ParsedUrlQueryInput } from "querystring";
 import { head, isArray, isNil } from "lodash";
 import { removeSuffix } from "@/ex/utils";
@@ -10,15 +9,12 @@ export class PageUrl {
     this.pathname = pathname;
   }
 
-  url(query?: ParsedUrlQueryInput): UrlObject {
-    return { pathname: this.pathname, query };
-  }
-
-  urlString(query?: ParsedUrlQueryInput) {
+  url(query?: ParsedUrlQueryInput) {
     if (isNil(query)) {
       return this.pathname;
     }
 
+    // OPT :: 확인 해보고 new URLSearchParams 로 수정
     const queryArr = Object.keys(query ?? {}).map((key) => {
       const value = this.codecQueryValue(query[key]);
       return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
