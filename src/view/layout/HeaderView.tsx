@@ -15,31 +15,31 @@ const HeaderView = () => {
 
   const onClickSignOut = useCallback(() => {
     setToken(null);
-    router.replace(Urls.index.pathname);
+    router.replace(Urls.page.url());
   }, []);
 
   return (
     <header className="flex w-full items-center justify-between px-10 pb-3 pt-5">
-      <HeaderLinkView label="BLUCK" url={Urls.index.urlString()} logo />
+      <HeaderLinkView label="BLUCK" url={Urls.page.url()} logo />
       <ul className="flex w-1/2 items-center justify-end">
         {isNil(token) ? (
           <>
             <li>
-              <HeaderLinkView label="LOG_IN" url={Urls["(auth)"]["sign-in"].index.urlString()} />
+              <HeaderLinkView label="LOG_IN" url={Urls["(auth)"]["sign-in"].page.url()} />
             </li>
             <li>
-              <HeaderLinkView label="JOIN" url={Urls["(auth)"]["sign-up"].index.urlString()} />
+              <HeaderLinkView label="JOIN" url={Urls["(auth)"]["sign-up"].page.url()} />
             </li>
           </>
         ) : (
           <>
             <li>
-              <HeaderLinkView label="MY PAGE" url={Urls.index.urlString()} />
+              <HeaderLinkView label="MY PAGE" url={Urls.page.url()} />
             </li>
             <li>
               <HeaderLinkView
                 label="LOG_OUT"
-                url={Urls.index.urlString()}
+                url={Urls.page.url()}
                 onClick={() => onClickSignOut()}
               />
             </li>
