@@ -6,7 +6,7 @@ import { Urls } from "@/url/url.g";
 
 const Page = () => {
   if (!config.isDev) {
-    return <Replace url={Urls.index.urlString()} />;
+    return <Replace url={Urls.page.url()} />;
   }
   return <MainContentsSkeleton />;
 };
