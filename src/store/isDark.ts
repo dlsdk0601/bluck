@@ -1,6 +1,11 @@
-import { atom } from "recoil";
+import { create } from "zustand";
 
-export const isDark = atom<boolean>({
-  key: "IS_DARK",
-  default: false,
-});
+interface IsDarkState {
+  isDark: boolean;
+  setIsDark: (value: boolean) => void;
+}
+
+export const isDarkState = create<IsDarkState>((set) => ({
+  isDark: false,
+  setIsDark: (value) => set(() => ({ isDark: value })),
+}));

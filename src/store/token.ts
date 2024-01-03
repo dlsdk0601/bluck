@@ -1,26 +1,23 @@
-import { atom, selector } from "recoil";
 import { isNil } from "lodash";
+import { create } from "zustand";
 
-export const token = atom<string | null>({
-  key: "TOKEN",
-  default: null,
-});
+// TODO :: NEXT-AUTH 사용 하면 불필요
+interface TokenState {
+  token: string | null;
+  setToken: (value: string | null) => void;
+}
 
-export const tokenSelector = selector<string | null>({
-  key: "TOKEN_SELECTOR",
-  get: ({ get }) => {
-    return get(token);
-  },
-  set: ({ set }, newValue) => {
-    if (typeof newValue === "string") {
-      set(token, newValue);
-      sessionStorage.setItem("X-ACCESS-TOKEN-ADMIN", newValue);
-      return;
+export const tokenState = create<TokenState>((set) => ({
+  token: null,
+  setToken: (value) => {
+    if (typeof value === "string") {
+      sessionStorage.setItem("X-ACCESS-TOKEN-ADMIN", value);
     }
 
-    if (isNil(newValue)) {
-      set(token, newValue);
+    if (isNil(value)) {
       sessionStorage.removeItem("X-ACCESS-TOKEN-ADMIN");
     }
+
+    return set({ token: value });
   },
-});
+}));
