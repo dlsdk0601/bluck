@@ -21,9 +21,9 @@
     "react-query": "^3.39.3",
     "react-slick": "^0.29.0",
     "react-spinners": "^0.13.8",
-    "recoil": "^0.7.7",
     "sleepjs": "^4.0.3",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",
