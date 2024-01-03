@@ -2,16 +2,15 @@
 
 import { useCallback } from "react";
 import Link from "next/link";
-import { useRecoilState } from "recoil";
 import { isNil } from "lodash";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
-import { tokenSelector } from "@/store/token";
+import { tokenState } from "@/store/token";
 import { Urls } from "@/url/url.g";
 
 const HeaderView = () => {
   const router = useRouter();
-  const [token, setToken] = useRecoilState(tokenSelector);
+  const { token, setToken } = tokenState();
 
   const onClickSignOut = useCallback(() => {
     setToken(null);
