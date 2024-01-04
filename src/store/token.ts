@@ -7,8 +7,8 @@ interface TokenState {
   setToken: (value: string | null) => void;
 }
 
-export const tokenState = create<TokenState>()(
-  persist(
+export const tokenState = create(
+  persist<TokenState>(
     (set, get) => ({
       token: null,
       setToken: (value) => set({ token: value }),
