@@ -22,3 +22,7 @@ e2e:
 
 e2e-headless:
 	start-server-and-test dev http://localhost:3000 cypress-headless
+
+deploy:
+	bun bin/generateUrl.ts
+	npm run build
