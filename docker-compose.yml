@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - '5435:5432'
+    environment:
+      - TZ=Asia/Seoul
+      - PGTZ=Asia/Seoul
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=bluck
+    volumes:
+      - db-var_lib_postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  db-var_lib_postgresql_data:
