@@ -5,7 +5,7 @@ import { isNil } from "lodash";
 import bcrypt from "bcrypt";
 import Credentials from "@auth/core/providers/credentials";
 import { User } from "@/type/definitions";
-import { authConfig } from "@/server/auth/auth.config";
+import { authConfig } from "@/app/api/auth/auth.config";
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
