@@ -1,5 +1,7 @@
+"use server";
+
 import { AuthError } from "next-auth";
-import { signIn } from "@/app/api/auth/auth";
+import { signIn } from "@/server/auth/auth";
 
 export async function signInAction(prevState: string | undefined, formData: FormData) {
   try {
