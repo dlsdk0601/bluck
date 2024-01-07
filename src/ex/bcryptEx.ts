@@ -1,4 +1,4 @@
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 
 // bcrypt 가 의존성 문제가 생긴다.
 // next 를 사용하게 되면 나는 이슈 인거같은데 next 에서 bugfix 를 해주지 않음
