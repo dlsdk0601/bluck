@@ -1,4 +1,3 @@
-
 export type ImageType = {
   id?: number;
   type: string;
@@ -21,7 +20,9 @@ export const _blobToBase64 = (blob: Blob): Promise<string> => {
   });
 };
 
-export const fileToBase64 = async (file: File): Promise<{ type: string, fileName: string, fileBase64: string }> => {
+export const fileToBase64 = async (
+  file: File,
+): Promise<{ type: string; fileName: string; fileBase64: string }> => {
   const dataUri = await _blobToBase64(file);
   return {
     type: file.type,
