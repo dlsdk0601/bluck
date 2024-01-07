@@ -1,5 +1,5 @@
-import ContentsCardView from "@/view/ContentsCardView";
 import { fetchMainContents } from "@/server/data";
+import ContentsCardView from "./ContentsCardView";
 
 const MainContentsView = async (props: { searchType?: string; searchDateType?: string }) => {
   const contents = await fetchMainContents(props.searchType, props.searchDateType);

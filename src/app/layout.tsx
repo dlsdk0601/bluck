@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import "./globals.css";
 import { Metadata } from "next";
-import ClientLayout from "@/view/layout/ClientLayout";
 import { config } from "@/config/config";
+import ClientLayout from "./view/layout/ClientLayout";
 
 export const metadata: Metadata = {
   title: {

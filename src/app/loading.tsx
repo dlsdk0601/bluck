@@ -1,4 +1,4 @@
-import MainContentsSkeleton from "@/view/skeleton/MainContentsSkeleton";
+import MainContentsSkeleton from "./view/skeleton/MainContentsSkeleton";
 
 const Loading = () => {
   return <MainContentsSkeleton />;

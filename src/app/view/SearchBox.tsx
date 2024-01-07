@@ -1,19 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { MainSelectBoxView } from "@/view/SelectBoxView";
 import useDarkMode from "@/hooks/useDarkMode";
+import { SelectBoxView } from "./SelectBoxView";
 
 const SearchBox = () => {
   const { isDarkMode } = useDarkMode();
   return (
     <form className="flex h-[20px] w-56 items-center justify-start rounded-xl bg-ccfd1dd dark:bg-c000000 tablet:w-60 mobile:w-40">
-      <MainSelectBoxView
+      <SelectBoxView
         value="H"
         options={[
           ["H", "작성자"],
           ["I", "제목"],
         ]}
+        onChange={() => {}}
         className="ml-1 mr-0 mobile:mr-0"
       />
       <input

@@ -1,9 +1,9 @@
 "use client";
 
 import { PropsWithChildren } from "react";
-import { roboto } from "@/view/layout/fonts";
-import HeaderView from "@/view/layout/HeaderView";
-import FooterView from "@/view/layout/Footer";
+import FooterView from "@/app/view/layout/Footer";
+import { roboto } from "./fonts";
+import HeaderView from "./HeaderView";
 
 const ClientLayout = (props: PropsWithChildren) => {
   return (

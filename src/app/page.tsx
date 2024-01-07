@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { MainSelectBoxView } from "@/view/SelectBoxView";
-import SearchBox from "@/view/SearchBox";
-import MainContentsView from "@/view/MainContentsView";
-import MainContentsSkeleton from "@/view/skeleton/MainContentsSkeleton";
+import { MainSelectBoxView } from "./view/SelectBoxView";
+import SearchBox from "./view/SearchBox";
+import MainContentsSkeleton from "./view/skeleton/MainContentsSkeleton";
+import MainContentsView from "./view/MainContentsView";
 
 export default function Page(props: {
   searchParams?: { searchType?: string; searchDateType?: string };
