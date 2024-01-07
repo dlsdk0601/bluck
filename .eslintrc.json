@@ -195,7 +195,9 @@
     // 자동 완성되는 interface는 빈 interface가 될수 있기에 비활성화
     "no-empty-interface": 0,
     // 상황에 따라 다르지만 @ path 를 사용하기 위해 비활성화
-    "import/no-unresolved": 0
+    "import/no-unresolved": 0,
+    // faker 에서 loop 안에 await 사용을 위해 
+    "no-await-in-loop": 0
   },
   "settings": {
     "import/resolver": {
