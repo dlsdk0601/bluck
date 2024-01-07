@@ -12,9 +12,10 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.11",
     "@prisma/client": "^5.7.1",
     "axios": "^1.6.2",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "classnames": "^2.3.2",
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
@@ -37,7 +38,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
-    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20",
     "@types/react": "^18",
