@@ -2,12 +2,12 @@ import NextAuth from "next-auth";
 import { z } from "zod";
 import { isNil } from "lodash";
 import Credentials from "@auth/core/providers/credentials";
-import { User } from ".prisma/client";
+import { user } from "@prisma/client";
 import { authConfig } from "@/server/auth/auth.config";
 import { compare } from "@/ex/bcryptEx";
 import prisma from "@/lib/prisma";
 
-async function getUser(email: string): Promise<User | undefined> {
+async function getUser(email: string): Promise<user | undefined> {
   try {
     const user = await prisma.user.findFirst({ where: { email } });
 
@@ -17,8 +17,8 @@ async function getUser(email: string): Promise<User | undefined> {
 
     return user;
   } catch (e) {
-    console.error("Failed to fetch user: ", e);
-    throw new Error("Failed to fetch user.");
+    console.error("유저 조회 실패: ", e);
+    throw new Error("유저 조회에 실패했습니다.");
   }
 }
 
@@ -26,9 +26,7 @@ export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
-      // return 이 Promise<any> 인 이유는 Next-auth 팀이 strict mode 를 끄고 개발해서
-      // 타입 버그인듯
-      async authorize(credentials): Promise<any> {
+      async authorize(credentials) {
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string() })
           .safeParse(credentials);
@@ -51,7 +49,14 @@ export const { auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        return user;
+        // 여기서 next-auth 자체에서 정의한 User 의 타입을 return 해야한다.
+        // export interface User {
+        //   id: string
+        //   name?: string | null
+        //   email?: string | null
+        //   image?: string | null
+        // }
+        return { id: user.pk.toString(), name: user.name, email: user.email };
       },
     }),
   ],
