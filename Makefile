@@ -35,11 +35,8 @@ db-deploy:
 	prisma migrate deploy
 	sleep 1
 
-faker-import:
-	prisma db seed
-
 dev-reinitialize: dev-clean dev db-deploy
-	faker-import
+	prisma db seed
 
 
 # test
