@@ -22,7 +22,7 @@ async function main() {
 }
 
 async function users(faker: Faker) {
-  const users: Prisma.UserCreateInput[] = [];
+  const users: Prisma.userCreateInput[] = [];
 
   // test 계정
   users.push({
