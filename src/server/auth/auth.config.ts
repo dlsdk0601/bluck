@@ -4,17 +4,19 @@ import { isNotNil } from "@/ex/utils";
 
 export const authConfig = {
   pages: {
-    signIn: "/sign-in",
+    signIn: Urls["sign-in"].page.url(),
   },
   callbacks: {
+    // false 를 return 하면 signIn 으로 리다이렉트 된다.
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = auth?.user;
+      const user = auth?.user;
 
-      if (isNotNil(isLoggedIn)) {
-        return Response.redirect(Urls.page.url());
+      // my-page (아직 my-page 가 개발이 안되서 blog 로 테스트)
+      if (nextUrl.pathname.startsWith("/blog")) {
+        return isNotNil(user);
       }
 
-      return isLoggedIn;
+      return true;
     },
   },
   providers: [],
