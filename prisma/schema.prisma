@@ -10,9 +10,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model user {
   pk        Int      @id @default(autoincrement())
-  email     String   @db.VarChar(256)
+  email     String   @unique @db.VarChar(256)
   password  String   @db.VarChar(256)
   name      String   @db.VarChar(64)
   birthday  DateTime @db.Date
