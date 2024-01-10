@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import { z } from "zod";
 import { isNil } from "lodash";
-import Credentials from "@auth/core/providers/credentials";
+import Credentials from "next-auth/providers/credentials";
 import { user } from "@prisma/client";
 import { authConfig } from "@/server/auth/auth.config";
 import { compare } from "@/ex/bcryptEx";
