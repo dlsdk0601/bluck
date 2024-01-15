@@ -3,9 +3,9 @@ import { z } from "zod";
 import { isNil } from "lodash";
 import Credentials from "next-auth/providers/credentials";
 import { user } from "@prisma/client";
-import { authConfig } from "@/server/auth/auth.config";
 import { compare } from "@/ex/bcryptEx";
 import prisma from "@/lib/prisma";
+import { authConfig } from "./auth.config";
 
 async function getUser(email: string): Promise<user | undefined> {
   try {
