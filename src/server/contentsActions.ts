@@ -1,3 +1,5 @@
+"use server";
+
 import { range } from "lodash";
 
 export async function fetchMainContents(searchType?: string, searchDateType?: string) {

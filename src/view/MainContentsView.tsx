@@ -1,4 +1,4 @@
-import { fetchMainContents } from "@/server/data";
+import { fetchMainContents } from "@/server/contentsActions";
 import ContentsCardView from "./ContentsCardView";
 
 const MainContentsView = async (props: { searchType?: string; searchDateType?: string }) => {
