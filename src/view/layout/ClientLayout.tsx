@@ -1,5 +1,3 @@
-"use client";
-
 import { PropsWithChildren } from "react";
 import FooterView from "@/view/layout/Footer";
 import { roboto } from "./fonts";
