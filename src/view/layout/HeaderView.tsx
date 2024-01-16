@@ -1,27 +1,16 @@
-"use client";
-
-import { useCallback } from "react";
 import Link from "next/link";
 import { isNil } from "lodash";
 import classNames from "classnames";
-import { useRouter } from "next/navigation";
-import { tokenState } from "@/store/token";
 import { Urls } from "@/url/url.g";
+import { auth, signOut } from "@/server/auth/auth";
 
-const HeaderView = () => {
-  const router = useRouter();
-  const { token, setToken } = tokenState();
-
-  const onClickSignOut = useCallback(() => {
-    setToken(null);
-    router.replace(Urls.page.url());
-  }, []);
-
+const HeaderView = async () => {
+  const session = await auth();
   return (
     <header className="flex w-full items-center justify-between px-10 pb-3 pt-5">
       <HeaderLinkView label="BLUCK" url={Urls.page.url()} logo />
       <ul className="flex w-1/2 items-center justify-end">
-        {isNil(token) ? (
+        {isNil(session?.user) ? (
           <>
             <li>
               <HeaderLinkView label="LOG_IN" url={Urls["sign-in"].page.url()} />
@@ -36,11 +25,20 @@ const HeaderView = () => {
               <HeaderLinkView label="MY PAGE" url={Urls.page.url()} />
             </li>
             <li>
-              <HeaderLinkView
-                label="LOG_OUT"
-                url={Urls.page.url()}
-                onClick={() => onClickSignOut()}
-              />
+              <form
+                action={async () => {
+                  "use server";
+
+                  await signOut();
+                }}
+              >
+                <button
+                  className="ml-10 inline cursor-pointer text-lg text-c1f295a dark:text-cffffff tablet:text-lg mobile:ml-5 mobile:text-sm"
+                  type="submit"
+                >
+                  LOG_OUT
+                </button>
+              </form>
             </li>
           </>
         )}
@@ -49,23 +47,9 @@ const HeaderView = () => {
   );
 };
 
-const HeaderLinkView = (props: {
-  label: string;
-  logo?: boolean;
-  url: string;
-  onClick?: () => void;
-}) => {
+const HeaderLinkView = (props: { label: string; logo?: boolean; url: string }) => {
   return (
-    <Link
-      href={props.url}
-      onClick={(e) => {
-        if (isNil(props.onClick)) {
-          return;
-        }
-        e.preventDefault();
-        props.onClick();
-      }}
-    >
+    <Link href={props.url}>
       <span
         className={classNames("cursor-pointer text-c1f295a dark:text-cffffff", {
           "text-3xl font-bold tablet:text-2xl mobile:text-xl": props.logo,
