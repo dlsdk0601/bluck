@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useFormState, useFormStatus } from "react-dom";
-import { signInAction } from "@/server/actions";
+import { signInAction } from "@/server/authActions";
 import { isNotNil } from "@/ex/utils";
 
 const SignInFormView = () => {
