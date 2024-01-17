@@ -44,3 +44,6 @@ next-env.d.ts
 
 # 환경 변수
 .env
+
+# 임시 폴더
+tmp/
