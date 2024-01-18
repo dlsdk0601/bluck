@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useFormState, useFormStatus } from "react-dom";
 import { signInAction } from "@/server/authActions";
 import { isNotNil } from "@/ex/utils";
+import BlockView from "@/view/BlockView";
 
 const SignInFormView = () => {
   const [error, dispatch] = useFormState(signInAction, undefined);
@@ -57,13 +58,16 @@ const SignInButtonView = () => {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      type="submit"
-      aria-disabled={pending}
-      className="mt-10 h-14 w-full rounded-xl border-2 border-solid border-c1f295a bg-none font-medium mobile:mt-8 mobile:h-8 mobile:text-lg"
-    >
-      로그인
-    </button>
+    <>
+      <button
+        type="submit"
+        aria-disabled={pending}
+        className="mt-10 h-14 w-full rounded-xl border-2 border-solid border-c1f295a bg-none font-medium mobile:mt-8 mobile:h-8 mobile:text-lg"
+      >
+        로그인
+      </button>
+      <BlockView isLocked={pending} />
+    </>
   );
 };
 
