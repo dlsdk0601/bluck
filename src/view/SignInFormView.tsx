@@ -33,6 +33,7 @@ const SignInFormView = () => {
           name="password"
           className="h-12 w-4/5 bg-cedeff6 text-sm font-light focus:bg-none focus:outline-none mobile:h-10 mobile:text-[11px]"
           type="password"
+          minLength={8}
         />
       </div>
       {isNotNil(error) && (
