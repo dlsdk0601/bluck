@@ -2,7 +2,11 @@ import { isEmpty, isNil } from "lodash";
 import isEmail from "validator/lib/isEmail";
 import isUrl from "validator/lib/isURL";
 
-export const vEmail = (value: string): string | undefined => {
+export const vEmail = (value: any): string | undefined => {
+  if (typeof value !== "string") {
+    return "문자로 입력해주세요.";
+  }
+
   // 값이 없을 경우 무시
   if (isNil(value) || isEmpty(value)) {
     return "이메일은 필수 입력사항입니다.";
@@ -40,30 +44,18 @@ export const vUrl = (value: string): string | undefined => {
   }
 };
 
-export const vPassword = (value: string): string | undefined => {
+export const vPassword = (value: any): string | undefined => {
+  if (typeof value !== "string") {
+    return "문자로 입력해주세요.";
+  }
+
   // 값이 없을 경우 무시
   if (isNil(value) || isEmpty(value)) {
     return "비밀번호는 필수 입력사항입니다.";
   }
 
-  let count = 0;
-  if (value.match(/[A-Z]/)) {
-    count++;
-  }
-
-  if (value.match(/[a-z]/)) {
-    count++;
-  }
-
-  if (value.match(/[0-9]/)) {
-    count++;
-  }
-
-  if (value.match(/[#?!@$%^&*-]/)) {
-    count++;
-  }
-
-  if (value.length <= 8 || count < 3) {
-    return "비밀번호는 8자 이상 대문자, 소문자, 숫자, 특수문자 중 3가지 이상 조합을 포함해야 합니다.";
+  const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$/;
+  if (!value.match(reg)) {
+    return "비밀번호는 8자 이상 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.";
   }
 };
