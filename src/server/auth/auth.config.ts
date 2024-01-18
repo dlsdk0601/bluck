@@ -17,7 +17,7 @@ export const authConfig = {
       const user = auth?.user;
 
       // my-page (아직 my-page 가 개발이 안되서 blog 로 테스트)
-      if (nextUrl.pathname.startsWith("/blog")) {
+      if (nextUrl.pathname.startsWith(Urls["my-page"].page.pathname)) {
         return isNotNil(user);
       }
 
