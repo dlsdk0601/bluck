@@ -1,12 +1,12 @@
 import path from "path";
-import * as fs from "fs";
+import fs from "fs";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Faker, ko } from "@faker-js/faker";
 import moment from "moment/moment";
 import mime from "mime-types";
 import { v4 as uuidv4 } from "uuid";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { config } from "@/config/config";
+import { config } from "../src/config/config";
 import { getHash } from "../src/ex/bcryptEx";
 // @ 를 안쓰는 이유는 ts-node 에서 해당 option 이 먹지 않는다.
 
@@ -77,7 +77,7 @@ async function users(faker: Faker) {
 async function assets() {
   const assets: Prisma.assetCreateInput[] = [];
 
-  const temp = path.join(__dirname, "..", "temp");
+  const temp = path.join(__dirname, "..", "tmp");
   const files = fs.readdirSync(temp, { withFileTypes: true });
 
   for (let i = 0; i < files.length; i++) {
