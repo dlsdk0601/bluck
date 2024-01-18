@@ -7,7 +7,7 @@ const MainContentsView = async (props: { searchType?: string; searchDateType?: s
   return (
     <div className="mt-[10px] flex h-[70vh] w-full flex-wrap justify-between overflow-y-auto pr-[1%] tablet:h-[72vh]">
       {contents.map((item) => (
-        <ContentsCardView key={`contents-${item}`} isFull={false} />
+        <ContentsCardView key={`contents-${item}`} pk={item} isFull={false} />
       ))}
     </div>
   );

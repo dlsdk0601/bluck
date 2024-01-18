@@ -1,7 +1,12 @@
+"use client";
+
 import classNames from "classnames";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Urls } from "@/url/url.g";
 
-const ContentsCardView = (props: { isFull: boolean }) => {
+const ContentsCardView = (props: { pk: number; isFull: boolean }) => {
+  const router = useRouter();
   return (
     <div
       className={classNames(
@@ -11,6 +16,7 @@ const ContentsCardView = (props: { isFull: boolean }) => {
           "w-[49%]": !props.isFull,
         },
       )}
+      onClick={() => router.push(Urls.blog.show.pk.page.urlPk({ pk: props.pk }))}
     >
       <figure
         className={classNames(
