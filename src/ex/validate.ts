@@ -17,7 +17,11 @@ export const vEmail = (value: any): string | undefined => {
   }
 };
 
-export const vPhone = (value: string): string | undefined => {
+export const vPhone = (value: any): string | undefined => {
+  if (typeof value !== "string") {
+    return "문자로 입력해주세요.";
+  }
+
   if (isNil(value) || isEmpty(value)) {
     return "핸드폰번호는 필수 입력사항입니다.";
   }
