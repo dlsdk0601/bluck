@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { Urls } from "@/url/url.g";
-import SignInFormView from "@/view/SignInFormView";
+import SignInFormView from "@/view/auth/SignInFormView";
 
 export const metadata: Metadata = {
   title: "sign-in",
