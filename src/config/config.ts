@@ -1,6 +1,7 @@
 class Config {
   // BASIC
   readonly baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  readonly apiDelay = Number(process.env.NEXT_PUBLIC_API_DELAY ?? 0);
   readonly isDev = process.env.NEXT_PUBLIC_IS_DEV === "true";
 
   // AWS
