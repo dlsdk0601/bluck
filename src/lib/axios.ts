@@ -30,6 +30,10 @@ axiosInstance.interceptors.response.use(
 class ApiBase {
   private counter = 0;
 
+  get isBlock() {
+    return this.counter > 0;
+  }
+
   get = async (url: string, axiosRequestConfig?: AxiosRequestConfig<any>) => {
     return this.with(async () => {
       try {
