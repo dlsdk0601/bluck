@@ -10,7 +10,7 @@ watch:
 
 # --bun 옵션을 넣으면 에러가 난다. bun 자체의 버그인듯
 run:
-	bun run dev
+	bun run dev --turbo
 
 # docker
 dev:
