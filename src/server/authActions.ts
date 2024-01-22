@@ -3,6 +3,7 @@
 import { AuthError } from "next-auth";
 import { vEmail, vPassword } from "@/ex/validate";
 import { isNotNil } from "@/ex/utils";
+import { errorMessage } from "@/lib/errorEx";
 import { signIn } from "./auth/auth";
 
 export async function signInAction(prevState: string | undefined, formData: FormData) {
@@ -26,9 +27,9 @@ export async function signInAction(prevState: string | undefined, formData: Form
     if (e instanceof AuthError) {
       switch (e.type) {
         case "CredentialsSignin":
-          return "일치하는 회원이 존재하지 않습니다.";
+          return errorMessage.userNotFound;
         default:
-          return "로그인이 실패하였습니다.\n 잠시 후 다시 시도 해주세요.";
+          return errorMessage.signInFailed;
       }
     }
 
