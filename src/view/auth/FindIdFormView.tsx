@@ -1,71 +1,81 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { isString } from "lodash";
-import Button from "@/view/Button";
-import { isNotBlank } from "@/ex/utils";
+import { isBlank, isNotBlank, isNotNil } from "@/ex/utils";
 import { api } from "@/lib/axios";
+import InputFieldView from "@/view/auth/InputFieldView";
+import { errorMessage } from "@/lib/errorEx";
+import { vPhone } from "@/ex/validate";
 
 const FindIdFormView = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
-  const [isFindId, setIsFindId] = useState(false);
   const [id, setId] = useState("");
 
-  const onClick = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onClick = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    try {
-      const res = await api.findId({ name, phone });
-      console.log(res);
-
-      if (isString(res)) {
-        setError(res);
+      if (isBlank(name)) {
+        setError(errorMessage.nameRequired);
         return;
       }
 
-      setId(res.id);
-      setIsFindId(true);
-    } catch (e) {
-      console.error(e);
-      setError("실패");
-    }
-  };
+      if (isBlank(phone)) {
+        setError(errorMessage.phoneRequired);
+        return;
+      }
+
+      const validPhone = vPhone(phone);
+      if (isNotNil(validPhone)) {
+        setError(errorMessage.phoneBadFormat);
+        return;
+      }
+
+      try {
+        const res = await api.findId({ name, phone });
+
+        if (isString(res)) {
+          setError(res);
+          return;
+        }
+
+        setId(res.id);
+      } catch (e) {
+        console.error(e);
+        setError("서버가 원활하지 않습니다.");
+      }
+    },
+    [name, phone],
+  );
 
   return (
     <form onSubmit={(e) => onClick(e)} className="w-4/5 mobile:w-full">
-      {isFindId ? (
+      {isNotBlank(id) ? (
         <p>
           회원님의 아이디는 <br /> {id}입니다.
         </p>
       ) : (
         <>
-          <Button />
           <div className="mt-3 flex items-center justify-center rounded-xl bg-ccfd1dd dark:bg-c000000">
-            <label htmlFor="name" className="w-1/5 pl-2 text-sm mobile:pl-4 mobile:text-[10px]">
-              이름
-            </label>
-            <input
+            <InputFieldView
               id="name"
-              type="text"
-              className="h-12 w-4/5 rounded-r-xl bg-ccfd1dd text-sm font-light focus:outline-none dark:bg-c000000 mobile:h-10"
-              placeholder="이름을 입력해주세요."
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              label="이름"
+              onChange={(value) => setName(value)}
+              placeholder="이름을 입력해주세요."
             />
           </div>
           <div className="mt-3 flex items-center justify-center rounded-xl bg-ccfd1dd dark:bg-c000000">
-            <label htmlFor="tel" className="w-1/5 pl-2 text-sm mobile:pl-4 mobile:text-[10px]">
-              휴대폰
-            </label>
-            <input
+            <InputFieldView
               id="tel"
               type="tel"
-              className="h-12 w-4/5 rounded-r-xl bg-ccfd1dd text-sm font-light focus:outline-none dark:bg-c000000 mobile:h-10"
-              placeholder="휴대 전화를 입력해주세요."
+              label="휴대폰"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(value) => setPhone(value)}
+              placeholder="휴대 전화를 입력해주세요."
             />
           </div>
           {isNotBlank(error) && (
@@ -82,4 +92,5 @@ const FindIdFormView = () => {
     </form>
   );
 };
+
 export default FindIdFormView;
