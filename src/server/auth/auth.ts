@@ -32,7 +32,7 @@ export const { auth, signIn, signOut } = NextAuth({
           .safeParse(credentials);
 
         if (!parsedCredentials.success) {
-          console.log("Invalid credentials");
+          console.error("Invalid credentials");
           return null;
         }
 

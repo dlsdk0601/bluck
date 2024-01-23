@@ -16,7 +16,7 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const user = auth?.user;
 
-      // my-page (아직 my-page 가 개발이 안되서 blog 로 테스트)
+      // my-page 는 login 한 유저만 적용
       if (nextUrl.pathname.startsWith(Urls["my-page"].page.pathname)) {
         return isNotNil(user);
       }
