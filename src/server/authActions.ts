@@ -138,7 +138,9 @@ export async function findPasswordAction(
     }
 
     // 비밀번호 갱신
-    const purePassword = faker.internet.password();
+    const purePassword = faker.internet.password({
+      prefix: "!",
+    });
     const newPassword = await getHash(purePassword);
     await prisma.user.update({
       where: user,
