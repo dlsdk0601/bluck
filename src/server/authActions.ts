@@ -2,11 +2,13 @@
 
 import { AuthError } from "next-auth";
 import { isNil, isString } from "lodash";
+import { faker } from "@faker-js/faker/locale/ko";
 import { vEmail, vPassword, vPhone } from "@/ex/validate";
 import { isBlank, isNotNil } from "@/ex/utils";
 import { errorMessage } from "@/lib/errorEx";
 import prisma from "@/lib/prisma";
 import { getHash } from "@/ex/bcryptEx";
+import { taskMailer } from "@/lib/taskMailer";
 import { signIn } from "./auth/auth";
 
 export async function signInAction(prevState: string | undefined, formData: FormData) {
@@ -93,7 +95,7 @@ export async function findIdAction(
 
 interface FindPasswordRes {
   error: string | null;
-  data: null | { result: boolean };
+  data: null | { result: string };
 }
 
 export async function findPasswordAction(
@@ -136,7 +138,8 @@ export async function findPasswordAction(
     }
 
     // 비밀번호 갱신
-    const newPassword = await getHash("");
+    const purePassword = faker.internet.password();
+    const newPassword = await getHash(purePassword);
     await prisma.user.update({
       where: user,
       data: {
@@ -144,9 +147,10 @@ export async function findPasswordAction(
       },
     });
 
-    // TODO :: 새 비밀번호 mail 로 전송
+    // 새 비밀번호 mail 로 전송
+    const res = await taskMailer.sendPassword(email, purePassword);
 
-    return { error: null, data: { result: true } };
+    return { error: null, data: { result: res } };
   } catch (e) {
     if (e instanceof Error) {
       return { error: e.message, data: null };
