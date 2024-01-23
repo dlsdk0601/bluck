@@ -18,15 +18,15 @@ export async function POST(req: NextRequest) {
   const body: FindIdReq = await req.json();
 
   if (isBlank(body.name)) {
-    return badRequestException(errorMessage.NAME_REQUIRED);
+    return badRequestException(errorMessage.REQUIRED("이름"));
   }
 
   if (isBlank(body.phone)) {
-    return badRequestException(errorMessage.PHONE_REQUIRED);
+    return badRequestException(errorMessage.REQUIRED("휴대폰"));
   }
 
   if (vPhone(body.phone)) {
-    return badRequestException(errorMessage.PHONE_BAD_FORMAT);
+    return badRequestException(errorMessage.BAD_FORMAT("휴대폰"));
   }
 
   const user = await prisma.user.findFirst({
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
   });
 
   if (isNil(user)) {
-    return notFoundException(errorMessage.USER_NOT_FOUND);
+    return notFoundException(errorMessage.NOT_FOUND("유저"));
   }
 
   return NextResponse.json({ id: user.email });

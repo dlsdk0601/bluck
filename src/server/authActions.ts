@@ -29,7 +29,7 @@ export async function signInAction(prevState: string | undefined, formData: Form
     if (e instanceof AuthError) {
       switch (e.type) {
         case "CredentialsSignin":
-          return errorMessage.USER_NOT_FOUND;
+          return errorMessage.NOT_FOUND("유저");
         default:
           return errorMessage.SIGN_ING_FAILED;
       }
@@ -53,11 +53,11 @@ export async function findIdAction(
     const phone = formData.get("phone");
 
     if (isNil(name) || isBlank(name)) {
-      return { error: errorMessage.NAME_REQUIRED, data: null };
+      return { error: errorMessage.REQUIRED("이름"), data: null };
     }
 
     if (isNil(phone) || isBlank(phone)) {
-      return { error: errorMessage.PHONE_REQUIRED, data: null };
+      return { error: errorMessage.REQUIRED("휴대폰"), data: null };
     }
 
     if (!isString(name)) {
@@ -69,7 +69,7 @@ export async function findIdAction(
     }
 
     if (vPhone(phone)) {
-      return { error: errorMessage.PHONE_BAD_FORMAT, data: null };
+      return { error: errorMessage.BAD_FORMAT("휴대폰"), data: null };
     }
 
     const user = await prisma.user.findFirst({
@@ -77,7 +77,7 @@ export async function findIdAction(
     });
 
     if (isNil(user)) {
-      return { error: errorMessage.USER_NOT_FOUND, data: null };
+      return { error: errorMessage.NOT_FOUND("유저"), data: null };
     }
 
     return { error: null, data: { id: user.email } };
