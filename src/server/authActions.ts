@@ -6,6 +6,7 @@ import { vEmail, vPassword, vPhone } from "@/ex/validate";
 import { isBlank, isNotNil } from "@/ex/utils";
 import { errorMessage } from "@/lib/errorEx";
 import prisma from "@/lib/prisma";
+import { getHash } from "@/ex/bcryptEx";
 import { signIn } from "./auth/auth";
 
 export async function signInAction(prevState: string | undefined, formData: FormData) {
@@ -86,6 +87,70 @@ export async function findIdAction(
       return { error: e.message, data: null };
     }
 
+    throw e;
+  }
+}
+
+interface FindPasswordRes {
+  error: string | null;
+  data: null | { result: boolean };
+}
+
+export async function findPasswordAction(
+  prevState: FindPasswordRes | undefined,
+  formData: FormData,
+): Promise<FindPasswordRes> {
+  try {
+    const name = formData.get("name");
+    const email = formData.get("email");
+
+    if (isNil(name) || isBlank(name)) {
+      return { error: errorMessage.REQUIRED("이름"), data: null };
+    }
+
+    if (isNil(email) || isBlank(email)) {
+      return { error: errorMessage.REQUIRED("이메일"), data: null };
+    }
+
+    if (!isString(name)) {
+      return { error: errorMessage.ONLY_STRING("이름"), data: null };
+    }
+
+    if (!isString(email)) {
+      return { error: errorMessage.ONLY_STRING("이메일"), data: null };
+    }
+
+    if (vEmail(email)) {
+      return { error: errorMessage.BAD_FORMAT("이메일"), data: null };
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        name,
+        email,
+      },
+    });
+
+    if (isNil(user)) {
+      return { error: errorMessage.NOT_FOUND("유저"), data: null };
+    }
+
+    // 비밀번호 갱신
+    const newPassword = await getHash("");
+    await prisma.user.update({
+      where: user,
+      data: {
+        password: newPassword,
+      },
+    });
+
+    // TODO :: 새 비밀번호 mail 로 전송
+
+    return { error: null, data: { result: true } };
+  } catch (e) {
+    if (e instanceof Error) {
+      return { error: e.message, data: null };
+    }
     throw e;
   }
 }
