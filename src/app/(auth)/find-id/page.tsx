@@ -21,7 +21,7 @@ const FindIdPage = () => {
         &#183;
         <Link
           className="cursor-pointer text-xs font-medium tablet:text-[10px] mobile:text-[9px]"
-          href=""
+          href={Urls["find-password"].page.url()}
         >
           비밀번호 찾기
         </Link>
