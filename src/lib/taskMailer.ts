@@ -20,9 +20,8 @@ export class TaskMailer {
 
   async sendPassword(to: string, newPassword: string): Promise<string> {
     const options = {
-      from: "no-reply@gmail.com",
       to,
-      subject: "새로운 비밀번호 변경 안내",
+      subject: "[BLUCK] 새로운 비밀번호 변경 안내",
       text: this.newPasswordText(newPassword),
     };
 
@@ -36,7 +35,7 @@ export class TaskMailer {
   }
 
   newPasswordText(newPassword: string) {
-    return `<div>새로운 비밀번호는 ${newPassword} 입니다.</div>`;
+    return `새로운 비밀번호는 ${newPassword} 입니다.`;
   }
 }
 
