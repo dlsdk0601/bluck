@@ -28,10 +28,10 @@ export class TaskMailer {
     const res = await this.sendEmail(options);
 
     if (!res) {
-      return "새로운 비밀번호를 전송했습니다.";
+      return "비밀번호 전송을 실패하였습니다.";
     }
 
-    return "비밀번호 전송을 실패하였습니다.";
+    return "이메일로 새로운 비밀번호를 전송했습니다.";
   }
 
   newPasswordText(newPassword: string) {
