@@ -8,9 +8,10 @@ setup:
 watch:
 	bun --watch bin/generateUrl.ts
 
-# --bun 옵션을 넣으면 에러가 난다. bun 자체의 버그인듯
+# --bun 옵션을 넣으면 에러가 난다. 아직 bun 에서 app route 구현이 안됨
+# https://bun.sh/guides/ecosystem/nextjs
 run:
-	bun run dev --turbo
+	bun run dev
 
 # docker
 dev:
