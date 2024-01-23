@@ -5,10 +5,15 @@ class Config {
   readonly isDev = process.env.NEXT_PUBLIC_IS_DEV === "true";
 
   // AWS
-  readonly awsAccessKey = process.env.AWS_ACCESS_KEY ?? "";
-  readonly awsSecretKey = process.env.AWS_SECRET_KEY ?? "";
-  readonly awsBucketName = process.env.AWS_BUCKET_NAME ?? "";
-  readonly awsRegion = process.env.AWS_REGION ?? "";
+  readonly awsAccessKey = process.env.NEXT_PUBLIC_AWS_ACCESS_KEY ?? "";
+  readonly awsSecretKey = process.env.NEXT_PUBLIC_AWS_SECRET_KEY ?? "";
+  readonly awsBucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME ?? "";
+  readonly awsRegion = process.env.NEXT_PUBLIC_AWS_REGION ?? "";
+
+  // NODE MAILER
+  readonly mailer_service = process.env.NEXT_PUBLIC_NODE_MAILER_SERVICE ?? "";
+  readonly mailer_auth_user = process.env.NEXT_PUBLIC_NODE_MAILER_AUTH_USER ?? "";
+  readonly mailer_auth_pass = process.env.NEXT_PUBLIC_NODE_MAILER_AUTH_PASS ?? "";
 }
 
 export const config = new Config();
