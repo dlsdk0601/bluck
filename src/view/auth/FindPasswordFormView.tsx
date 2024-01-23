@@ -1,14 +1,15 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { findPasswordAction } from "@/server/authActions";
 import { isNotBlank, isNotNil } from "@/ex/utils";
+import BlockView from "@/view/BlockView";
 
 const FindPasswordFormView = () => {
   const [res, dispatch] = useFormState(findPasswordAction, undefined);
 
-  if (isNotNil(res?.data?.result) && res?.data?.result) {
-    return <p>이메일로 비밀번호 전송하였습니다.</p>;
+  if (isNotNil(res?.data?.result)) {
+    return <p>{res.data.result}</p>;
   }
 
   return (
@@ -40,13 +41,25 @@ const FindPasswordFormView = () => {
       {isNotBlank(res?.error) && (
         <p className="mt-2 text-xs text-cff4500 mobile:mt-1 mobile:text-[9px]">{res?.error}</p>
       )}
+      <FindPasswordButtonView />
+    </form>
+  );
+};
+
+const FindPasswordButtonView = () => {
+  const { pending } = useFormStatus();
+
+  return (
+    <>
       <button
         type="submit"
+        aria-disabled={pending}
         className="mt-12 h-14 w-full cursor-pointer rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:mt-8 mobile:h-10 mobile:text-[12px]"
       >
         비밀번호 찾기
       </button>
-    </form>
+      <BlockView isLocked={pending} />
+    </>
   );
 };
 
