@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
-import { isNil } from "lodash";
 import { config } from "@/config/config";
+import { isNotNil } from "@/ex/utils";
 
 export class TaskMailer {
   private transporter = nodemailer.createTransport({
@@ -15,11 +15,7 @@ export class TaskMailer {
   async sendEmail(options: Mail.Options) {
     const res = await this.transporter.sendMail(options);
 
-    if (isNil(res)) {
-      return false;
-    }
-
-    return true;
+    return isNotNil(res);
   }
 
   async sendPassword(to: string, newPassword: string): Promise<string> {
