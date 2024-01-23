@@ -15,6 +15,7 @@ const InputFieldView = (props: {
       </label>
       <input
         id={props.id}
+        name={props.id}
         type={props.type ?? "text"}
         className="h-12 w-4/5 rounded-r-xl bg-ccfd1dd text-sm font-light focus:outline-none dark:bg-c000000 mobile:h-10"
         placeholder={props.placeholder ?? "데이터를 입력해주세요."}
