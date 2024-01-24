@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Urls } from "@/url/url.g";
 
-const ContentsCardView = (props: { pk: number; isFull: boolean }) => {
+const BlogCardView = (props: { pk: number; isFull: boolean }) => {
   const router = useRouter();
   return (
     <div
@@ -77,4 +77,4 @@ const ContentsCardView = (props: { pk: number; isFull: boolean }) => {
   );
 };
 
-export default ContentsCardView;
+export default BlogCardView;

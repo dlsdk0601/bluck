@@ -1,5 +1,5 @@
 import Image from "next/image";
-import BlogButtonBoxView from "@/view/BlogButtonBoxView";
+import BlogButtonBoxView from "@/view/blog/BlogButtonBoxView";
 
 const BlogShowPage = () => {
   return (

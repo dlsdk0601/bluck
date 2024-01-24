@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import MainContentsView from "@/view/MainContentsView";
+import MainBlogView from "@/view/blog/MainBlogView";
 import { MainSelectBoxView } from "@/view/SelectBoxView";
 import SearchBox from "@/view/SearchBox";
 import MainContentsSkeleton from "@/view/skeleton/MainContentsSkeleton";
@@ -41,7 +41,7 @@ export default function Page(props: {
         </button>
       </div>
       <Suspense fallback={<MainContentsSkeleton />}>
-        <MainContentsView
+        <MainBlogView
           searchType={props.searchParams?.searchType}
           searchDateType={props.searchParams?.searchDateType}
         />
