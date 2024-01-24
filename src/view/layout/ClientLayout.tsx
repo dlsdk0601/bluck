@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
 import FooterView from "@/view/layout/Footer";
+import BlockView from "@/view/BlockView";
 import { roboto } from "./fonts";
 import HeaderView from "./HeaderView";
 
@@ -13,6 +14,7 @@ const ClientLayout = (props: PropsWithChildren) => {
         <main className="h-screen w-full px-10">{props.children}</main>
       </div>
       <FooterView />
+      <BlockView />
     </body>
   );
 };

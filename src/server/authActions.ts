@@ -147,3 +147,7 @@ export const findPasswordAction: FindPasswordType = async (prevState, formData) 
     throw e;
   }
 };
+
+export async function testAction(prevState: string | null, formData: FormData) {
+  return "";
+}
