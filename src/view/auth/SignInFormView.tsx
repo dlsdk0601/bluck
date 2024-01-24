@@ -7,7 +7,7 @@ import { isNotNil } from "@/ex/utils";
 import BlockView from "@/view/BlockView";
 
 const SignInFormView = () => {
-  const [error, dispatch] = useFormState(signInAction, undefined);
+  const [res, dispatch] = useFormState(signInAction, null);
 
   return (
     <form action={dispatch} className="w-4/5 mobile:w-full">
@@ -37,8 +37,8 @@ const SignInFormView = () => {
           minLength={8}
         />
       </div>
-      {isNotNil(error) && (
-        <p className="mt-2 text-[10px] text-cff4500 mobile:text-[8px]">{error}</p>
+      {isNotNil(res?.error) && (
+        <p className="mt-2 text-[10px] text-cff4500 mobile:text-[8px]">{res?.error}</p>
       )}
       <div className="mt-2 flex cursor-pointer items-center justify-start tablet:w-3/5">
         <figure className="relative h-5 w-5 mobile:h-4 mobile:w-4">

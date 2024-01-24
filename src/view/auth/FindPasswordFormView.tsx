@@ -6,7 +6,7 @@ import { isNotBlank, isNotNil } from "@/ex/utils";
 import BlockView from "@/view/BlockView";
 
 const FindPasswordFormView = () => {
-  const [res, dispatch] = useFormState(findPasswordAction, undefined);
+  const [res, dispatch] = useFormState(findPasswordAction, null);
 
   if (isNotNil(res?.data?.result)) {
     return <p>{res.data.result}</p>;
