@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { k } from "@/ex/korean-postposition";
 
-export const errorMessage = {
+export const ERR = {
   ONLY_STRING: (label: string) => k(`${label}(은|는) 문자여야 합니다.`),
   REQUIRED: (label: string) => k(`${label}(은|는) 필수입니다.`),
   BAD_FORMAT: (label: string) => k(`${label} 형식이 잘못되었습니다.`),
@@ -14,7 +14,7 @@ export const errorMessage = {
 
 export function notFoundException(message?: string) {
   return NextResponse.json(
-    { message: message ?? errorMessage.NOT_FOUND("데이터") },
+    { message: message ?? ERR.NOT_FOUND("데이터") },
     {
       status: 404,
     },
@@ -23,7 +23,7 @@ export function notFoundException(message?: string) {
 
 export function badRequestException(message?: string) {
   return NextResponse.json(
-    { message: message ?? errorMessage.BAD_REQUEST },
+    { message: message ?? ERR.BAD_REQUEST },
     {
       status: 400,
     },
@@ -32,7 +32,7 @@ export function badRequestException(message?: string) {
 
 export function internalServerException(message?: string) {
   return NextResponse.json(
-    { message: message ?? errorMessage.INTERNAL_SERVER },
+    { message: message ?? ERR.INTERNAL_SERVER },
     {
       status: 500,
     },
@@ -41,7 +41,7 @@ export function internalServerException(message?: string) {
 
 export function unAuthorizedException(message?: string) {
   return NextResponse.json(
-    { message: message ?? errorMessage.UN_AUTHORIZED },
+    { message: message ?? ERR.UN_AUTHORIZED },
     {
       status: 401,
     },
