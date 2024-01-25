@@ -1,18 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import BlockView from "@/view/BlockView";
+import { signUpAction } from "@/server/authActions";
 
 const SignUpFormView = () => {
+  const [res, dispatch] = useFormState(signUpAction, null);
+
+  console.log("res");
+  console.log(res?.error);
+
   return (
-    <form className="mx-auto flex h-4/6 max-w-4xl items-start justify-center overflow-y-auto overflow-x-hidden mobile:block">
+    <form
+      action={dispatch}
+      className="mx-auto flex h-4/6 max-w-4xl items-start justify-center overflow-y-auto overflow-x-hidden mobile:block"
+    >
       <label
         htmlFor="profile"
         className="flex h-48 w-48 cursor-pointer items-center justify-center rounded-lg border-none bg-ccfd1dd dark:bg-c000000 mobile:mx-auto mobile:my-3 mobile:h-full mobile:w-full"
       >
         &#43;
-        <input type="file" accept="image/*" id="profile" className="hidden" />
+        <input type="file" accept="image/*" id="profile" name="profile" className="hidden" />
       </label>
       <div className="mx-5 flex w-8/12 flex-wrap items-center justify-between mobile:mx-auto mobile:w-5/6">
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
@@ -25,6 +34,7 @@ const SignUpFormView = () => {
           <input
             id="email"
             type="email"
+            name="email"
             className="h-10 w-3/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
             placeholder="이메일을 입력해주세요."
           />
@@ -45,8 +55,9 @@ const SignUpFormView = () => {
           </label>
           <input
             id="password"
-            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
+            name="password"
             type="password"
+            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
             placeholder="비밀번호를 입력해주세요."
           />
         </div>
@@ -60,8 +71,9 @@ const SignUpFormView = () => {
           </label>
           <input
             id="confirm-password"
-            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
+            name="confirm-password"
             type="password"
+            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
             placeholder="비밀번호를 다시 입력해주세요."
           />
         </div>
@@ -75,8 +87,9 @@ const SignUpFormView = () => {
           </label>
           <input
             id="name"
+            name="name"
+            type="text"
             className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
-            type="name"
             placeholder="이름을 입력해주세요."
           />
         </div>
@@ -90,8 +103,9 @@ const SignUpFormView = () => {
           </label>
           <input
             id="text"
+            name="birthday"
+            type="text"
             className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
-            type="birthday"
             placeholder="생년월일 6자리 입력해주세요."
           />
         </div>
@@ -105,8 +119,9 @@ const SignUpFormView = () => {
           </label>
           <input
             id="tel"
-            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
+            name="phone"
             type="tel"
+            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
             placeholder="- 없이 입력해주세요."
           />
         </div>
@@ -120,8 +135,9 @@ const SignUpFormView = () => {
           </label>
           <input
             id="message"
-            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
+            name="message"
             type="text"
+            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
             placeholder="상태메시지를 입력해주세요."
           />
         </div>
@@ -135,6 +151,7 @@ const SignUpFormView = () => {
           </label>
           <textarea
             id="introduce"
+            name="introduce"
             className="h-5/6 w-4/5 rounded-xl p-2 focus:outline-none"
             placeholder="자기소개를 입력해주세요."
           />
@@ -147,7 +164,12 @@ const SignUpFormView = () => {
           <label htmlFor="check" className="ml-1 cursor-pointer text-sm">
             개인정보 수집 이용에 대한 동의
           </label>
-          <input id="check" type="checkbox" className="hidden opacity-0" />
+          <input
+            id="check"
+            type="checkbox"
+            name="isPersonalInfoConsentGiven"
+            className="hidden opacity-0"
+          />
         </div>
         <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
         <div className="mt-10 flex w-full items-center justify-between mobile:mt-5">
