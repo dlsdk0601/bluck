@@ -19,4 +19,6 @@ export type SignInActionType = BaseActionFunction<{ result: boolean }>;
 
 export type FindIdActionType = BaseActionFunction<{ id: string }>;
 
-export type FindPasswordType = BaseActionFunction<{ result: string }>;
+export type FindPasswordActionType = BaseActionFunction<{ result: string }>;
+
+export type SignUpActionType = BaseActionFunction<{ result: boolean }>;
