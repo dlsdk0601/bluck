@@ -12,6 +12,8 @@ export const ERR = {
   UN_AUTHORIZED: "해당 요청에 권한이 없습니다.",
 };
 
+export type ApiRes<T> = NextResponse<T> | NextResponse<{ message: string }>;
+
 export function notFoundException(message?: string) {
   return NextResponse.json(
     { message: message ?? ERR.NOT_FOUND("데이터") },
