@@ -9,7 +9,14 @@ import { ERR } from "@/lib/errorEx";
 import prisma from "@/lib/prisma";
 import { getHash } from "@/ex/bcryptEx";
 import { taskMailer } from "@/lib/taskMailer";
-import { err, FindIdActionType, FindPasswordType, ok, SignInActionType } from "@/type/definitions";
+import {
+  err,
+  FindIdActionType,
+  FindPasswordActionType,
+  ok,
+  SignInActionType,
+  SignUpActionType,
+} from "@/type/definitions";
 import { signIn } from "./auth/auth";
 
 export const signInAction: SignInActionType = async (prevState, formData) => {
@@ -88,7 +95,7 @@ export const findIdAction: FindIdActionType = async (prevState, formData) => {
   }
 };
 
-export const findPasswordAction: FindPasswordType = async (prevState, formData) => {
+export const findPasswordAction: FindPasswordActionType = async (prevState, formData) => {
   try {
     const name = formData.get("name");
     const email = formData.get("email");
@@ -148,6 +155,22 @@ export const findPasswordAction: FindPasswordType = async (prevState, formData) 
   }
 };
 
-export async function testAction(prevState: string | null, formData: FormData) {
-  return "";
-}
+export const signUpAction: SignUpActionType = async (prevState, formData) => {
+  const profile = formData.get("profile");
+  const uuid = formData.get("uuid");
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const confirmPassword = formData.get("confirm-password");
+  const name = formData.get("name");
+  const birthday = formData.get("birthday");
+  const phone = formData.get("phone");
+  const message = formData.get("message");
+  const introduce = formData.get("introduce");
+  const isPersonalInfoConsentGiven = formData.get("isPersonalInfoConsentGiven");
+
+  console.log("uuid");
+  console.log(uuid);
+  console.log(typeof uuid);
+
+  return ok({ result: true });
+};
