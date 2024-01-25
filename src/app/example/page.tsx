@@ -1,14 +1,10 @@
 "use client";
 
-import { useFormState } from "react-dom";
 import { config } from "@/config/config";
 import { Urls } from "@/url/url.g";
 import Replace from "@/view/layout/Replace";
-import { testAction } from "@/server/authActions";
 
 const Page = () => {
-  const [str, dispatch] = useFormState(testAction, null);
-
   if (!config.isDev) {
     return <Replace url={Urls.page.url()} />;
   }
