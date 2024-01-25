@@ -1,6 +1,7 @@
 import { isEmpty, isNil } from "lodash";
 import isEmail from "validator/lib/isEmail";
 import isUrl from "validator/lib/isURL";
+import { isNotNil } from "@/ex/utils";
 
 export const vEmail = (value: any): string | undefined => {
   if (typeof value !== "string") {
@@ -61,5 +62,44 @@ export const vPassword = (value: any): string | undefined => {
   const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$/;
   if (!value.match(reg)) {
     return "비밀번호는 8자 이상 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.";
+  }
+};
+
+export type FileType = "IMAGE" | "PDF" | "VIDEO";
+export const vFileExtension = (value: any, types: FileType[]): string | undefined => {
+  if (typeof value !== "string") {
+    return "확장자 형식이 잘못되었습니다.";
+  }
+
+  // 값이 없을 경우 무시
+  if (isNil(value) || isEmpty(value)) {
+    return "확장자 형식이 잘못되었습니다.";
+  }
+
+  let isValid = true;
+  let error = "";
+  // eslint-disable-next-line array-callback-return
+  const _ignore = types.map((type) => {
+    switch (type) {
+      case "PDF": {
+        isValid = isNotNil(value.match(/^application\/pdf$/));
+        error = "PDF 확장자가 아닙니다.";
+        return;
+      }
+      case "VIDEO": {
+        isValid = isNotNil(value.match(/^video\/(mp4|webm)$/));
+        error = "비디오 확장자가 아닙니다.";
+        return;
+      }
+      case "IMAGE":
+      default: {
+        error = "이미지 확장자가 아닙니다.";
+        isValid = isNotNil(value.match(/^image\/(jpeg|png|jpg)$/));
+      }
+    }
+  });
+
+  if (!isValid) {
+    return error;
   }
 };
