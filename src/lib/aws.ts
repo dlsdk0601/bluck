@@ -1,7 +1,8 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import { asset, Prisma } from "@prisma/client";
-import { isNil } from "lodash";
+import { isNil, isString } from "lodash";
+import mime from "mime-types";
 import { config } from "@/config/config";
 import prisma from "@/lib/prisma";
 
@@ -44,7 +45,7 @@ class AwsModel {
       await this.s3.send(command);
 
       return {
-        uuid: uuidv4.toString(),
+        uuid: uuidv4().toString(),
         content_type: type,
         name: fileName,
         url: this.awsDownloadUrl(fileName),
@@ -81,6 +82,28 @@ class AwsModel {
       console.error(e);
       return null;
     }
+  }
+
+  async getFileSet(fileName: string, base64: string): Promise<Fileset | null> {
+    const type = mime.lookup(fileName);
+
+    if (!isString(type) && !type) {
+      return null;
+    }
+
+    const newAsset = await this.newAsset(type, fileName, base64);
+
+    if (isNil(newAsset)) {
+      return null;
+    }
+
+    return {
+      url: newAsset.url,
+      uuid: newAsset.uuid,
+      downloadUrl: newAsset.download_url,
+      name: newAsset.name,
+      contentType: newAsset.content_type,
+    };
   }
 }
 
