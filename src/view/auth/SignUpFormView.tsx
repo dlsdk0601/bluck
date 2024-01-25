@@ -2,27 +2,26 @@
 
 import Image from "next/image";
 import { useFormState, useFormStatus } from "react-dom";
+import { ChangeEvent, useState } from "react";
+import { isNil, isString } from "lodash";
+import { blobToBase64String } from "blob-util";
+import classNames from "classnames";
 import BlockView from "@/view/BlockView";
 import { signUpAction } from "@/server/authActions";
+import { vFileExtension } from "@/ex/validate";
+import { isNotNil } from "@/ex/utils";
+import { api } from "@/lib/axios";
+import { Fileset } from "@/lib/aws";
 
 const SignUpFormView = () => {
   const [res, dispatch] = useFormState(signUpAction, null);
-
-  console.log("res");
-  console.log(res?.error);
 
   return (
     <form
       action={dispatch}
       className="mx-auto flex h-4/6 max-w-4xl items-start justify-center overflow-y-auto overflow-x-hidden mobile:block"
     >
-      <label
-        htmlFor="profile"
-        className="flex h-48 w-48 cursor-pointer items-center justify-center rounded-lg border-none bg-ccfd1dd dark:bg-c000000 mobile:mx-auto mobile:my-3 mobile:h-full mobile:w-full"
-      >
-        &#43;
-        <input type="file" accept="image/*" id="profile" name="profile" className="hidden" />
-      </label>
+      <FileUploadView />
       <div className="mx-5 flex w-8/12 flex-wrap items-center justify-between mobile:mx-auto mobile:w-5/6">
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label
@@ -198,6 +197,67 @@ const SignUpButtonView = () => {
         회원가입
       </button>
       <BlockView isLocked={pending} />
+    </>
+  );
+};
+
+const FileUploadView = () => {
+  const [fileSet, setFileSet] = useState<Fileset | null>(null);
+
+  const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+
+    if (isNil(files)) {
+      return;
+    }
+
+    const file = files[0];
+    const validFileExtension = vFileExtension(file.type, ["IMAGE"]);
+    if (isNotNil(validFileExtension)) {
+      alert(validFileExtension);
+      return;
+    }
+
+    const base64 = await blobToBase64String(file);
+
+    const res = await api.newAsset({ base64, name: file.name });
+
+    if (isNil(res)) {
+      return;
+    }
+
+    if (isString(res)) {
+      return alert(res);
+    }
+
+    setFileSet(res.fileSet);
+  };
+
+  return (
+    <>
+      <label
+        htmlFor="profile"
+        // TODO :: 에러남
+        // style={{ backgroundImage: isNotNil(fileSet?.url) ? `url(${fileSet.url})` : undefined }}
+        className={classNames(
+          "flex h-48 w-48 cursor-pointer items-center justify-center rounded-lg border-none mobile:mx-auto mobile:my-3 mobile:h-full mobile:w-full",
+          {
+            "bg-ccfd1dd dark:bg-c000000": isNil(fileSet),
+            "bg-cover bg-center bg-no-repeat": isNotNil(fileSet),
+          },
+        )}
+      >
+        {isNil(fileSet) ? "\u002B" : ""}
+        <input
+          type="file"
+          onChange={(e) => onChange(e)}
+          accept="image/*"
+          id="profile"
+          name="profile"
+          className="hidden"
+        />
+      </label>
+      <input type="text" value={fileSet?.uuid} name="uuid" className="hidden opacity-0" readOnly />
     </>
   );
 };
