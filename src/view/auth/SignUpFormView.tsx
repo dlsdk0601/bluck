@@ -237,8 +237,7 @@ const FileUploadView = () => {
     <>
       <label
         htmlFor="profile"
-        // TODO :: 에러남
-        // style={{ backgroundImage: isNotNil(fileSet?.url) ? `url(${fileSet.url})` : undefined }}
+        style={{ backgroundImage: isNotNil(fileSet?.url) ? `url(${fileSet.url})` : undefined }}
         className={classNames(
           "flex h-48 w-48 cursor-pointer items-center justify-center rounded-lg border-none mobile:mx-auto mobile:my-3 mobile:h-full mobile:w-full",
           {
