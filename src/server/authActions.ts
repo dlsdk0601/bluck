@@ -156,7 +156,10 @@ export const findPasswordAction: FindPasswordActionType = async (prevState, form
 };
 
 export const signUpAction: SignUpActionType = async (prevState, formData) => {
-  const profile = formData.get("profile");
+  return ok({ result: true });
+};
+
+function singUpFiledValidate(formData: FormData): string | { [key: string]: string } {
   const uuid = formData.get("uuid");
   const email = formData.get("email");
   const password = formData.get("password");
@@ -168,9 +171,97 @@ export const signUpAction: SignUpActionType = async (prevState, formData) => {
   const introduce = formData.get("introduce");
   const isPersonalInfoConsentGiven = formData.get("isPersonalInfoConsentGiven");
 
-  console.log("uuid");
-  console.log(uuid);
-  console.log(typeof uuid);
+  if (isNil(uuid)) {
+    return ERR.REQUIRED("프로필 사진");
+  }
 
-  return ok({ result: true });
-};
+  if (isNil(email)) {
+    return ERR.REQUIRED("이메일");
+  }
+
+  if (isNil(password)) {
+    return ERR.REQUIRED("비밀번호");
+  }
+
+  if (isNil(confirmPassword)) {
+    return ERR.REQUIRED("비밀번호 재확인");
+  }
+
+  if (isNil(name)) {
+    return ERR.REQUIRED("이름");
+  }
+
+  if (isNil(birthday)) {
+    return ERR.REQUIRED("생년월일");
+  }
+
+  if (isNil(phone)) {
+    return ERR.REQUIRED("휴대폰");
+  }
+
+  if (isNil(message)) {
+    return ERR.REQUIRED("상태 메세지");
+  }
+
+  if (isNil(introduce)) {
+    return ERR.REQUIRED("자기 소개");
+  }
+
+  if (isNil(isPersonalInfoConsentGiven)) {
+    return ERR.REQUIRED("개인 정보 동의");
+  }
+
+  // TODO :: validtaion 정리
+  if (!isString(uuid)) {
+    return ERR.REQUIRED("프로필 사진");
+  }
+
+  if (!isString(email)) {
+    return ERR.REQUIRED("이메일");
+  }
+
+  if (!isString(password)) {
+    return ERR.REQUIRED("비밀번호");
+  }
+
+  if (!isString(confirmPassword)) {
+    return ERR.REQUIRED("비밀번호 재확인");
+  }
+
+  if (!isString(name)) {
+    return ERR.REQUIRED("이름");
+  }
+
+  if (!isString(birthday)) {
+    return ERR.REQUIRED("생년월일");
+  }
+
+  if (!isString(phone)) {
+    return ERR.REQUIRED("휴대폰");
+  }
+
+  if (!isString(message)) {
+    return ERR.REQUIRED("상태 메세지");
+  }
+
+  if (!isString(introduce)) {
+    return ERR.REQUIRED("자기 소개");
+  }
+
+  if (!isString(isPersonalInfoConsentGiven)) {
+    return ERR.REQUIRED("개인 정보 동의");
+  }
+
+  return {
+    uuid,
+    email,
+    password,
+    confirmPassword,
+    name,
+    birthday,
+    phone,
+    message,
+    introduce,
+    isPersonalInfoConsentGiven,
+  };
+}
