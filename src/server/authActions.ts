@@ -3,7 +3,9 @@
 import { AuthError } from "next-auth";
 import { isNil, isString } from "lodash";
 import { faker } from "@faker-js/faker/locale/ko";
-import { vEmail, vPassword, vPhone } from "@/ex/validate";
+import { asset } from "@prisma/client";
+import moment from "moment";
+import { vBirthday, vEmail, vPassword, vPhone } from "@/ex/validate";
 import { isBlank, isNotNil } from "@/ex/utils";
 import { ERR } from "@/lib/errorEx";
 import prisma from "@/lib/prisma";
@@ -17,6 +19,7 @@ import {
   SignInActionType,
   SignUpActionType,
 } from "@/type/definitions";
+import { awsModel } from "@/lib/aws";
 import { signIn } from "./auth/auth";
 
 export const signInAction: SignInActionType = async (prevState, formData) => {
@@ -156,10 +159,55 @@ export const findPasswordAction: FindPasswordActionType = async (prevState, form
 };
 
 export const signUpAction: SignUpActionType = async (prevState, formData) => {
-  return ok({ result: true });
+  const validation = await singUpFieldValidate(formData);
+
+  if (typeof validation === "string") {
+    return err(validation);
+  }
+
+  const { profile, email, password, name, birthday, phone, message, introduce } = validation;
+
+  try {
+    await prisma.user.create({
+      data: {
+        email,
+        password,
+        name,
+        birthday,
+        phone,
+        message,
+        introduce,
+        is_personal_information_agree: true,
+        main_image: {
+          connect: {
+            pk: profile.pk,
+          },
+        },
+      },
+    });
+
+    return ok({ result: true });
+  } catch (e) {
+    if (e instanceof Error) {
+      return err(e.message);
+    }
+
+    throw e;
+  }
 };
 
-function singUpFiledValidate(formData: FormData): string | { [key: string]: string } {
+interface SignUpField {
+  profile: asset;
+  email: string;
+  password: string;
+  name: string;
+  birthday: Date;
+  phone: string;
+  message: string;
+  introduce: string;
+}
+
+async function singUpFieldValidate(formData: FormData): Promise<string | SignUpField> {
   const uuid = formData.get("uuid");
   const email = formData.get("email");
   const password = formData.get("password");
@@ -211,57 +259,127 @@ function singUpFiledValidate(formData: FormData): string | { [key: string]: stri
     return ERR.REQUIRED("개인 정보 동의");
   }
 
-  // TODO :: validtaion 정리
   if (!isString(uuid)) {
+    return ERR.ONLY_STRING("프로필 사진");
+  }
+
+  if (isBlank(uuid)) {
+    return ERR.REQUIRED("프로필 사진");
+  }
+
+  // 프로필 사진 유효성
+  const profile = await awsModel.assetFromUuid(uuid);
+
+  if (isNil(profile)) {
     return ERR.REQUIRED("프로필 사진");
   }
 
   if (!isString(email)) {
+    return ERR.ONLY_STRING("이메일");
+  }
+
+  if (isBlank(email)) {
     return ERR.REQUIRED("이메일");
   }
 
+  // 이메일 중복 검사
+  const isEmailExist = await prisma.user.findFirst({ where: { email } });
+  if (isNotNil(isEmailExist)) {
+    return ERR.EMAIL_DUPLICATE;
+  }
+
   if (!isString(password)) {
+    return ERR.ONLY_STRING("비밀번호");
+  }
+
+  if (isBlank(password)) {
     return ERR.REQUIRED("비밀번호");
   }
 
   if (!isString(confirmPassword)) {
+    return ERR.ONLY_STRING("비밀번호 재확인");
+  }
+
+  if (isBlank(confirmPassword)) {
     return ERR.REQUIRED("비밀번호 재확인");
   }
 
+  // 비밀번호 체크 유효성
+  if (password !== confirmPassword) {
+    return ERR.PASSWORD_NOT_MATCH;
+  }
+
+  // 비밀번호 정규식 유효성
+  const validPassword = vPassword(password);
+  if (isNotNil(validPassword)) {
+    return validPassword;
+  }
+
   if (!isString(name)) {
+    return ERR.ONLY_STRING("이름");
+  }
+
+  if (isBlank(name)) {
     return ERR.REQUIRED("이름");
   }
 
   if (!isString(birthday)) {
+    return ERR.ONLY_STRING("생년월일");
+  }
+
+  if (isBlank(birthday)) {
     return ERR.REQUIRED("생년월일");
   }
 
+  // 생년월일 유효성
+  const validBirthday = vBirthday(birthday);
+  if (isNotNil(validBirthday)) {
+    return validBirthday;
+  }
+
   if (!isString(phone)) {
+    return ERR.ONLY_STRING("휴대폰");
+  }
+
+  if (isBlank(phone)) {
     return ERR.REQUIRED("휴대폰");
   }
 
+  // 휴대폰 번호 유효성
+  const validPhone = vPhone(phone);
+  if (isNotNil(validPhone)) {
+    return validPhone;
+  }
+
   if (!isString(message)) {
+    return ERR.ONLY_STRING("상태 메세지");
+  }
+
+  if (isBlank(message)) {
     return ERR.REQUIRED("상태 메세지");
   }
 
   if (!isString(introduce)) {
-    return ERR.REQUIRED("자기 소개");
+    return ERR.ONLY_STRING("자기 소개");
   }
 
   if (!isString(isPersonalInfoConsentGiven)) {
-    return ERR.REQUIRED("개인 정보 동의");
+    return ERR.ONLY_STRING("개인 정보 동의");
+  }
+
+  // 개인 정보 수집 동의 유효성
+  if (isPersonalInfoConsentGiven !== "on") {
+    return ERR.PERSONAL_INFORMATION_AGREE;
   }
 
   return {
-    uuid,
+    profile,
     email,
-    password,
-    confirmPassword,
+    password: await getHash(password),
     name,
-    birthday,
+    birthday: moment(birthday, "YYMMDD").toDate(),
     phone,
     message,
     introduce,
-    isPersonalInfoConsentGiven,
   };
 }
