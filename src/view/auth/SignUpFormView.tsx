@@ -1,20 +1,37 @@
 "use client";
 
-import Image from "next/image";
 import { useFormState, useFormStatus } from "react-dom";
 import { ChangeEvent, useState } from "react";
 import { isNil, isString } from "lodash";
 import { blobToBase64String } from "blob-util";
 import classNames from "classnames";
+import { CheckCircleIcon as OutlineCheckCircleIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 import BlockView from "@/view/BlockView";
 import { signUpAction } from "@/server/authActions";
 import { vFileExtension } from "@/ex/validate";
 import { isNotNil } from "@/ex/utils";
 import { api } from "@/lib/axios";
 import { Fileset } from "@/lib/aws";
+import { Urls } from "@/url/url.g";
 
 const SignUpFormView = () => {
   const [res, dispatch] = useFormState(signUpAction, null);
+
+  if (isNotNil(res?.data?.result) && res?.data?.result) {
+    return (
+      <div className="mx-auto flex h-4/5 w-2/5 flex-col items-center justify-center tablet:w-3/4 mobile:w-full">
+        <p>회원가입이 정상적으로 처리되었습니다.</p>
+        <Link
+          className="mt-5 cursor-pointer text-xs font-medium tablet:text-[10px] mobile:text-[9px]"
+          href={Urls["sign-in"].page.url()}
+        >
+          로그인
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -34,17 +51,10 @@ const SignUpFormView = () => {
             id="email"
             type="email"
             name="email"
-            className="h-10 w-3/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
+            className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
             placeholder="이메일을 입력해주세요."
           />
-          <button
-            type="button"
-            className="bold ml-2 h-10 w-1/5 rounded-xl border-2 border-solid border-c1f295a bg-none text-[12px] dark:border-cffffff"
-          >
-            중복확인
-          </button>
         </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label
             htmlFor="password"
@@ -60,7 +70,6 @@ const SignUpFormView = () => {
             placeholder="비밀번호를 입력해주세요."
           />
         </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label
             htmlFor="confirm-password"
@@ -76,7 +85,6 @@ const SignUpFormView = () => {
             placeholder="비밀번호를 다시 입력해주세요."
           />
         </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label
             htmlFor="name"
@@ -92,7 +100,6 @@ const SignUpFormView = () => {
             placeholder="이름을 입력해주세요."
           />
         </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label
             htmlFor="birthday"
@@ -108,7 +115,6 @@ const SignUpFormView = () => {
             placeholder="생년월일 6자리 입력해주세요."
           />
         </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label
             htmlFor="tel"
@@ -124,7 +130,6 @@ const SignUpFormView = () => {
             placeholder="- 없이 입력해주세요."
           />
         </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label
             htmlFor="message"
@@ -140,7 +145,6 @@ const SignUpFormView = () => {
             placeholder="상태메시지를 입력해주세요."
           />
         </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
         <div className="mb-5 flex h-28 w-full items-center justify-center overflow-hidden rounded-xl bg-ccfd1dd dark:bg-c000000">
           <label
             htmlFor="introduce"
@@ -155,22 +159,11 @@ const SignUpFormView = () => {
             placeholder="자기소개를 입력해주세요."
           />
         </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
-        <div className="my-3 flex w-full cursor-pointer items-center justify-start mobile:my-3">
-          <figure className="relative h-5 w-5 mobile:h-2 mobile:w-2">
-            <Image fill sizes="10px" src="/assets/img/check.png" alt="check" />
-          </figure>
-          <label htmlFor="check" className="ml-1 cursor-pointer text-sm">
-            개인정보 수집 이용에 대한 동의
-          </label>
-          <input
-            id="check"
-            type="checkbox"
-            name="isPersonalInfoConsentGiven"
-            className="hidden opacity-0"
-          />
-        </div>
-        <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">에러 메시지</span>
+        <SignUpPersonalInformationRadioBoxView />
+
+        {isNotNil(res?.error) && (
+          <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">{res?.error}</span>
+        )}
         <div className="mt-10 flex w-full items-center justify-between mobile:mt-5">
           <button
             type="button"
@@ -182,6 +175,27 @@ const SignUpFormView = () => {
         </div>
       </div>
     </form>
+  );
+};
+
+const SignUpPersonalInformationRadioBoxView = () => {
+  const [isCheck, setIsCheck] = useState(false);
+  return (
+    <div className="my-3 flex w-full cursor-pointer items-center justify-start mobile:my-3">
+      <figure className=" h-5 w-5 mobile:h-2 mobile:w-2">
+        {isCheck ? <CheckCircleIcon /> : <OutlineCheckCircleIcon />}
+      </figure>
+      <label htmlFor="check" className="ml-1 cursor-pointer text-sm">
+        개인정보 수집 이용에 대한 동의
+      </label>
+      <input
+        id="check"
+        type="checkbox"
+        name="isPersonalInfoConsentGiven"
+        className="hidden opacity-0"
+        onChange={() => setIsCheck(!isCheck)}
+      />
+    </div>
   );
 };
 
