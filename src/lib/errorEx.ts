@@ -10,6 +10,9 @@ export const ERR = {
   BAD_REQUEST: "요청 데이터가 잘못되었습니다.",
   INTERNAL_SERVER: "서버가 원활하지 않습니다. 잠시 후 다시 시도해주세요.",
   UN_AUTHORIZED: "해당 요청에 권한이 없습니다.",
+  PASSWORD_NOT_MATCH: "비밀번호가 서로 다릅니다.",
+  PERSONAL_INFORMATION_AGREE: "개인정보 수집에 동의 하셔야 합니다.",
+  EMAIL_DUPLICATE: "이메일이 중복입니다.",
 };
 
 export type ApiRes<T> = NextResponse<T> | NextResponse<{ message: string }>;
