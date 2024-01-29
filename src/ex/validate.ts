@@ -65,6 +65,21 @@ export const vPassword = (value: any): string | undefined => {
   }
 };
 
+export const vBirthday = (value: any): string | undefined => {
+  if (typeof value !== "string") {
+    return "문자로 입력해주세요.";
+  }
+
+  if (isNil(value) || isEmpty(value)) {
+    return "생년월일은 필수 입력사항입니다.";
+  }
+
+  const reg = /\b\d{6}\b/;
+  if (!value.match(reg)) {
+    return "생년월일은 6자리여야 합니다.";
+  }
+};
+
 export type FileType = "IMAGE" | "PDF" | "VIDEO";
 export const vFileExtension = (value: any, types: FileType[]): string | undefined => {
   if (typeof value !== "string") {
