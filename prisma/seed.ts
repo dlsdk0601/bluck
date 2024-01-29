@@ -52,6 +52,7 @@ async function users(faker: Faker) {
     message: faker.lorem.sentences(),
     introduce: faker.lorem.paragraphs(),
     main_image_pk: 1,
+    is_personal_information_agree: true,
   });
 
   for (let i = 0; i < 20; i++) {
@@ -66,6 +67,7 @@ async function users(faker: Faker) {
       message: faker.lorem.sentences(),
       introduce: faker.lorem.paragraphs(),
       main_image_pk: 2,
+      is_personal_information_agree: true,
     };
 
     users.push(user);
