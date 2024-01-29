@@ -11,16 +11,17 @@ datasource db {
 }
 
 model user {
-  pk            Int      @id @default(autoincrement())
-  email         String   @unique @db.VarChar(256)
-  password      String   @db.VarChar(256)
-  name          String   @db.VarChar(64)
-  birthday      DateTime @db.Date
-  phone         String   @db.VarChar(32)
-  message       String   @db.VarChar(256)
-  introduce     String   @db.Text
-  main_image_pk Int      @db.Integer
-  main_image    asset    @relation(fields: [main_image_pk], references: [pk])
+  pk                            Int      @id @default(autoincrement())
+  email                         String   @unique @db.VarChar(256)
+  password                      String   @db.VarChar(256)
+  name                          String   @db.VarChar(64)
+  birthday                      DateTime @db.Date
+  phone                         String   @db.VarChar(32)
+  message                       String   @db.VarChar(256)
+  introduce                     String   @db.Text
+  main_image_pk                 Int      @db.Integer
+  main_image                    asset    @relation(fields: [main_image_pk], references: [pk])
+  is_personal_information_agree Boolean
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
