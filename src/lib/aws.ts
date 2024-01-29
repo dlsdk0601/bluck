@@ -105,6 +105,16 @@ class AwsModel {
       contentType: newAsset.content_type,
     };
   }
+
+  toFileSet(asset: asset): Fileset {
+    return {
+      url: asset.url,
+      uuid: asset.uuid,
+      downloadUrl: asset.download_url,
+      name: asset.name,
+      contentType: asset.content_type,
+    };
+  }
 }
 
 export const awsModel = new AwsModel();
