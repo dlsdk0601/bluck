@@ -21,7 +21,13 @@ export const authConfig = {
         return isNotNil(user);
       }
 
-      if (nextUrl.pathname === Urls["sign-in"].page.url() && isNotNil(user)) {
+      const signInExceptions = [
+        Urls["sign-in"].page.url(),
+        Urls["sign-up"].page.url(),
+        Urls["find-id"].page.url(),
+        Urls["find-password"].page.url(),
+      ];
+      if (signInExceptions.includes(nextUrl.pathname) && isNotNil(user)) {
         return Response.redirect(new URL("/", nextUrl));
       }
 
