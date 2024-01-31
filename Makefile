@@ -25,27 +25,27 @@ dev-clean:
 # db
 # 되도록 사용하지 말것. --name 옵션을 써서 migration 을 명시적으로 해줄 것.
 db-up:
-	prisma migrate dev
+	bunx prisma migrate dev
 
 # 한 단계 버전 다운이 아닌 완전 초기화임.
 # 원하는 버전으로 돌리는건 --to 써서 버전 명시 해줄 것.
 db-down:
-	prisma migrate reset
+	bunx prisma migrate reset
 
 db-deploy:
-	prisma migrate deploy
+	bunx prisma migrate deploy
 	sleep 1
 
 dev-reinitialize: dev-clean dev db-deploy
-	prisma db seed
+	bun run prisma/seed.ts
 
 
 # test
 cypress-open:
-	npx cypress open
+	bunx cypress open
 
 cypress-headless:
-	npx cypress run
+	bunx cypress run
 
 e2e:
 	start-server-and-test dev http://localhost:3000 cypress
