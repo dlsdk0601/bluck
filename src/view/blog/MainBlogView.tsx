@@ -1,14 +1,66 @@
-import { fetchMainContents } from "@/server/blogActions";
+"use client";
+
+import { useInView } from "react-intersection-observer";
+import { useEffect, useState } from "react";
+import { isNil } from "lodash";
+import { getBlogsAction } from "@/server/blogActions";
+import { ignorePromise, isNotBlank, isNotNil } from "@/ex/utils";
+import { MainContentsCardSkeleton } from "@/view/skeleton/MainContentsSkeleton";
+import { GetBlogsActionResItem } from "@/type/definitions";
+import { PaginationType } from "@/ex/paginationEx";
 import BlogCardView from "./BlogCardView";
 
-const MainBlogView = async (props: { searchType?: string; searchDateType?: string }) => {
-  const contents = await fetchMainContents(props.searchType, props.searchDateType);
+const MainBlogView = (props: {
+  initBlogs: PaginationType<GetBlogsActionResItem>;
+  searchType?: string;
+  searchDateType?: string;
+}) => {
+  const { ref, inView } = useInView();
+  const [page, setPage] = useState(props.initBlogs.page);
+  const [blogs, setBlogs] = useState(props.initBlogs.rows);
+  const [hasNext, setHasNext] = useState(true);
+  const [error, setError] = useState("");
+
+  const onFetch = async () => {
+    // 다음 페이지가 없으면 막는다.
+    if (!hasNext) {
+      return;
+    }
+
+    const res = await getBlogsAction(page + 1, props.searchType, props.searchDateType);
+
+    if (isNotNil(res.error)) {
+      setError(res.error);
+      return;
+    }
+
+    if (isNil(res.data?.blogs)) {
+      return;
+    }
+
+    setBlogs([...blogs, ...res.data.blogs.rows]);
+    setPage(res.data.blogs.page);
+    setHasNext(res.data.blogs.hasNext);
+  };
+
+  useEffect(() => {
+    if (inView) {
+      ignorePromise(() => onFetch());
+    }
+  }, [inView]);
 
   return (
     <div className="mt-[10px] flex h-[70vh] w-full flex-wrap justify-between overflow-y-auto pr-[1%] tablet:h-[72vh]">
-      {contents.map((item) => (
-        <BlogCardView key={`contents-${item}`} pk={item} isFull={false} />
+      {blogs.map((blog) => (
+        <BlogCardView key={`blog-card-view-${blog.pk}`} blog={blog} isFull={false} />
       ))}
+      {hasNext && (
+        <>
+          <MainContentsCardSkeleton ref={ref} />
+          <MainContentsCardSkeleton />
+        </>
+      )}
+      {isNotBlank(error) && <p>{error}</p>}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
 const MainContentsSkeleton = () => {
   return (
@@ -16,9 +16,10 @@ const MainContentsSkeleton = () => {
 const loader =
   "before:absolute before:bg-bgLoader before:opacity-30 before:z-30 before:inset-0 before:-translate-x-full before:animate-[loader_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent";
 
-const MainContentsCardSkeleton = () => {
+export const MainContentsCardSkeleton = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <div
+      ref={ref}
       className={`${loader} relative mb-[20px] flex h-[185px] w-[49%] items-center justify-center overflow-hidden rounded-xl tablet:h-[175px] tablet:w-[99%] mobile:mx-auto mobile:my-[10px] mobile:block mobile:h-[200px] mobile:w-[90%] mobile:pb-4`}
     >
       <figure className="relative h-full w-[30%] mobile:h-[40%] mobile:w-full">
@@ -38,6 +39,6 @@ const MainContentsCardSkeleton = () => {
       </div>
     </div>
   );
-};
+});
 
 export default MainContentsSkeleton;
