@@ -22,17 +22,17 @@ async function main() {
     data: await assets(),
   });
 
-  // await prisma.user.createMany({
-  //   data: await users(faker),
-  // });
-  //
-  // await prisma.tag.createMany({
-  //   data: await tags(faker),
-  // });
-  //
-  // await prisma.blog.createMany({
-  //   data: await blogs(faker),
-  // });
+  await prisma.user.createMany({
+    data: await users(faker),
+  });
+
+  await prisma.tag.createMany({
+    data: await tags(faker),
+  });
+
+  await prisma.blog.createMany({
+    data: await blogs(faker),
+  });
 
   console.log("----------------Faker Insert Success----------------");
 }
