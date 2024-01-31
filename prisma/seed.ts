@@ -1,12 +1,12 @@
-import path from "path";
-import fs from "fs";
+import { join } from "node:path";
+import { readdirSync, readFileSync } from "node:fs";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Faker, ko } from "@faker-js/faker";
 import moment from "moment/moment";
-import mime from "mime-types";
 import { isNil } from "lodash";
-import { awsModel } from "@/lib/aws";
+import mime from "mime-types";
 import { getHash } from "@/ex/bcryptEx";
+import { awsModel } from "@/lib/aws";
 
 const prisma = new PrismaClient();
 
@@ -22,17 +22,17 @@ async function main() {
     data: await assets(),
   });
 
-  await prisma.user.createMany({
-    data: await users(faker),
-  });
-
-  await prisma.tag.createMany({
-    data: await tags(faker),
-  });
-
-  await prisma.blog.createMany({
-    data: await blogs(faker),
-  });
+  // await prisma.user.createMany({
+  //   data: await users(faker),
+  // });
+  //
+  // await prisma.tag.createMany({
+  //   data: await tags(faker),
+  // });
+  //
+  // await prisma.blog.createMany({
+  //   data: await blogs(faker),
+  // });
 
   console.log("----------------Faker Insert Success----------------");
 }
@@ -77,8 +77,8 @@ async function users(faker: Faker): Promise<Prisma.userCreateManyInput[]> {
 async function assets(): Promise<Prisma.assetCreateInput[]> {
   const assets: Prisma.assetCreateInput[] = [];
 
-  const temp = path.join(__dirname, "..", "tmp");
-  const files = fs.readdirSync(temp, { withFileTypes: true });
+  const temp = join(import.meta.dir, "..", "tmp");
+  const files = readdirSync(temp, { withFileTypes: true });
 
   for (let i = 0; i < files.length; i++) {
     const entry = files[i];
@@ -87,8 +87,8 @@ async function assets(): Promise<Prisma.assetCreateInput[]> {
       continue;
     }
 
-    const filePath = path.join(temp, entry.name);
-    const file = fs.readFileSync(filePath);
+    const filePath = join(temp, entry.name);
+    const file = readFileSync(filePath);
     const fileBase64 = file.toString("base64");
 
     const contentType = mime.lookup(filePath);
