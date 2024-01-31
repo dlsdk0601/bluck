@@ -38,6 +38,7 @@
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
     "@types/bcryptjs": "^2.4.6",
+    "@types/bun": "^1.0.4",
     "@types/lodash": "^4.14.202",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^20",
