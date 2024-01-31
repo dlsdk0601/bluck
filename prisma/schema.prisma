@@ -23,8 +23,11 @@ model user {
   main_image                    asset    @relation(fields: [main_image_pk], references: [pk])
   is_personal_information_agree Boolean
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  blog       blog[]
+  blog_view  blog_view[]
+  blog_like  blog_like[]
 }
 
 model asset {
@@ -35,4 +38,45 @@ model asset {
   url          String @db.VarChar(256)
   download_url String @db.VarChar(256)
   user         user[]
+}
+
+model tag {
+  pk       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(64)
+  blog_tag blog_tag[]
+}
+
+model blog {
+  pk    Int    @id @default(autoincrement())
+  title String @db.VarChar(256)
+  body  String @db.Text
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  user_pk Int        @db.Integer
+  user    user       @relation(fields: [user_pk], references: [pk])
+  tags    blog_tag[]
+}
+
+model blog_tag {
+  tag_pk  Int
+  tag     tag  @relation(fields: [tag_pk], references: [pk])
+  blog_pk Int
+  blog    blog @relation(fields: [blog_pk], references: [pk])
+
+  @@id([blog_pk, tag_pk])
+}
+
+model blog_view {
+  pk      Int  @id @default(autoincrement())
+  user_pk Int  @db.Integer
+  user    user @relation(fields: [user_pk], references: [pk])
+}
+
+model blog_like {
+  pk      Int  @id @default(autoincrement())
+  user_pk Int  @db.Integer
+  user    user @relation(fields: [user_pk], references: [pk])
 }
