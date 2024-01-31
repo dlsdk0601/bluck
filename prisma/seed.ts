@@ -4,21 +4,11 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { Faker, ko } from "@faker-js/faker";
 import moment from "moment/moment";
 import mime from "mime-types";
-import { v4 as uuidv4 } from "uuid";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { config } from "../src/config/config";
-import { getHash } from "../src/ex/bcryptEx";
-// @ 를 안쓰는 이유는 ts-node 에서 해당 option 이 먹지 않는다.
+import { isNil } from "lodash";
+import { awsModel } from "@/lib/aws";
+import { getHash } from "@/ex/bcryptEx";
 
 const prisma = new PrismaClient();
-
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: config.awsAccessKey,
-    secretAccessKey: config.awsSecretKey,
-  },
-  region: config.awsRegion,
-});
 
 // seed 도 bun 으로 돌리고 싶지만,
 // Command was killed with SIGSEGV (Segmentation fault) 에러가 나기 때문에
@@ -28,18 +18,26 @@ async function main() {
 
   const faker = new Faker({ locale: ko });
 
-  const _insertAssts = await prisma.asset.createMany({
+  await prisma.asset.createMany({
     data: await assets(),
   });
 
-  const _insertUsers = await prisma.user.createMany({
+  await prisma.user.createMany({
     data: await users(faker),
+  });
+
+  await prisma.tag.createMany({
+    data: await tags(faker),
+  });
+
+  await prisma.blog.createMany({
+    data: await blogs(faker),
   });
 
   console.log("----------------Faker Insert Success----------------");
 }
 
-async function users(faker: Faker) {
+async function users(faker: Faker): Promise<Prisma.userCreateManyInput[]> {
   const users: Prisma.userCreateManyInput[] = [];
 
   // test 계정
@@ -76,7 +74,7 @@ async function users(faker: Faker) {
   return users;
 }
 
-async function assets() {
+async function assets(): Promise<Prisma.assetCreateInput[]> {
   const assets: Prisma.assetCreateInput[] = [];
 
   const temp = path.join(__dirname, "..", "tmp");
@@ -92,11 +90,6 @@ async function assets() {
     const filePath = path.join(temp, entry.name);
     const file = fs.readFileSync(filePath);
     const fileBase64 = file.toString("base64");
-    const isUpload = await awsUpload(entry.name, fileBase64);
-
-    if (!isUpload) {
-      continue;
-    }
 
     const contentType = mime.lookup(filePath);
 
@@ -104,13 +97,11 @@ async function assets() {
       continue;
     }
 
-    const asset = {
-      content_type: contentType,
-      name: entry.name,
-      uuid: uuidv4().toString(),
-      url: awsDownloadUrl(entry.name),
-      download_url: awsDownloadUrl(entry.name),
-    };
+    const asset = await awsModel.upload(contentType, entry.name, fileBase64);
+
+    if (isNil(asset)) {
+      continue;
+    }
 
     assets.push(asset);
   }
@@ -118,32 +109,45 @@ async function assets() {
   return assets;
 }
 
-async function awsUpload(name: string, base64: string): Promise<boolean> {
-  const command = new PutObjectCommand({
-    Bucket: config.awsBucketName,
-    Key: name,
-    Body: Buffer.from(base64, "base64"),
-    ContentType: "application/octet-stream",
-  });
+async function tags(faker: Faker): Promise<Prisma.tagCreateManyInput[]> {
+  const tags: Prisma.tagCreateManyInput[] = [];
 
-  try {
-    const res = await s3.send(command);
-    return res.$metadata.httpStatusCode === 200;
-  } catch {
-    return false;
+  for (let i = 0; i < 50; i++) {
+    tags.push({
+      name: faker.lorem.word(64),
+    });
   }
+
+  return tags;
 }
 
-function awsDownloadUrl(fileName: string) {
-  return `https://${config.awsBucketName}.s3.${config.awsRegion}.amazonaws.com/${fileName}`;
+async function blogs(faker: Faker): Promise<Prisma.blogCreateManyInput[]> {
+  const blogs: Prisma.blogCreateManyInput[] = [];
+
+  for (let i = 0; i < 100; i++) {
+    const sentences = faker.lorem.sentences({ min: 10, max: 200 });
+    const body = `<p>${sentences.split(".").join("</p><p>")}</p>`;
+    blogs.push({
+      title: faker.lorem.words({ min: 3, max: 30 }),
+      body,
+      user_pk: i / 5 + 1,
+    });
+  }
+
+  return blogs;
 }
 
-main()
+// bun 에서 await 를 안 붙이면 안되는데 이유를 모르겠다.
+// 아마 async 로 정의 했으니 await 를 붙여야 하나 예상해본다.
+await main()
   .then(async () => {
     await prisma.$disconnect();
   })
-  .catch(async (e) => {
+  .catch((e) => {
     console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
     await prisma.$disconnect();
     process.exit(1);
   });
