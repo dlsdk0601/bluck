@@ -1,12 +1,18 @@
-import { Suspense } from "react";
 import MainBlogView from "@/view/blog/MainBlogView";
 import { MainSelectBoxView } from "@/view/SelectBoxView";
 import SearchBox from "@/view/SearchBox";
-import MainContentsSkeleton from "@/view/skeleton/MainContentsSkeleton";
+import { getBlogsAction } from "@/server/blogActions";
+import { isNotNil } from "@/ex/utils";
 
-export default function Page(props: {
+export default async function Page(props: {
   searchParams?: { searchType?: string; searchDateType?: string };
 }) {
+  const res = await getBlogsAction(
+    1,
+    props.searchParams?.searchType,
+    props.searchParams?.searchDateType,
+  );
+
   return (
     <div className="h-full w-full">
       <div className="flex items-center justify-between mobile:flex-wrap">
@@ -40,12 +46,14 @@ export default function Page(props: {
           글쓰기
         </button>
       </div>
-      <Suspense fallback={<MainContentsSkeleton />}>
+      {isNotNil(res.data) && (
         <MainBlogView
+          initBlogs={res.data.blogs}
           searchType={props.searchParams?.searchType}
           searchDateType={props.searchParams?.searchDateType}
         />
-      </Suspense>
+      )}
+      {isNotNil(res.error) && <p>{res.error}</p>}
     </div>
   );
 }
