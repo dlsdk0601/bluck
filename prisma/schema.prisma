@@ -55,9 +55,11 @@ model blog {
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  user_pk Int        @db.Integer
-  user    user       @relation(fields: [user_pk], references: [pk])
-  tags    blog_tag[]
+  user_pk   Int         @db.Integer
+  user      user        @relation(fields: [user_pk], references: [pk])
+  tags      blog_tag[]
+  blog_view blog_view[]
+  blog_like blog_like[]
 }
 
 model blog_tag {
@@ -70,13 +72,19 @@ model blog_tag {
 }
 
 model blog_view {
-  pk      Int  @id @default(autoincrement())
+  blog_pk Int  @db.Integer
+  blog    blog @relation(fields: [blog_pk], references: [pk])
   user_pk Int  @db.Integer
   user    user @relation(fields: [user_pk], references: [pk])
+
+  @@id([blog_pk, user_pk])
 }
 
 model blog_like {
-  pk      Int  @id @default(autoincrement())
+  blog_pk Int  @db.Integer
+  blog    blog @relation(fields: [blog_pk], references: [pk])
   user_pk Int  @db.Integer
   user    user @relation(fields: [user_pk], references: [pk])
+
+  @@id([blog_pk, user_pk])
 }
