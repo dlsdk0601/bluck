@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { readdirSync, readFileSync } from "node:fs";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { blog, Prisma, PrismaClient, tag, user } from "@prisma/client";
 import { Faker, ko } from "@faker-js/faker";
 import moment from "moment/moment";
 import { isNil } from "lodash";
@@ -32,6 +32,21 @@ async function main() {
 
   await prisma.blog.createMany({
     data: await blogs(faker),
+  });
+
+  await prisma.blog_tag.createMany({
+    data: await blogTags(faker),
+    skipDuplicates: true,
+  });
+
+  await prisma.blog_view.createMany({
+    data: await blogViews(faker),
+    skipDuplicates: true,
+  });
+
+  await prisma.blog_like.createMany({
+    data: await blogLikes(faker),
+    skipDuplicates: true,
   });
 
   console.log("----------------Faker Insert Success----------------");
@@ -135,6 +150,69 @@ async function blogs(faker: Faker): Promise<Prisma.blogCreateManyInput[]> {
   }
 
   return blogs;
+}
+
+async function blogTags(faker: Faker) {
+  const blogTags: Prisma.blog_tagCreateManyInput[] = [];
+
+  for (let i = 0; i < 150; i++) {
+    blogTags.push({
+      tag_pk: (await getTag(faker)).pk,
+      blog_pk: (await getBlog(faker)).pk,
+    });
+  }
+
+  return blogTags;
+}
+
+async function blogViews(faker: Faker) {
+  const blogViews: Prisma.blog_viewCreateManyInput[] = [];
+
+  for (let i = 0; i < 150; i++) {
+    blogViews.push({
+      user_pk: (await getUser(faker)).pk,
+      blog_pk: (await getBlog(faker)).pk,
+    });
+  }
+
+  return blogViews;
+}
+
+async function blogLikes(faker: Faker) {
+  const blogLikes: Prisma.blog_likeCreateManyInput[] = [];
+
+  for (let i = 0; i < 150; i++) {
+    blogLikes.push({
+      user_pk: (await getUser(faker)).pk,
+      blog_pk: (await getBlog(faker)).pk,
+    });
+  }
+
+  return blogLikes;
+}
+
+async function getUser(faker: Faker): Promise<user> {
+  const users = await prisma.user.findMany();
+
+  const randomIndex = faker.number.int({ min: 0, max: users.length - 1 });
+
+  return users[randomIndex];
+}
+
+async function getBlog(faker: Faker): Promise<blog> {
+  const blogs = await prisma.blog.findMany();
+
+  const randomIndex = faker.number.int({ min: 0, max: blogs.length - 1 });
+
+  return blogs[randomIndex];
+}
+
+async function getTag(faker: Faker): Promise<tag> {
+  const tags = await prisma.tag.findMany();
+
+  const randomIndex = faker.number.int({ min: 0, max: tags.length - 1 });
+
+  return tags[randomIndex];
 }
 
 // bun 에서 await 를 안 붙이면 안되는데 이유를 모르겠다.
