@@ -6,13 +6,20 @@ import { isNil } from "lodash";
 import { getBlogsAction } from "@/server/blogActions";
 import { ignorePromise, isNotBlank, isNotNil } from "@/ex/utils";
 import { MainContentsCardSkeleton } from "@/view/skeleton/MainContentsSkeleton";
-import { GetBlogsActionResItem, SearchDataType, SearchType } from "@/type/definitions";
+import {
+  GetBlogsActionResItem,
+  SearchDataType,
+  SearchOrderByType,
+  SearchType,
+} from "@/type/definitions";
 import { PaginationType } from "@/ex/paginationEx";
 import BlogCardView from "./BlogCardView";
 
 const MainBlogView = (props: {
   initBlogs: PaginationType<GetBlogsActionResItem>;
+  search?: string;
   searchType?: SearchType;
+  searchOrderByType?: SearchOrderByType;
   searchDateType?: SearchDataType;
 }) => {
   const { ref, inView } = useInView();
@@ -27,7 +34,13 @@ const MainBlogView = (props: {
       return;
     }
 
-    const res = await getBlogsAction(page + 1, props.searchType, props.searchDateType);
+    const res = await getBlogsAction(
+      page + 1,
+      props.search ?? "",
+      props.searchType,
+      props.searchOrderByType,
+      props.searchDateType,
+    );
 
     if (isNotNil(res.error)) {
       setError(res.error);
