@@ -3,11 +3,22 @@
 import classNames from "classnames";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import parse from "html-react-parser";
+import { useEffect, useState } from "react";
 import { Urls } from "@/url/url.g";
 import { GetBlogsActionResItem } from "@/type/definitions";
 
 const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull: boolean }) => {
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // html parser 를 사용하게 되면 hydration 단계에서 에러가 난다.
+    // 때문에 html parser 가 들어가는 부분은 hydration 에서 제외 될 수 있게 조건부 렌더링으로 처리
+    // https://nextjs.org/docs/messages/react-hydration-error
+    setIsClient(true);
+  }, []);
+
   return (
     <div
       className={classNames(
@@ -40,17 +51,17 @@ const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull: boolean }) =
         )}
       >
         <div className="mt-[10px] flex items-center justify-start mobile:mt-0 mobile:pt-[10px]">
-          {/* <Image width={18} height={18} src="/assets/img/blackProfile.png" alt="profile" /> */}
           <Image width={18} height={18} src={props.blog.user.profile.url} alt="profile" />
           <span className="ml-1 text-[12px]">{props.blog.user.name}</span>
         </div>
-        <p className="mt-[25px] font-medium dark:text-cffffff mobile:mt-[15px] mobile:text-[12px]">
+        <p className="mt-[25px] overflow-hidden overflow-ellipsis whitespace-nowrap font-medium dark:text-cffffff mobile:mt-[15px] mobile:text-[12px]">
           {props.blog.title}
         </p>
-        <p className="mb-[35px] mt-[15px] h-[30px] w-[95%] overflow-hidden overflow-ellipsis whitespace-normal text-[14px] leading-4 dark:text-cffffff mobile:mb-[10px] mobile:mt-[10px] mobile:h-[23px] mobile:text-[10px] mobile:leading-5">
-          내용입니다.
-          쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라쏼라
-        </p>
+        {isClient && (
+          <p className="mb-[35px] mt-[15px] h-[30px] w-[95%] overflow-hidden overflow-ellipsis whitespace-nowrap text-[14px] leading-4 dark:text-cffffff mobile:mb-[10px] mobile:mt-[10px] mobile:h-[23px] mobile:text-[10px] mobile:leading-5">
+            {parse(props.blog.body)}
+          </p>
+        )}
         <div className="mt-[4%] flex items-center justify-between mobile:mt-0 ">
           <span className="text-[14px] mobile:text-[10px]">{props.blog.createAt}</span>
           <div className="flex items-center justify-end mobile:ml-2 mobile:w-[60%]">
@@ -63,13 +74,13 @@ const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull: boolean }) =
             <figure className="mx-[5px] flex items-center justify-between">
               <Image width={14} height={14} src="/assets/img/blackFind.png" alt="blackFind" />
               <figcaption className="ml-[10px] text-[14px] mobile:ml-[2px] mobile:text-[10px]">
-                1000
+                {props.blog.viewCount}
               </figcaption>
             </figure>
             <figure className="mx-[5px] flex items-center justify-between">
               <Image width={14} height={14} src="/assets/img/blackLike.png" alt="blackLike" />
               <figcaption className="ml-[10px] text-[14px] mobile:ml-[2px] mobile:text-[10px]">
-                1000
+                {props.blog.likeCount}
               </figcaption>
             </figure>
           </div>
