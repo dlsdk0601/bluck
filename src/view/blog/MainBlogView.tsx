@@ -6,18 +6,18 @@ import { isNil } from "lodash";
 import { getBlogsAction } from "@/server/blogActions";
 import { ignorePromise, isNotBlank, isNotNil } from "@/ex/utils";
 import { MainContentsCardSkeleton } from "@/view/skeleton/MainContentsSkeleton";
-import { GetBlogsActionResItem } from "@/type/definitions";
+import { GetBlogsActionResItem, SearchDataType, SearchType } from "@/type/definitions";
 import { PaginationType } from "@/ex/paginationEx";
 import BlogCardView from "./BlogCardView";
 
 const MainBlogView = (props: {
   initBlogs: PaginationType<GetBlogsActionResItem>;
-  searchType?: string;
-  searchDateType?: string;
+  searchType?: SearchType;
+  searchDateType?: SearchDataType;
 }) => {
   const { ref, inView } = useInView();
-  const [page, setPage] = useState(props.initBlogs.page);
-  const [blogs, setBlogs] = useState(props.initBlogs.rows);
+  const [page, setPage] = useState(1);
+  const [blogs, setBlogs] = useState<GetBlogsActionResItem[]>([]);
   const [hasNext, setHasNext] = useState(true);
   const [error, setError] = useState("");
 
@@ -42,6 +42,12 @@ const MainBlogView = (props: {
     setPage(res.data.blogs.page);
     setHasNext(res.data.blogs.hasNext);
   };
+
+  useEffect(() => {
+    setPage(props.initBlogs.page);
+    setHasNext(props.initBlogs.hasNext);
+    setBlogs([...props.initBlogs.rows]);
+  }, [props]);
 
   useEffect(() => {
     if (inView) {
