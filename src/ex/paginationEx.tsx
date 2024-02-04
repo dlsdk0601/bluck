@@ -13,8 +13,9 @@ export interface PaginationType<T> {
   rows: T[];
 }
 
-// TODO :: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
-// class 형으로 client 에 보내는걸 지원 해주지 않는거 같다...
+// Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
+// class 로 인스턴스 빼주고 작업하니까 위와 같은 에러가 나는데
+// JSON.parse(JSON.stringify(pagination)) 로 감싸서 작업 해주니 에러가 안나옴
 export class Pagination<T> implements PaginationType<T> {
   page: number;
   nextPage: number;
