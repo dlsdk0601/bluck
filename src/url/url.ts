@@ -1,12 +1,30 @@
 import { ParsedUrlQueryInput } from "querystring";
 import { head, isArray, isNil } from "lodash";
-import { removeSuffix } from "@/ex/utils";
+import { ReadonlyURLSearchParams } from "next/navigation";
+import { isBlank, removeSuffix } from "@/ex/utils";
 
 export class PageUrl {
   readonly pathname: string;
 
   constructor(pathname: string) {
     this.pathname = pathname;
+  }
+
+  setQuery(searchParams: ReadonlyURLSearchParams, currentQuery: Record<string, any>) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key of Object.keys(currentQuery)) {
+      const value = currentQuery[key];
+
+      if (isBlank(value)) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    }
+
+    return `${this.pathname}?${params.toString()}`;
   }
 
   url(query?: ParsedUrlQueryInput) {
