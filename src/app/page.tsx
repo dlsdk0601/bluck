@@ -1,16 +1,23 @@
 import MainBlogView from "@/view/blog/MainBlogView";
 import { MainSelectBoxView } from "@/view/SelectBoxView";
 import SearchBox from "@/view/SearchBox";
-import { SearchDataType, SearchType } from "@/type/definitions";
+import { SearchDataType, SearchOrderByType, SearchType } from "@/type/definitions";
 import { getBlogsAction } from "@/server/blogActions";
 import { isNotNil } from "@/ex/utils";
 
 export default async function Page(props: {
-  searchParams?: { searchType?: SearchType; searchDateType?: SearchDataType };
+  searchParams?: {
+    search?: string;
+    searchType?: SearchType;
+    searchOrderByType?: SearchOrderByType;
+    searchDateType?: SearchDataType;
+  };
 }) {
   const res = await getBlogsAction(
     1,
+    props.searchParams?.search ?? "",
     props.searchParams?.searchType,
+    props.searchParams?.searchOrderByType,
     props.searchParams?.searchDateType,
   );
 
@@ -19,9 +26,9 @@ export default async function Page(props: {
       <div className="flex items-center justify-between mobile:flex-wrap">
         {/*  menu */}
         <div className="flex items-center justify-between">
-          <MainSelectBoxView<SearchType>
-            queryKey="searchType"
-            value={props.searchParams?.searchType ?? "LIKE"}
+          <MainSelectBoxView<SearchOrderByType>
+            queryKey="searchOrderByType"
+            value={props.searchParams?.searchOrderByType ?? "LIKE"}
             options={[
               ["LIKE", "인기순"],
               ["LATEST", "최신순"],
@@ -37,7 +44,10 @@ export default async function Page(props: {
               ["YEAR", "올해"],
             ]}
           />
-          <SearchBox />
+          <SearchBox
+            search={props.searchParams?.search}
+            searchType={props.searchParams?.searchType}
+          />
         </div>
         <button
           type="button"
@@ -49,7 +59,9 @@ export default async function Page(props: {
       {isNotNil(res.data) && (
         <MainBlogView
           initBlogs={res.data.blogs}
+          search={props.searchParams?.search}
           searchType={props.searchParams?.searchType}
+          searchOrderByType={props.searchParams?.searchOrderByType}
           searchDateType={props.searchParams?.searchDateType}
         />
       )}
