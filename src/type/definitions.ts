@@ -29,19 +29,26 @@ export type SignUpActionType = BaseFormActionFunction<{ result: boolean }>;
 export interface GetBlogsActionResItem {
   pk: number;
   title: string;
+  body: string;
   createAt: string;
   user: {
     profile: Fileset;
     name: string;
   };
+  viewCount: number;
+  likeCount: number;
 }
 
 export interface GetBlogsActionRes {
   blogs: PaginationType<GetBlogsActionResItem>;
 }
 
+export type SearchType = "LIKE" | "LATEST" | "VIEW";
+
+export type SearchDataType = "WEEKLY" | "MONTHLY" | "YEAR";
+
 export type getBlogsActionType = (
   page: number,
-  searchType: string | undefined,
-  searchDateType: string | undefined,
+  searchType: SearchType | undefined,
+  searchDateType: SearchDataType | undefined,
 ) => Promise<Res<GetBlogsActionRes>>;
