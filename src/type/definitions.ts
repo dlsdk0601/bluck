@@ -43,12 +43,16 @@ export interface GetBlogsActionRes {
   blogs: PaginationType<GetBlogsActionResItem>;
 }
 
-export type SearchType = "LIKE" | "LATEST" | "VIEW";
+export type SearchOrderByType = "LIKE" | "LATEST" | "VIEW";
 
 export type SearchDataType = "WEEKLY" | "MONTHLY" | "YEAR";
 
+export type SearchType = "AUTHOR" | "TITLE";
+
 export type getBlogsActionType = (
   page: number,
+  search: string,
   searchType: SearchType | undefined,
+  searchOrderByType: SearchOrderByType | undefined,
   searchDateType: SearchDataType | undefined,
 ) => Promise<Res<GetBlogsActionRes>>;
