@@ -1,11 +1,13 @@
 "use server";
 
 import { Prisma } from "@prisma/client";
+import moment from "moment";
 import {
   GetBlogsActionResItem,
   getBlogsActionType,
   ok,
   SearchDataType,
+  SearchOrderByType,
   SearchType,
 } from "@/type/definitions";
 import { awsModel } from "@/lib/aws";
@@ -15,7 +17,9 @@ import { PAGE_LIMIT, Pagination } from "@/ex/paginationEx";
 
 export const getBlogsAction: getBlogsActionType = async (
   page,
-  searchType = "LIKE",
+  search,
+  searchType,
+  searchOrderByType = "LIKE",
   searchDateType = "WEEKLY",
 ) => {
   const [blogs, count] = await prisma.$transaction([
@@ -40,10 +44,10 @@ export const getBlogsAction: getBlogsActionType = async (
       },
       skip: (page - 1) * PAGE_LIMIT,
       take: PAGE_LIMIT,
-      where: setBlogWhere(searchDateType),
-      orderBy: setBlogOrderBy(searchType),
+      where: setBlogWhere(search, searchType, searchDateType),
+      orderBy: setBlogOrderBy(searchOrderByType),
     }),
-    prisma.blog.count({ where: setBlogWhere(searchDateType) }),
+    prisma.blog.count({ where: setBlogWhere(search, searchType, searchDateType) }),
   ]);
 
   const pagination = new Pagination<GetBlogsActionResItem>(count, page);
@@ -65,8 +69,8 @@ export const getBlogsAction: getBlogsActionType = async (
   });
 };
 
-function setBlogOrderBy(searchType: SearchType): Prisma.blogOrderByWithRelationInput {
-  switch (searchType) {
+function setBlogOrderBy(searchOrderByType: SearchOrderByType): Prisma.blogOrderByWithRelationInput {
+  switch (searchOrderByType) {
     case "LATEST":
       return { created_at: "desc" };
     case "VIEW":
@@ -85,14 +89,75 @@ function setBlogOrderBy(searchType: SearchType): Prisma.blogOrderByWithRelationI
   }
 }
 
-function setBlogWhere(searchDateType: SearchDataType): Prisma.blogWhereInput {
-  switch (searchDateType) {
-    case "MONTHLY":
-      return {};
-    case "YEAR":
-      return {};
-    case "WEEKLY":
-    default:
-      return {};
+function setBlogWhere(
+  search: string,
+  searchType: SearchType | undefined,
+  searchDateType: SearchDataType,
+): Prisma.blogWhereInput {
+  const where: Prisma.blogWhereInput = {};
+
+  switch (searchType) {
+    case "AUTHOR": {
+      where.user = {
+        name: {
+          contains: search,
+        },
+      };
+      break;
+    }
+    case "TITLE": {
+      where.title = {
+        contains: search,
+      };
+      break;
+    }
+    default: {
+      where.OR = [
+        { title: { contains: search } },
+        {
+          user: {
+            name: {
+              contains: search,
+            },
+          },
+        },
+      ];
+    }
   }
+
+  switch (searchDateType) {
+    case "MONTHLY": {
+      where.OR = [
+        ...(where.OR ?? []),
+        {
+          created_at: { lte: moment().startOf("month").toDate() },
+        },
+        { created_at: { gte: moment().endOf("month").toDate() } },
+      ];
+      break;
+    }
+    case "YEAR": {
+      where.OR = [
+        ...(where.OR ?? []),
+        {
+          created_at: { lte: moment().startOf("year").toDate() },
+        },
+        { created_at: { gte: moment().endOf("year").toDate() } },
+      ];
+      break;
+    }
+    case "WEEKLY":
+    default: {
+      where.OR = [
+        ...(where.OR ?? []),
+        {
+          created_at: { lte: moment().startOf("week").toDate() },
+        },
+        { created_at: { gte: moment().endOf("week").toDate() } },
+      ];
+      break;
+    }
+  }
+
+  return where;
 }
