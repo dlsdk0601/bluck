@@ -1,11 +1,12 @@
 import MainBlogView from "@/view/blog/MainBlogView";
 import { MainSelectBoxView } from "@/view/SelectBoxView";
 import SearchBox from "@/view/SearchBox";
+import { SearchDataType, SearchType } from "@/type/definitions";
 import { getBlogsAction } from "@/server/blogActions";
 import { isNotNil } from "@/ex/utils";
 
 export default async function Page(props: {
-  searchParams?: { searchType?: string; searchDateType?: string };
+  searchParams?: { searchType?: SearchType; searchDateType?: SearchDataType };
 }) {
   const res = await getBlogsAction(
     1,
@@ -18,23 +19,22 @@ export default async function Page(props: {
       <div className="flex items-center justify-between mobile:flex-wrap">
         {/*  menu */}
         <div className="flex items-center justify-between">
-          <MainSelectBoxView
+          <MainSelectBoxView<SearchType>
             queryKey="searchType"
-            value="A"
+            value={props.searchParams?.searchType ?? "LIKE"}
             options={[
-              ["A", "인기순"],
-              ["B", "최신순"],
-              ["C", "조회수"],
+              ["LIKE", "인기순"],
+              ["LATEST", "최신순"],
+              ["VIEW", "조회수"],
             ]}
           />
-          <MainSelectBoxView
+          <MainSelectBoxView<SearchDataType>
             queryKey="searchDateType"
-            value="D"
+            value={props.searchParams?.searchDateType ?? "WEEKLY"}
             options={[
-              ["D", "오늘"],
-              ["E", "이번주"],
-              ["F", "이번달"],
-              ["G", "올해"],
+              ["WEEKLY", "이번주"],
+              ["MONTHLY", "이번달"],
+              ["YEAR", "올해"],
             ]}
           />
           <SearchBox />
