@@ -100,7 +100,7 @@ export function MainSelectBoxView<T>(props: {
   const searchParams = useSearchParams();
 
   const onChange = (value: T) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
 
     params.set(props.queryKey, stringify(value));
 
