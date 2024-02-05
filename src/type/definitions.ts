@@ -57,6 +57,11 @@ export type getBlogListActionType = (
   searchDateType: SearchDataType | undefined,
 ) => Promise<Res<GetBlogsActionRes>>;
 
+export interface RecommendBlog {
+  pk: number;
+  title: string;
+}
+
 export interface GetBlogShowActionRes {
   pk: number;
   title: string;
@@ -66,8 +71,10 @@ export interface GetBlogShowActionRes {
     profile: Fileset;
     name: string;
   };
+  tags: Array<{ pk: number; name: string }>;
   viewCount: number;
   likeCount: number;
+  recommendBlogs: RecommendBlog[];
 }
 
 export type getBlogShowActionType = (pk: number) => Promise<Res<GetBlogShowActionRes>>;
