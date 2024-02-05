@@ -1,7 +1,19 @@
 import Image from "next/image";
+import { isNil } from "lodash";
 import BlogButtonBoxView from "@/view/blog/BlogButtonBoxView";
+import { getBlogShowAction } from "@/server/blogActions";
+import { isNotNil } from "@/ex/utils";
 
-const BlogShowPage = () => {
+const BlogShowPage = async (props: { params: { pk: number } }) => {
+  console.log(props.params.pk);
+  const res = await getBlogShowAction(props.params.pk);
+  console.log(res);
+
+  if (isNil(res.data) || isNotNil(res.error)) {
+    // TODO :: error 메세지
+    return <></>;
+  }
+
   return (
     <div className="mx-auto h-[75vh] w-3/5 overflow-auto mobile:w-[95%]">
       <div className="overflow-hidden rounded-t-3xl">
@@ -16,9 +28,9 @@ const BlogShowPage = () => {
               <Image fill src="/assets/img/blackProfile.png" alt="profile" />
             </figure>
             <div className="ml-3">
-              <p className="text-l font-bold mobile:text-sm">user name</p>
+              <p className="text-l font-bold mobile:text-sm">{res.data.user.name}</p>
               <p className="text-l bold mx-0 my-2 mobile:mb-0 mobile:mt-1 mobile:text-sm">
-                2023.01.23
+                {res.data.createAt}
               </p>
             </div>
           </div>
