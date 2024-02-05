@@ -3,7 +3,7 @@
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import { isNil } from "lodash";
-import { getBlogsAction } from "@/server/blogActions";
+import { getBlogListAction } from "@/server/blogActions";
 import { ignorePromise, isNotBlank, isNotNil } from "@/ex/utils";
 import { MainContentsCardSkeleton } from "@/view/skeleton/MainContentsSkeleton";
 import {
@@ -34,7 +34,7 @@ const MainBlogView = (props: {
       return;
     }
 
-    const res = await getBlogsAction(
+    const res = await getBlogListAction(
       page + 1,
       props.search ?? "",
       props.searchType,

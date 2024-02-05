@@ -3,8 +3,8 @@
 import { Prisma } from "@prisma/client";
 import moment from "moment";
 import {
+  getBlogListActionType,
   GetBlogsActionResItem,
-  getBlogsActionType,
   ok,
   SearchDataType,
   SearchOrderByType,
@@ -15,7 +15,7 @@ import { d1 } from "@/ex/dateEx";
 import prisma from "@/lib/prisma";
 import { PAGE_LIMIT, Pagination } from "@/ex/paginationEx";
 
-export const getBlogsAction: getBlogsActionType = async (
+export const getBlogListAction: getBlogListActionType = async (
   page,
   search,
   searchType,

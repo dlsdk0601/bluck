@@ -2,7 +2,7 @@ import MainBlogView from "@/view/blog/MainBlogView";
 import { MainSelectBoxView } from "@/view/SelectBoxView";
 import SearchBox from "@/view/SearchBox";
 import { SearchDataType, SearchOrderByType, SearchType } from "@/type/definitions";
-import { getBlogsAction } from "@/server/blogActions";
+import { getBlogListAction } from "@/server/blogActions";
 import { isNotNil } from "@/ex/utils";
 
 export default async function Page(props: {
@@ -13,7 +13,7 @@ export default async function Page(props: {
     searchDateType?: SearchDataType;
   };
 }) {
-  const res = await getBlogsAction(
+  const res = await getBlogListAction(
     1,
     props.searchParams?.search ?? "",
     props.searchParams?.searchType,

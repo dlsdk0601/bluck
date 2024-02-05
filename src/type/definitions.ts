@@ -49,7 +49,7 @@ export type SearchDataType = "WEEKLY" | "MONTHLY" | "YEAR";
 
 export type SearchType = "AUTHOR" | "TITLE";
 
-export type getBlogsActionType = (
+export type getBlogListActionType = (
   page: number,
   search: string,
   searchType: SearchType | undefined,
