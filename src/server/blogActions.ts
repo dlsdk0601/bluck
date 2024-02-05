@@ -2,9 +2,12 @@
 
 import { Prisma } from "@prisma/client";
 import moment from "moment";
+import { isNil } from "lodash";
 import {
+  err,
   getBlogListActionType,
   GetBlogsActionResItem,
+  getBlogShowActionType,
   ok,
   SearchDataType,
   SearchOrderByType,
@@ -14,6 +17,7 @@ import { awsModel } from "@/lib/aws";
 import { d1 } from "@/ex/dateEx";
 import prisma from "@/lib/prisma";
 import { PAGE_LIMIT, Pagination } from "@/ex/paginationEx";
+import { ERR } from "@/lib/errorEx";
 
 export const getBlogListAction: getBlogListActionType = async (
   page,
@@ -161,3 +165,46 @@ function setBlogWhere(
 
   return where;
 }
+
+export const getBlogShowAction: getBlogShowActionType = async (pk) => {
+  const blog = await prisma.blog.findUnique({
+    select: {
+      pk: true,
+      title: true,
+      body: true,
+      created_at: true,
+      user: {
+        select: {
+          name: true,
+          main_image: true,
+        },
+      },
+      _count: {
+        select: {
+          blog_view: true,
+          blog_like: true,
+        },
+      },
+    },
+    where: {
+      pk,
+    },
+  });
+
+  if (isNil(blog)) {
+    return err(ERR.NOT_FOUND("블로그 글"));
+  }
+
+  return ok({
+    pk: blog.pk,
+    title: blog.title,
+    body: blog.body,
+    createAt: d1(blog.created_at),
+    user: {
+      profile: awsModel.toFileSet(blog.user.main_image),
+      name: blog.user.name,
+    },
+    viewCount: blog._count.blog_view,
+    likeCount: blog._count.blog_like,
+  });
+};
