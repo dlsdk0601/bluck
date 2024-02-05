@@ -56,3 +56,18 @@ export type getBlogListActionType = (
   searchOrderByType: SearchOrderByType | undefined,
   searchDateType: SearchDataType | undefined,
 ) => Promise<Res<GetBlogsActionRes>>;
+
+export interface GetBlogShowActionRes {
+  pk: number;
+  title: string;
+  body: string;
+  createAt: string;
+  user: {
+    profile: Fileset;
+    name: string;
+  };
+  viewCount: number;
+  likeCount: number;
+}
+
+export type getBlogShowActionType = (pk: number) => Promise<Res<GetBlogShowActionRes>>;
