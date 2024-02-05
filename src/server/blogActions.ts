@@ -179,6 +179,7 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
           main_image: true,
         },
       },
+      tags: { select: { tag: true } },
       _count: {
         select: {
           blog_view: true,
@@ -195,6 +196,9 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
     return err(ERR.NOT_FOUND("블로그 글"));
   }
 
+  const tags = blog.tags.map((item) => item.tag);
+  const recommendBlogs = await getRecommendBlogs(blog.pk, tags);
+
   return ok({
     pk: blog.pk,
     title: blog.title,
@@ -204,7 +208,46 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
       profile: awsModel.toFileSet(blog.user.main_image),
       name: blog.user.name,
     },
+    tags,
     viewCount: blog._count.blog_view,
     likeCount: blog._count.blog_like,
+    recommendBlogs,
   });
+};
+
+const getRecommendBlogs = async (pk: number, tags: { pk: number; name: string }[]) => {
+  // 같은 태그를 가지고 있는 블로그 두개를 추천
+  const recommendBlobs = await prisma.blog.findMany({
+    take: 2,
+    select: {
+      pk: true,
+      title: true,
+    },
+    where: {
+      NOT: {
+        pk,
+      },
+      tags: {
+        some: {
+          OR: tags.map((tag) => ({ tag_pk: tag.pk })),
+        },
+      },
+    },
+  });
+
+  // 갯수가 충족되지 않으면 그냥 최신순으로 추천 해준다.
+  if (recommendBlobs.length !== 2) {
+    return prisma.blog.findMany({
+      take: 2,
+      select: {
+        pk: true,
+        title: true,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+  }
+
+  return recommendBlobs;
 };
