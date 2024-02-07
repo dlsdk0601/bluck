@@ -1,4 +1,5 @@
 import { NextAuthConfig } from "next-auth";
+import { NextResponse } from "next/server";
 import { isNotNil } from "@/ex/utils";
 import { Urls } from "@/url/url.g";
 
@@ -27,8 +28,9 @@ export const authConfig = {
         Urls["find-id"].page.url(),
         Urls["find-password"].page.url(),
       ];
+
       if (signInExceptions.includes(nextUrl.pathname) && isNotNil(user)) {
-        return Response.redirect(new URL("/", nextUrl));
+        return NextResponse.redirect(Urls.page.url());
       }
 
       return true;
