@@ -30,7 +30,7 @@ export const authConfig = {
       ];
 
       if (signInExceptions.includes(nextUrl.pathname) && isNotNil(user)) {
-        return NextResponse.redirect(Urls.page.url());
+        return NextResponse.redirect(Urls.page.fullUrl);
       }
 
       return true;
