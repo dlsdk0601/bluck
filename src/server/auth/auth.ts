@@ -7,6 +7,12 @@ import { compare } from "@/ex/bcryptEx";
 import prisma from "@/lib/prisma";
 import { authConfig } from "./auth.config";
 
+declare module "next-auth" {
+  interface User {
+    pk: number;
+  }
+}
+
 async function getUser(email: string): Promise<user | undefined> {
   try {
     const user = await prisma.user.findFirst({ where: { email } });
@@ -56,7 +62,7 @@ export const { auth, signIn, signOut } = NextAuth({
         //   email?: string | null
         //   image?: string | null
         // }
-        return { id: user.pk.toString(), name: user.name, email: user.email };
+        return { id: user.pk.toString(), name: user.name, email: user.email, pk: user.pk };
       },
     }),
   ],
