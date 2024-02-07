@@ -2,12 +2,17 @@ import { ParsedUrlQueryInput } from "querystring";
 import { head, isArray, isNil } from "lodash";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { isBlank, removeSuffix } from "@/ex/utils";
+import { config } from "@/config/config";
 
 export class PageUrl {
   readonly pathname: string;
 
   constructor(pathname: string) {
     this.pathname = pathname;
+  }
+
+  get fullUrl() {
+    return config.baseUrl + this.pathname;
   }
 
   setQuery(searchParams: ReadonlyURLSearchParams, currentQuery: Record<string, any>) {
