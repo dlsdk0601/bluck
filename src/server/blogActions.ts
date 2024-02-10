@@ -179,23 +179,30 @@ function setBlogWhere(
 
 export const getBlogShowAction: getBlogShowActionType = async (pk) => {
   try {
+    // TODO :: session 을 불러오면 session 객체에 pk 값이 없다..
+    // 이유는 불명이라서 이유를 찾으면 수정 할 것.
     const session = await auth();
 
     if (isNotNil(session?.user)) {
-      // where 가 있으면 update / 없으면 create
-      await prisma.blog_view.upsert({
-        where: {
-          blog_pk_user_pk: {
-            user_pk: parseInt(session?.user.id, 10),
+      // as 를 쓴 이유는 ts 가 session.user 에 대한 분기처리를 못한다...
+      const user = await prisma.user.findUnique({ where: { email: session.user.email as string } });
+
+      if (user) {
+        // where 가 있으면 update / 없으면 create
+        await prisma.blog_view.upsert({
+          where: {
+            blog_pk_user_pk: {
+              blog_pk: pk,
+              user_pk: user.pk,
+            },
+          },
+          update: {},
+          create: {
+            user_pk: user.pk,
             blog_pk: pk,
           },
-        },
-        update: {},
-        create: {
-          user_pk: parseInt(session?.user.id, 10),
-          blog_pk: pk,
-        },
-      });
+        });
+      }
     }
 
     const blog = await prisma.blog.findUnique({
