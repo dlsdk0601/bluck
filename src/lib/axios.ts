@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { sleep } from "sleepjs";
 import { config } from "@/config/config";
-import { FindIdReq, FindIdRes } from "@/app/api/auth/find-id/route";
 import { NewAssetReq, NewAssetRes } from "@/app/api/asset/new/route";
 
 export const axiosInstance = axios.create({
@@ -128,7 +127,6 @@ class ApiBase {
 }
 
 class Api extends ApiBase {
-  findId = (req: FindIdReq) => this.post<FindIdRes>("/auth/find-id", req);
   newAsset = (req: NewAssetReq) => this.post<NewAssetRes>("/asset/new", req);
 }
 
