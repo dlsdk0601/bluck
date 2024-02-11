@@ -1,6 +1,12 @@
 import { Fileset } from "@/lib/aws";
 import { PaginationType } from "@/ex/paginationEx";
 
+declare module "next-auth" {
+  interface User {
+    pk: number;
+  }
+}
+
 interface R<T> {
   error: string | null;
   data: T;
@@ -78,3 +84,10 @@ export interface GetBlogShowActionRes {
 }
 
 export type getBlogShowActionType = (pk: number) => Promise<Res<GetBlogShowActionRes>>;
+
+export interface BlogLikeActionRes {
+  pk: number;
+  count: number;
+}
+
+export type BlogLikeActionType = (pk: number) => Promise<Res<BlogLikeActionRes>>;
