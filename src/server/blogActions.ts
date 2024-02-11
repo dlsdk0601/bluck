@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import moment from "moment";
 import { isNil } from "lodash";
 import {
+  BlogLikeActionType,
   err,
   getBlogListActionType,
   GetBlogsActionResItem,
@@ -179,30 +180,23 @@ function setBlogWhere(
 
 export const getBlogShowAction: getBlogShowActionType = async (pk) => {
   try {
-    // TODO :: session 을 불러오면 session 객체에 pk 값이 없다..
-    // 이유는 불명이라서 이유를 찾으면 수정 할 것.
     const session = await auth();
 
     if (isNotNil(session?.user)) {
-      // as 를 쓴 이유는 ts 가 session.user 에 대한 분기처리를 못한다...
-      const user = await prisma.user.findUnique({ where: { email: session.user.email as string } });
-
-      if (user) {
-        // where 가 있으면 update / 없으면 create
-        await prisma.blog_view.upsert({
-          where: {
-            blog_pk_user_pk: {
-              blog_pk: pk,
-              user_pk: user.pk,
-            },
-          },
-          update: {},
-          create: {
-            user_pk: user.pk,
+      // where 가 있으면 update / 없으면 create
+      await prisma.blog_view.upsert({
+        where: {
+          blog_pk_user_pk: {
             blog_pk: pk,
+            user_pk: session.user.pk,
           },
-        });
-      }
+        },
+        update: {},
+        create: {
+          user_pk: session.user.pk,
+          blog_pk: pk,
+        },
+      });
     }
 
     const blog = await prisma.blog.findUnique({
@@ -296,4 +290,54 @@ const getRecommendBlogs = async (pk: number, tags: { pk: number; name: string }[
   }
 
   return recommendBlobs;
+};
+
+export const blogLikeActionType: BlogLikeActionType = async (pk: number) => {
+  const session = await auth();
+
+  if (isNil(session)) {
+    return err(ERR.NOT_SIGN_USER);
+  }
+
+  const user = await prisma.user.findUnique({ where: { email: session.user?.email ?? undefined } });
+
+  if (isNil(user)) {
+    return err(ERR.NOT_SIGN_USER);
+  }
+
+  const blog = await prisma.blog.findUnique({ where: { pk } });
+
+  if (isNil(blog)) {
+    return err(ERR.NOT_FOUND("블로그"));
+  }
+
+  try {
+    await prisma.blog_like.upsert({
+      where: {
+        blog_pk_user_pk: {
+          blog_pk: blog.pk,
+          user_pk: user.pk,
+        },
+      },
+      create: {
+        blog_pk: blog.pk,
+        user_pk: user.pk,
+      },
+      update: {},
+    });
+
+    const count = await prisma.blog_like.count({
+      where: {
+        blog_pk: blog.pk,
+      },
+    });
+
+    return ok({ pk: blog.pk, count });
+  } catch (e) {
+    if (e instanceof Error) {
+      return err(e.message);
+    }
+
+    throw e;
+  }
 };
