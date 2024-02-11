@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { User } from "next-auth";
 import { z } from "zod";
 import { isNil } from "lodash";
 import Credentials from "next-auth/providers/credentials";
@@ -6,12 +6,6 @@ import { user } from "@prisma/client";
 import { compare } from "@/ex/bcryptEx";
 import prisma from "@/lib/prisma";
 import { authConfig } from "./auth.config";
-
-declare module "next-auth" {
-  interface User {
-    pk: number;
-  }
-}
 
 async function getUser(email: string): Promise<user | undefined> {
   try {
@@ -56,14 +50,21 @@ export const { auth, signIn, signOut } = NextAuth({
         }
 
         // 여기서 next-auth 자체에서 정의한 User 의 타입을 return 해야한다.
-        // export interface User {
-        //   id: string
-        //   name?: string | null
-        //   email?: string | null
-        //   image?: string | null
-        // }
+        // custom 을 위해서 declare 로 확장함
         return { id: user.pk.toString(), name: user.name, email: user.email, pk: user.pk };
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token }) {
+      session.user = token.user as User;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
+  },
 });
