@@ -149,44 +149,6 @@ export function phoneOnlyNumber(phone: string | null) {
   return newPhone.replaceAll("-", "");
 }
 
-export const isPassword = (value: string | null | undefined): boolean => {
-  // 값이 없을 경우 무시
-  if (isNil(value) || isEmpty(value)) {
-    return false;
-  }
-
-  let count = 0;
-  if (value.match(/[A-Z]/)) {
-    count++;
-  }
-
-  if (value.match(/[a-z]/)) {
-    count++;
-  }
-
-  if (value.match(/[0-9]/)) {
-    count++;
-  }
-
-  if (value.match(/[#?!@$%^&*-]/)) {
-    count++;
-  }
-
-  return !(value.length <= 8 || count < 3);
-};
-
-export const isPhone = (value: string): boolean => {
-  if (isNil(value) || isEmpty(value)) {
-    return false;
-  }
-
-  if (!value.match(/^010-?([0-9]{4})-?([0-9]{4})$/)) {
-    return false;
-  }
-
-  return true;
-};
-
 export function validatePageQuery(page: string | string[] | undefined): number | null {
   if (isNil(page) || isArray(page)) {
     return null;
