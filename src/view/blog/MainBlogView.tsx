@@ -1,7 +1,7 @@
 "use client";
 
 import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { isNil } from "lodash";
 import { getBlogListAction } from "@/server/blogActions";
 import { ignorePromise, isNotBlank, isNotNil } from "@/ex/utils";
@@ -27,7 +27,6 @@ const MainBlogView = (props: {
   const [blogs, setBlogs] = useState<GetBlogsActionResItem[]>([]);
   const [hasNext, setHasNext] = useState(true);
   const [error, setError] = useState("");
-
   const onFetch = async () => {
     // 다음 페이지가 없으면 막는다.
     if (!hasNext) {
@@ -84,4 +83,4 @@ const MainBlogView = (props: {
   );
 };
 
-export default MainBlogView;
+export default memo(MainBlogView);
