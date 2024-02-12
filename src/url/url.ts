@@ -47,7 +47,7 @@ export class PageUrl {
     return `${this.pathname}?${queryString}`;
   }
 
-  urlPk(query: { pk: number }) {
+  urlPk(query: { pk: number | "new" }) {
     const pureUrl = removeSuffix(this.pathname, "pk");
 
     return `${pureUrl}${query.pk}`;
