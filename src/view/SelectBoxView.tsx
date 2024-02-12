@@ -1,10 +1,10 @@
 "use client";
 
 import { head, isNil } from "lodash";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { Urls } from "@/url/url.g";
 
@@ -51,13 +51,8 @@ export function SelectBoxView<T>(props: {
     >
       {label}{" "}
       <div className="ml-1 h-[15px] w-[15px] mobile:h-[10px] mobile:w-[10px]">
-        <Image
-          className="inline-block"
-          height={15}
-          width={15}
-          src="/assets/img/aroow.png"
-          alt="search-arrow"
-        />
+        {/* chevron-down */}
+        <ChevronDownIcon className="w-full" />
       </div>
       <ul
         className={classNames(

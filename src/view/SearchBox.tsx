@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import useDarkMode from "@/hooks/useDarkMode";
 import { Urls } from "@/url/url.g";
 import { SearchType } from "@/type/definitions";
@@ -44,12 +44,7 @@ const SearchBox = (props: { search?: string; searchType?: SearchType }) => {
         defaultValue={props.search ?? ""}
       />
       <div className="ml-1 h-[15px] w-[15px] cursor-pointer mobile:top-1/3 mobile:ml-0 mobile:h-[10px] mobile:w-[10px]">
-        <Image
-          src={isDarkMode ? "/assets/img/whiteLenz.png" : "/assets/img/blackLenz.png"}
-          alt="lenz"
-          width={15}
-          height={15}
-        />
+        <MagnifyingGlassIcon className="w-full" />
       </div>
     </form>
   );
