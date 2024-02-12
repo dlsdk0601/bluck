@@ -5,8 +5,15 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import parse from "html-react-parser";
 import { useEffect, useState } from "react";
+
+import {
+  ChatBubbleBottomCenterTextIcon,
+  EyeIcon,
+  HandThumbUpIcon,
+} from "@heroicons/react/24/outline";
 import { Urls } from "@/url/url.g";
 import { GetBlogsActionResItem } from "@/type/definitions";
+import { mf1 } from "@/ex/numberEx";
 
 const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull: boolean }) => {
   const router = useRouter();
@@ -57,30 +64,28 @@ const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull: boolean }) =
         <p className="mt-[25px] overflow-hidden overflow-ellipsis whitespace-nowrap font-medium dark:text-cffffff mobile:mt-[15px] mobile:text-[12px]">
           {props.blog.title}
         </p>
-        {isClient && (
-          <p className="mb-[35px] mt-[15px] h-[30px] w-[95%] overflow-hidden overflow-ellipsis whitespace-nowrap text-[14px] leading-4 dark:text-cffffff mobile:mb-[10px] mobile:mt-[10px] mobile:h-[23px] mobile:text-[10px] mobile:leading-5">
-            {parse(props.blog.body)}
-          </p>
-        )}
+        <div className="mb-[35px] mt-[15px] h-[30px] w-[95%] overflow-hidden overflow-ellipsis whitespace-nowrap text-[14px] leading-4 dark:text-cffffff mobile:mb-[10px] mobile:mt-[10px] mobile:h-[23px] mobile:text-[10px] mobile:leading-5">
+          {isClient && parse(props.blog.body)}
+        </div>
         <div className="mt-[4%] flex items-center justify-between mobile:mt-0 ">
           <span className="text-[14px] mobile:text-[10px]">{props.blog.createAt}</span>
           <div className="flex items-center justify-end mobile:ml-2 mobile:w-[60%]">
             <figure className="mx-[5px] flex items-center justify-between">
-              <Image width={14} height={14} src="/assets/img/blackCommend.png" alt="commend" />
+              <ChatBubbleBottomCenterTextIcon className="w-5" />
               <figcaption className="ml-[10px] text-[14px]  mobile:ml-[2px] mobile:text-[10px]">
                 1000
               </figcaption>
             </figure>
             <figure className="mx-[5px] flex items-center justify-between">
-              <Image width={14} height={14} src="/assets/img/blackFind.png" alt="blackFind" />
+              <EyeIcon className="w-5" />
               <figcaption className="ml-[10px] text-[14px] mobile:ml-[2px] mobile:text-[10px]">
-                {props.blog.viewCount}
+                {mf1(props.blog.viewCount)}
               </figcaption>
             </figure>
             <figure className="mx-[5px] flex items-center justify-between">
-              <Image width={14} height={14} src="/assets/img/blackLike.png" alt="blackLike" />
+              <HandThumbUpIcon className="w-5" />
               <figcaption className="ml-[10px] text-[14px] mobile:ml-[2px] mobile:text-[10px]">
-                {props.blog.likeCount}
+                {mf1(props.blog.likeCount)}
               </figcaption>
             </figure>
           </div>
