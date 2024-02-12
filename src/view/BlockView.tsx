@@ -3,7 +3,7 @@
 import { ClipLoader } from "react-spinners";
 import { isLockState } from "@/store/isLock";
 
-const BlockView = (props: { isLocked?: boolean }) => {
+const BlockView = () => {
   const isLock = isLockState((state) => state.isLock);
   return (
     <div
@@ -14,8 +14,8 @@ const BlockView = (props: { isLocked?: boolean }) => {
         width: "100vw",
         height: "100vh",
         zIndex: 9999,
-        pointerEvents: props.isLocked || isLock ? "auto" : "none",
-        opacity: props.isLocked || isLock ? 1 : 0,
+        pointerEvents: isLock ? "auto" : "none",
+        opacity: isLock ? 1 : 0,
         transition: "opacity .3s .1s",
         display: "flex",
         justifyContent: "center",
