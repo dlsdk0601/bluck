@@ -8,6 +8,7 @@ import { isNotNil, validatePk } from "@/ex/utils";
 import Replace from "@/view/layout/Replace";
 import { Urls } from "@/url/url.g";
 import { mf1 } from "@/ex/numberEx";
+import BlogLikeButtonView from "@/view/blog/BlogLikeButtonView";
 
 const BlogShowPage = async (props: { params: { pk: string } }) => {
   const pk = validatePk(props.params.pk);
@@ -88,12 +89,7 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
               {mf1(res.data.viewCount)}
             </figcaption>
           </figure>
-          <figure className="mx-[5px] flex items-center justify-between">
-            <Image width={14} height={14} src="/assets/img/blackLike.png" alt="blackLike" />
-            <figcaption className="ml-[10px] text-[14px] mobile:ml-[2px] mobile:text-[10px]">
-              {mf1(res.data.likeCount)}
-            </figcaption>
-          </figure>
+          <BlogLikeButtonView pk={res.data.pk} likeCount={res.data.likeCount} />
         </div>
 
         {/* 버튼 박스 */}
