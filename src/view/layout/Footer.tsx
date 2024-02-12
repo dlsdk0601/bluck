@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import useDarkMode from "@/hooks/useDarkMode";
 
 const FooterView = () => {
@@ -28,12 +28,7 @@ const DarkModeButtonView = () => {
       onClick={() => onClickToggleButton()}
     >
       <figure className="relative h-[20px] w-[20px] mobile:h-[15px] mobile:w-[15px]">
-        <Image
-          fill
-          sizes="100vw"
-          src={isDarkMode ? "/assets/img/sun.png" : "/assets/img/moon.png"}
-          alt=""
-        />
+        {isDarkMode ? <SunIcon className="w-full" /> : <MoonIcon className="w-full" />}
       </figure>
       {isDarkMode ? "라이트모드" : "다크모드"}
     </button>
