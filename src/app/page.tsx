@@ -4,6 +4,7 @@ import SearchBox from "@/view/SearchBox";
 import { SearchDataType, SearchOrderByType, SearchType } from "@/type/definitions";
 import { getBlogListAction } from "@/server/blogActions";
 import { isNotNil } from "@/ex/utils";
+import WriteBlogButtonView from "@/view/WriteBlogButtonView";
 
 export default async function Page(props: {
   searchParams?: {
@@ -49,12 +50,7 @@ export default async function Page(props: {
             searchType={props.searchParams?.searchType}
           />
         </div>
-        <button
-          type="button"
-          className="h-[30px] w-[85px] rounded-2xl border-2 border-c1f295a p-2 text-center text-[14px] text-c1f295a dark:border-cffffff dark:text-cffffff tablet:text-[12px] mobile:mx-auto mobile:mt-[20px] mobile:w-full mobile:text-[10px]"
-        >
-          글쓰기
-        </button>
+        <WriteBlogButtonView />
       </div>
       {isNotNil(res.data) && (
         <MainBlogView
