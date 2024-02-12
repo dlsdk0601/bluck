@@ -1,9 +1,10 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
+import { useEffect } from "react";
 import { findPasswordAction } from "@/server/authActions";
 import { isNotBlank, isNotNil } from "@/ex/utils";
-import BlockView from "@/view/BlockView";
+import { isLockState } from "@/store/isLock";
 
 const FindPasswordFormView = () => {
   const [res, dispatch] = useFormState(findPasswordAction, null);
@@ -48,18 +49,20 @@ const FindPasswordFormView = () => {
 
 const FindPasswordButtonView = () => {
   const { pending } = useFormStatus();
+  const setIsLock = isLockState((state) => state.setIsLock);
+
+  useEffect(() => {
+    setIsLock(pending);
+  }, [pending]);
 
   return (
-    <>
-      <button
-        type="submit"
-        aria-disabled={pending}
-        className="mt-12 h-14 w-full cursor-pointer rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:mt-8 mobile:h-10 mobile:text-[12px]"
-      >
-        비밀번호 찾기
-      </button>
-      <BlockView isLocked={pending} />
-    </>
+    <button
+      type="submit"
+      aria-disabled={pending}
+      className="mt-12 h-14 w-full cursor-pointer rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:mt-8 mobile:h-10 mobile:text-[12px]"
+    >
+      비밀번호 찾기
+    </button>
   );
 };
 

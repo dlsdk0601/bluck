@@ -1,9 +1,10 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
+import { useEffect } from "react";
 import { isNotBlank, isNotNil } from "@/ex/utils";
 import { findIdAction } from "@/server/authActions";
-import BlockView from "@/view/BlockView";
+import { isLockState } from "@/store/isLock";
 
 const FindIdFormView = () => {
   const [res, dispatch] = useFormState(findIdAction, null);
@@ -52,18 +53,20 @@ const FindIdFormView = () => {
 
 const FindIdButtonView = () => {
   const { pending } = useFormStatus();
+  const setIsLock = isLockState((state) => state.setIsLock);
+
+  useEffect(() => {
+    setIsLock(pending);
+  }, [pending]);
 
   return (
-    <>
-      <button
-        type="submit"
-        aria-disabled={pending}
-        className="mt-12 h-14 w-full cursor-pointer rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:mt-8 mobile:h-10 mobile:text-[12px]"
-      >
-        아이디 찾기
-      </button>
-      <BlockView isLocked={pending} />
-    </>
+    <button
+      type="submit"
+      aria-disabled={pending}
+      className="mt-12 h-14 w-full cursor-pointer rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:mt-8 mobile:h-10 mobile:text-[12px]"
+    >
+      아이디 찾기
+    </button>
   );
 };
 

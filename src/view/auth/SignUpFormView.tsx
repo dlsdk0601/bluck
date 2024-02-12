@@ -1,20 +1,20 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { isNil, isString } from "lodash";
 import { blobToBase64String } from "blob-util";
 import classNames from "classnames";
 import { CheckCircleIcon as OutlineCheckCircleIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
-import BlockView from "@/view/BlockView";
 import { signUpAction } from "@/server/authActions";
 import { vFileExtension } from "@/ex/validate";
 import { isNotNil } from "@/ex/utils";
 import { api } from "@/lib/axios";
 import { Fileset } from "@/lib/aws";
 import { Urls } from "@/url/url.g";
+import { isLockState } from "@/store/isLock";
 
 const SignUpFormView = () => {
   const [res, dispatch] = useFormState(signUpAction, null);
@@ -201,17 +201,20 @@ const SignUpPersonalInformationRadioBoxView = () => {
 
 const SignUpButtonView = () => {
   const { pending } = useFormStatus();
+  const setIsLock = isLockState((state) => state.setIsLock);
+
+  useEffect(() => {
+    setIsLock(pending);
+  }, [pending]);
+
   return (
-    <>
-      <button
-        type="submit"
-        aria-disabled={pending}
-        className="h-10 w-72 rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:h-8 mobile:text-[10px]"
-      >
-        회원가입
-      </button>
-      <BlockView isLocked={pending} />
-    </>
+    <button
+      type="submit"
+      aria-disabled={pending}
+      className="h-10 w-72 rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:h-8 mobile:text-[10px]"
+    >
+      회원가입
+    </button>
   );
 };
 
