@@ -43,6 +43,7 @@ export interface GetBlogsActionResItem {
   };
   viewCount: number;
   likeCount: number;
+  banner: Fileset;
 }
 
 export interface GetBlogsActionRes {
@@ -70,6 +71,7 @@ export interface RecommendBlog {
 
 export interface GetBlogShowActionRes {
   pk: number;
+  banner: Fileset;
   title: string;
   body: string;
   createAt: string;

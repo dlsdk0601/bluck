@@ -37,6 +37,7 @@ export const getBlogListAction: getBlogListActionType = async (
           title: true,
           body: true,
           created_at: true,
+          banner_image: true,
           user: {
             select: {
               name: true,
@@ -68,6 +69,7 @@ export const getBlogListAction: getBlogListActionType = async (
         profile: awsModel.toFileSet(blog.user.main_image),
         name: blog.user.name,
       },
+      banner: awsModel.toFileSet(blog.banner_image),
       viewCount: blog._count.blog_view,
       likeCount: blog._count.blog_like,
     }));
@@ -204,6 +206,7 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
         title: true,
         body: true,
         created_at: true,
+        banner_image: true,
         user: {
           select: {
             name: true,
@@ -235,6 +238,7 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
       pk: blog.pk,
       title: blog.title,
       body: blog.body,
+      banner: awsModel.toFileSet(blog.banner_image),
       createAt: d1(blog.created_at),
       user: {
         profile: awsModel.toFileSet(blog.user.main_image),
