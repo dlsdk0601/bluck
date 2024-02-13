@@ -2,6 +2,8 @@ import Image from "next/image";
 import { isNil } from "lodash";
 import parse from "html-react-parser";
 import Link from "next/link";
+import { ShareIcon } from "@heroicons/react/24/solid";
+import { ChatBubbleBottomCenterTextIcon, EyeIcon } from "@heroicons/react/24/outline";
 import BlogButtonBoxView from "@/view/blog/BlogButtonBoxView";
 import { getBlogShowAction } from "@/server/blogActions";
 import { isNotNil, validatePk } from "@/ex/utils";
@@ -55,7 +57,7 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
 
           <div className="flex items-center justify-center mobile:mr-2">
             <figure className="relative ml-3 h-[20px] w-[20px] cursor-pointer mobile:h-[15px] mobile:w-[15px]">
-              <Image fill src="/assets/img/blackShare.png" alt="link" />
+              <ShareIcon className="w-full" />
             </figure>
           </div>
         </div>
@@ -78,18 +80,22 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
         {/* 코멘트 */}
         <div className="my-16 mr-3 flex items-center justify-end mobile:ml-2 mobile:w-[60%]">
           <figure className="mx-[5px] flex items-center justify-between">
-            <Image width={14} height={14} src="/assets/img/blackCommend.png" alt="commend" />
+            <ChatBubbleBottomCenterTextIcon className="w-5" />
             <figcaption className="ml-[10px] text-[14px]  mobile:ml-[2px] mobile:text-[10px]">
               1000
             </figcaption>
           </figure>
+          <BlogLikeButtonView
+            pk={res.data.pk}
+            likeCount={res.data.likeCount}
+            hasLike={res.data.hasLike}
+          />
           <figure className="mx-[5px] flex items-center justify-between">
-            <Image width={14} height={14} src="/assets/img/blackFind.png" alt="blackFind" />
+            <EyeIcon className="w-5" />
             <figcaption className="ml-[10px] text-[14px] mobile:ml-[2px] mobile:text-[10px]">
               {mf1(res.data.viewCount)}
             </figcaption>
           </figure>
-          <BlogLikeButtonView pk={res.data.pk} likeCount={res.data.likeCount} />
         </div>
 
         {/* 버튼 박스 */}
