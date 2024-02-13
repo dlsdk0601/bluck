@@ -48,18 +48,18 @@ model tag {
 }
 
 model blog {
-  pk              Int    @id @default(autoincrement())
-  banner_image_pk Int    @db.Integer
-  banner_image    asset  @relation(fields: [banner_image_pk], references: [pk])
-  title           String @db.VarChar(256)
-  body            String @db.Text
-
+  pk         Int       @id @default(autoincrement())
+  title      String    @db.VarChar(256)
+  body       String    @db.Text
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  user_pk   Int         @db.Integer
-  user      user        @relation(fields: [user_pk], references: [pk])
+  banner_image_pk Int   @db.Integer
+  banner_image    asset @relation(fields: [banner_image_pk], references: [pk])
+  user_pk         Int   @db.Integer
+  user            user  @relation(fields: [user_pk], references: [pk])
+
   tags      blog_tag[]
   blog_view blog_view[]
   blog_like blog_like[]
