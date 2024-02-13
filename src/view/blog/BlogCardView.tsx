@@ -46,7 +46,7 @@ const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull: boolean }) =
           },
         )}
       >
-        <Image fill src="/assets/img/dog.png" alt="post-banner" />
+        <Image fill src={props.blog.banner.url} alt="post-banner" />
       </figure>
       <div
         className={classNames(

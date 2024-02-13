@@ -39,7 +39,8 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
       <div className="overflow-hidden rounded-t-3xl">
         {/* 이미지 */}
         <figure className="relative h-[300px] w-full mobile:h-[200px]">
-          <Image fill src="/assets/img/dog.png" alt="blog-show-banner" sizes="100%" />
+          {/* <Image fill src="/assets/img/dog.png" alt="blog-show-banner" sizes="100%" /> */}
+          <Image fill src={res.data.banner.url} alt="blog-show-banner" sizes="100%" />
         </figure>
         {/* 작성자 */}
         <div className="mx-auto my-5 flex w-11/12 items-center justify-between">
