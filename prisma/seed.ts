@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { readdirSync, readFileSync } from "node:fs";
-import { blog, Prisma, PrismaClient, tag, user } from "@prisma/client";
+import { asset, blog, Prisma, PrismaClient, tag, user } from "@prisma/client";
 import { Faker, ko } from "@faker-js/faker";
 import moment from "moment/moment";
 import { isNil } from "lodash";
@@ -140,12 +140,14 @@ async function blogs(faker: Faker): Promise<Prisma.blogCreateManyInput[]> {
   const blogs: Prisma.blogCreateManyInput[] = [];
 
   for (let i = 0; i < 100; i++) {
+    const asset = await getAsset(faker);
     const sentences = faker.lorem.sentences({ min: 10, max: 200 });
     const body = `<p>${sentences.split(".").join("</p><p>")}</p>`;
     blogs.push({
       title: faker.lorem.words({ min: 3, max: 30 }),
       body,
       user_pk: i / 5 + 1,
+      banner_image_pk: asset.pk,
     });
   }
 
@@ -197,6 +199,14 @@ async function getUser(faker: Faker): Promise<user> {
   const randomIndex = faker.number.int({ min: 0, max: users.length - 1 });
 
   return users[randomIndex];
+}
+
+async function getAsset(faker: Faker): Promise<asset> {
+  const assets = await prisma.asset.findMany();
+
+  const randomIndex = faker.number.int({ min: 0, max: assets.length - 1 });
+
+  return assets[randomIndex];
 }
 
 async function getBlog(faker: Faker): Promise<blog> {
