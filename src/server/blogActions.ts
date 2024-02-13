@@ -181,7 +181,6 @@ function setBlogWhere(
 export const getBlogShowAction: getBlogShowActionType = async (pk) => {
   try {
     const session = await auth();
-
     if (isNotNil(session?.user)) {
       // where 가 있으면 update / 없으면 create
       await prisma.blog_view.upsert({
@@ -211,6 +210,7 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
             main_image: true,
           },
         },
+        blog_like: true,
         tags: { select: { tag: true } },
         _count: {
           select: {
@@ -243,6 +243,7 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
       tags,
       viewCount: blog._count.blog_view,
       likeCount: blog._count.blog_like,
+      hasLike: blog.blog_like.some((item) => item.user_pk === session?.user?.pk),
       recommendBlogs,
     });
   } catch (e) {
@@ -293,6 +294,7 @@ const getRecommendBlogs = async (pk: number, tags: { pk: number; name: string }[
 };
 
 export const blogLikeActionType: BlogLikeActionType = async (pk: number) => {
+  let hasLike = false;
   const session = await auth();
 
   if (isNil(session)) {
@@ -312,19 +314,34 @@ export const blogLikeActionType: BlogLikeActionType = async (pk: number) => {
   }
 
   try {
-    await prisma.blog_like.upsert({
+    const res = await prisma.blog_like.findUnique({
       where: {
         blog_pk_user_pk: {
           blog_pk: blog.pk,
           user_pk: user.pk,
         },
       },
-      create: {
-        blog_pk: blog.pk,
-        user_pk: user.pk,
-      },
-      update: {},
     });
+
+    if (isNil(res)) {
+      await prisma.blog_like.create({
+        data: {
+          blog_pk: blog.pk,
+          user_pk: user.pk,
+        },
+      });
+
+      hasLike = true;
+    } else {
+      await prisma.blog_like.delete({
+        where: {
+          blog_pk_user_pk: {
+            blog_pk: blog.pk,
+            user_pk: user.pk,
+          },
+        },
+      });
+    }
 
     const count = await prisma.blog_like.count({
       where: {
@@ -332,7 +349,7 @@ export const blogLikeActionType: BlogLikeActionType = async (pk: number) => {
       },
     });
 
-    return ok({ pk: blog.pk, count });
+    return ok({ pk: blog.pk, count, hasLike });
   } catch (e) {
     if (e instanceof Error) {
       return err(e.message);

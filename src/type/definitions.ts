@@ -80,6 +80,7 @@ export interface GetBlogShowActionRes {
   tags: Array<{ pk: number; name: string }>;
   viewCount: number;
   likeCount: number;
+  hasLike: boolean;
   recommendBlogs: RecommendBlog[];
 }
 
@@ -88,6 +89,7 @@ export type getBlogShowActionType = (pk: number) => Promise<Res<GetBlogShowActio
 export interface BlogLikeActionRes {
   pk: number;
   count: number;
+  hasLike: boolean;
 }
 
 export type BlogLikeActionType = (pk: number) => Promise<Res<BlogLikeActionRes>>;
