@@ -15,7 +15,7 @@ import { Urls } from "@/url/url.g";
 import { GetBlogsActionResItem } from "@/type/definitions";
 import { mf1 } from "@/ex/numberEx";
 
-const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull: boolean }) => {
+const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull?: boolean }) => {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
