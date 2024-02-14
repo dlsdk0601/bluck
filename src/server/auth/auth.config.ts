@@ -16,9 +16,12 @@ export const authConfig = {
     // false 를 return 하면 sign-in 으로 리다이렉트 된다.
     authorized({ auth, request: { nextUrl } }) {
       const user = auth?.user;
+      const isSign = isNotNil(user);
 
-      // my-page 는 login 한 유저만 적용
-      if (nextUrl.pathname.startsWith(Urls["my-page"].page.pathname)) {
+      const signOutExceptions = [Urls["my-page"].page.url()];
+
+      // 비로그인 유저 접근 제한
+      if (signOutExceptions.includes(nextUrl.pathname) && !isSign) {
         return isNotNil(user);
       }
 
@@ -29,7 +32,8 @@ export const authConfig = {
         Urls["find-password"].page.url(),
       ];
 
-      if (signInExceptions.includes(nextUrl.pathname) && isNotNil(user)) {
+      // 로그인 유저 접근 제한
+      if (signInExceptions.includes(nextUrl.pathname) && isSign) {
         return NextResponse.redirect(Urls.page.fullUrl);
       }
 
