@@ -359,6 +359,7 @@ export const blogLikeActionType: BlogLikeActionType = async (pk: number) => {
       return err(e.message);
     }
 
-    throw e;
+    console.error(e);
+    return err(ERR.INTERNAL_SERVER);
   }
 };
