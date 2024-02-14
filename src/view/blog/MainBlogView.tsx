@@ -70,7 +70,7 @@ const MainBlogView = (props: {
   return (
     <div className="mt-[10px] flex h-[70vh] w-full flex-wrap justify-between overflow-y-auto pr-[1%] tablet:h-[72vh]">
       {blogs.map((blog) => (
-        <BlogCardView key={`blog-card-view-${blog.pk}`} blog={blog} isFull={false} />
+        <BlogCardView key={`blog-card-view-${blog.pk}`} blog={blog} />
       ))}
       {hasNext && (
         <>
