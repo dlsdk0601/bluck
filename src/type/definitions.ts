@@ -95,3 +95,38 @@ export interface BlogLikeActionRes {
 }
 
 export type BlogLikeActionType = (pk: number) => Promise<Res<BlogLikeActionRes>>;
+
+export interface MyPageUser {
+  profile: Fileset;
+  name: string;
+  email: string;
+  message: string;
+  introduce: string;
+}
+
+export interface MyPageTag {
+  pk: number;
+  name: string;
+}
+
+export interface MyPageBlog {
+  pk: number;
+  banner: Fileset;
+  title: string;
+  body: string;
+  createAt: string;
+  user: {
+    profile: Fileset;
+    name: string;
+  };
+  viewCount: number;
+  likeCount: number;
+}
+
+interface MyPageInitRes {
+  user: MyPageUser;
+  tags: MyPageTag[];
+  blogs: MyPageBlog[];
+}
+
+export type MyPageInitActionType = () => Promise<Res<MyPageInitRes>>;
