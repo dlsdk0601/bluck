@@ -26,7 +26,10 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
       <div className="mx-auto flex h-[75vh] w-3/5 items-center justify-center mobile:w-[95%]">
         <div>
           <p className="text-center">{res.error}</p>
-          <Link className="mt-3 block text-center" href={Urls.page.url()}>
+          <Link
+            href={Urls.page.url()}
+            className="mt-3 block rounded border-[1px] border-solid border-c1f295a py-2 text-center dark:border-cffffff"
+          >
             Home 으로 가기
           </Link>
         </div>
