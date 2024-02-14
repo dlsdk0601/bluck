@@ -23,7 +23,7 @@ const HeaderView = async () => {
         ) : (
           <>
             <li>
-              <HeaderLinkView label="MY PAGE" url={Urls.page.url()} />
+              <HeaderLinkView label="MY PAGE" url={Urls["my-page"].page.url()} />
             </li>
             <li>
               <form
