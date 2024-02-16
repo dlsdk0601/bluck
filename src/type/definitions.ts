@@ -109,24 +109,29 @@ export interface MyPageTag {
   name: string;
 }
 
+interface MyPageInitRes {
+  user: MyPageUser;
+  tags: MyPageTag[];
+}
+
+export type MyPageInitActionType = () => Promise<Res<MyPageInitRes>>;
+
 export interface MyPageBlog {
   pk: number;
   banner: Fileset;
   title: string;
   body: string;
-  createAt: string;
   user: {
     profile: Fileset;
     name: string;
   };
+  createAt: string;
   viewCount: number;
   likeCount: number;
 }
 
-interface MyPageInitRes {
-  user: MyPageUser;
-  tags: MyPageTag[];
+interface MyPageBlogsRes {
   blogs: MyPageBlog[];
 }
 
-export type MyPageInitActionType = () => Promise<Res<MyPageInitRes>>;
+export type MyPageBlogsActionType = (tagPks: number[]) => Promise<Res<MyPageBlogsRes>>;
