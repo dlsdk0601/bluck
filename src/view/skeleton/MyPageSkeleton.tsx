@@ -24,7 +24,7 @@ const MyPageSkeleton = () => {
       </div>
 
       <div className="mt-5 flex h-2/3 items-start justify-between">
-        {/*  태그 */}
+        {/*  태그 skeleton */}
         <div className="h-full w-1/6">
           <p className="mb-2 h-11 w-full rounded-xl bg-c1f295a py-2 text-center text-lg text-cffffff opacity-90">
             태그
@@ -36,18 +36,42 @@ const MyPageSkeleton = () => {
             <li className="m-1 inline rounded bg-loader px-2 py-1 text-cffffff opacity-50" />
           </ul>
         </div>
-        <div className="w-4/5 pt-2">
-          <p className="mb-5 h-3 border-b-[1px] border-solid border-c1f295a bg-loader pb-1" />
-          <div className="flex h-[47vh] flex-wrap justify-between overflow-y-scroll">
-            <MainContentsCardSkeleton isFull />
-            <MainContentsCardSkeleton isFull />
-            <MainContentsCardSkeleton isFull />
-            <MainContentsCardSkeleton isFull />
-            <MainContentsCardSkeleton isFull />
-            <MainContentsCardSkeleton isFull />
-          </div>
-        </div>
+
+        {/* blog skeleton */}
+        <BlogSkeleton />
       </div>
+    </div>
+  );
+};
+
+export const BlogSkeleton = () => {
+  return (
+    <div className="w-4/5 pt-2">
+      <p className="mb-5 h-3 border-b-[1px] border-solid border-c1f295a bg-loader pb-1" />
+      <div className="flex h-[47vh] flex-wrap justify-between overflow-y-scroll">
+        <MainContentsCardSkeleton isFull />
+        <MainContentsCardSkeleton isFull />
+        <MainContentsCardSkeleton isFull />
+        <MainContentsCardSkeleton isFull />
+        <MainContentsCardSkeleton isFull />
+        <MainContentsCardSkeleton isFull />
+      </div>
+    </div>
+  );
+};
+
+export const TagSkeleton = () => {
+  return (
+    <div className="h-full w-1/6">
+      <p className="mb-2 h-11 w-full rounded-xl bg-c1f295a py-2 text-center text-lg text-cffffff opacity-90">
+        태그
+      </p>
+      <ul className="h-[47vh] w-full rounded-xl bg-ccfd1dd px-3 py-6">
+        <li className="m-1 inline rounded bg-loader px-2 py-1 text-cffffff opacity-50" />
+        <li className="m-1 inline rounded bg-loader px-2 py-1 text-cffffff opacity-50" />
+        <li className="m-1 inline rounded bg-loader px-2 py-1 text-cffffff opacity-50" />
+        <li className="m-1 inline rounded bg-loader px-2 py-1 text-cffffff opacity-50" />
+      </ul>
     </div>
   );
 };
