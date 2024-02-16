@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { isNil } from "lodash";
-import BlogCardView from "@/view/blog/BlogCardView";
+import { Suspense } from "react";
 import { myPageInitAction } from "@/server/myPageAction";
 import { isNotNil } from "@/ex/utils";
 import { Urls } from "@/url/url.g";
 import MyPageProfileView from "@/view/myPage/MyPageProfileView";
 import MyPageTagsView from "@/view/myPage/MyPageTagsView";
+import { BlogSkeleton, TagSkeleton } from "@/view/skeleton/MyPageSkeleton";
+import MyPageBlogsView from "@/view/myPage/MyPageBlogsView";
 
-const Page = async (props: { searchParams?: { tags?: number[] } }) => {
-  console.log("props.searchParams?.tags");
-  console.log(props.searchParams?.tags);
+const Page = async (props: { searchParams?: { tags: string[] } }) => {
+  console.log(props.searchParams);
   const res = await myPageInitAction();
 
   if (isNotNil(res.error) || isNil(res.data)) {
@@ -36,22 +37,13 @@ const Page = async (props: { searchParams?: { tags?: number[] } }) => {
       {/*  하단 */}
       <div className="mt-5 flex h-2/3 items-start justify-between">
         {/*  태그 */}
-        <div className="h-full w-1/6">
-          <p className="mb-2 h-11 w-full rounded-xl bg-c1f295a py-2 text-center text-lg text-cffffff opacity-90">
-            태그
-          </p>
+        <Suspense fallback={<TagSkeleton />}>
           <MyPageTagsView tags={res.data.tags} />
-        </div>
-        <div className="w-4/5 pt-2">
-          <p className="mb-5 border-b-[1px] border-solid border-c1f295a pb-1">
-            내가 쓴 글 총 {res.data.blogs.length}개
-          </p>
-          <div className="flex h-[47vh] flex-wrap justify-between overflow-y-scroll">
-            {res.data.blogs.map((blog) => (
-              <BlogCardView key={`my-page-blog-${blog.pk}`} blog={blog} isFull />
-            ))}
-          </div>
-        </div>
+        </Suspense>
+
+        <Suspense fallback={<BlogSkeleton />}>
+          <MyPageBlogsView tags={props.searchParams?.tags} />
+        </Suspense>
       </div>
     </>
   );
