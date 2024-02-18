@@ -10,7 +10,6 @@ import { BlogSkeleton, TagSkeleton } from "@/view/skeleton/MyPageSkeleton";
 import MyPageBlogsView from "@/view/myPage/MyPageBlogsView";
 
 const Page = async (props: { searchParams?: { tags: string[] } }) => {
-  console.log(props.searchParams);
   const res = await myPageInitAction();
 
   if (isNotNil(res.error) || isNil(res.data)) {
