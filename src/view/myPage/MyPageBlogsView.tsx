@@ -6,9 +6,8 @@ import { myPageBlogsAction } from "@/server/myPageAction";
 import { isNotNil } from "@/ex/utils";
 import { Urls } from "@/url/url.g";
 
-const MyPageBlogsView = async (props: { tags?: string[] }) => {
-  // TODO :: 쿼리 스트링 수정 될때마다 렌더링 처리
-  const tags = (props.tags ?? []).map((pk) => Number(pk));
+const MyPageBlogsView = async (props: { tags?: string | string[] }) => {
+  const tags = props.tags ?? [];
   const res = await myPageBlogsAction(tags);
 
   if (isNotNil(res.error) || isNil(res.data)) {
