@@ -1,4 +1,4 @@
-import { isNil } from "lodash";
+import { isEmpty, isNil, isString } from "lodash";
 import { auth } from "@/server/auth/auth";
 import { err, MyPageBlogsActionType, MyPageInitActionType, ok } from "@/type/definitions";
 import { ERR } from "@/lib/errorEx";
@@ -67,10 +67,20 @@ export const myPageInitAction: MyPageInitActionType = async () => {
 
 export const myPageBlogsAction: MyPageBlogsActionType = async (tagPks) => {
   try {
+    let tags;
+    const tagFilterPks = isString(tagPks) ? [Number(tagPks)] : tagPks.map((pk) => Number(pk));
     const session = await auth();
 
     if (isNil(session?.user)) {
       return err(ERR.NOT_SIGN_USER);
+    }
+
+    if (!isEmpty(tagFilterPks)) {
+      tags = {
+        some: {
+          OR: tagFilterPks.map((pk) => ({ tag_pk: pk })),
+        },
+      };
     }
 
     // TODO :: in PK 처리
@@ -96,6 +106,7 @@ export const myPageBlogsAction: MyPageBlogsActionType = async (tagPks) => {
       },
       where: {
         user_pk: session.user.pk,
+        tags,
       },
       orderBy: {
         created_at: "desc",
