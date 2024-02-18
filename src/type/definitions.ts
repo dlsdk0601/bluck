@@ -134,4 +134,4 @@ interface MyPageBlogsRes {
   blogs: MyPageBlog[];
 }
 
-export type MyPageBlogsActionType = (tagPks: number[]) => Promise<Res<MyPageBlogsRes>>;
+export type MyPageBlogsActionType = (tagPks: string | string[]) => Promise<Res<MyPageBlogsRes>>;
