@@ -16,11 +16,12 @@ import {
   FindIdActionType,
   FindPasswordActionType,
   ok,
+  ShowUserActionType,
   SignInActionType,
   SignUpActionType,
 } from "@/type/definitions";
 import { awsModel } from "@/lib/aws";
-import { signIn } from "./auth/auth";
+import { auth, signIn } from "./auth/auth";
 
 export const signInAction: SignInActionType = async (prevState, formData) => {
   try {
@@ -94,7 +95,7 @@ export const findIdAction: FindIdActionType = async (prevState, formData) => {
       return err(e.message);
     }
 
-    throw e;
+    return err(ERR.INTERNAL_SERVER);
   }
 };
 
@@ -154,35 +155,85 @@ export const findPasswordAction: FindPasswordActionType = async (prevState, form
     if (e instanceof Error) {
       return err(e.message);
     }
-    throw e;
+    return err(ERR.INTERNAL_SERVER);
   }
 };
 
 export const signUpAction: SignUpActionType = async (prevState, formData) => {
-  const validation = await singUpFieldValidate(formData);
+  const session = await auth();
+  const user = session?.user;
 
-  if (typeof validation === "string") {
-    return err(validation);
+  // 로그인이 안되있으면 회원가입
+  if (isNil(user)) {
+    const validation = await singUpFieldValidate(formData);
+
+    if (typeof validation === "string") {
+      return err(validation);
+    }
+
+    const { profile, email, password, name, birthday, phone, message, introduce } = validation;
+
+    try {
+      await prisma.user.create({
+        data: {
+          email,
+          password,
+          name,
+          birthday,
+          phone,
+          message,
+          introduce,
+          is_personal_information_agree: true,
+          main_image: {
+            connect: {
+              pk: profile.pk,
+            },
+          },
+        },
+      });
+
+      return ok({ result: true });
+    } catch (e) {
+      if (e instanceof Error) {
+        return err(e.message);
+      }
+
+      return err(ERR.INTERNAL_SERVER);
+    }
   }
 
-  const { profile, email, password, name, birthday, phone, message, introduce } = validation;
-
+  // 로그인이 되어있다면 회원 정보 수정
   try {
-    await prisma.user.create({
+    const userData = await prisma.user.findUnique({ where: { pk: user.pk } });
+
+    if (isNil(userData)) {
+      return err(ERR.NOT_FOUND("유저 데이터"));
+    }
+
+    const validation = await editUserFieldValidate(formData);
+
+    if (isString(validation)) {
+      return err(validation);
+    }
+
+    const { profile, email, name, birthday, phone, message, introduce } = validation;
+
+    await prisma.user.update({
+      where: {
+        pk: user.pk,
+      },
       data: {
-        email,
-        password,
-        name,
-        birthday,
-        phone,
-        message,
-        introduce,
-        is_personal_information_agree: true,
         main_image: {
           connect: {
             pk: profile.pk,
           },
         },
+        email,
+        name,
+        birthday,
+        phone,
+        message,
+        introduce,
       },
     });
 
@@ -192,22 +243,23 @@ export const signUpAction: SignUpActionType = async (prevState, formData) => {
       return err(e.message);
     }
 
-    throw e;
+    return err(ERR.INTERNAL_SERVER);
   }
 };
 
-interface SignUpField {
-  profile: asset;
-  email: string;
-  password: string;
-  name: string;
-  birthday: Date;
-  phone: string;
-  message: string;
-  introduce: string;
-}
-
-async function singUpFieldValidate(formData: FormData): Promise<string | SignUpField> {
+async function singUpFieldValidate(formData: FormData): Promise<
+  | string
+  | {
+      profile: asset;
+      email: string;
+      password: string;
+      name: string;
+      birthday: Date;
+      phone: string;
+      message: string;
+      introduce: string;
+    }
+> {
   const uuid = formData.get("uuid");
   const email = formData.get("email");
   const password = formData.get("password");
@@ -383,3 +435,165 @@ async function singUpFieldValidate(formData: FormData): Promise<string | SignUpF
     introduce,
   };
 }
+
+async function editUserFieldValidate(formData: FormData): Promise<
+  | string
+  | {
+      profile: asset;
+      email: string;
+      name: string;
+      birthday: Date;
+      phone: string;
+      message: string;
+      introduce: string;
+    }
+> {
+  const uuid = formData.get("uuid");
+  const email = formData.get("email");
+  const name = formData.get("name");
+  const birthday = formData.get("birthday");
+  const phone = formData.get("phone");
+  const message = formData.get("message");
+  const introduce = formData.get("introduce");
+
+  if (isNil(uuid)) {
+    return ERR.REQUIRED("프로필 사진");
+  }
+
+  if (isNil(email)) {
+    return ERR.REQUIRED("이메일");
+  }
+
+  if (isNil(name)) {
+    return ERR.REQUIRED("이름");
+  }
+
+  if (isNil(birthday)) {
+    return ERR.REQUIRED("생년월일");
+  }
+
+  if (isNil(phone)) {
+    return ERR.REQUIRED("휴대폰");
+  }
+
+  if (isNil(message)) {
+    return ERR.REQUIRED("상태 메세지");
+  }
+
+  if (isNil(introduce)) {
+    return ERR.REQUIRED("자기 소개");
+  }
+
+  if (!isString(uuid)) {
+    return ERR.ONLY_STRING("프로필 사진");
+  }
+
+  if (isBlank(uuid)) {
+    return ERR.REQUIRED("프로필 사진");
+  }
+
+  // 프로필 사진 유효성
+  const profile = await awsModel.assetFromUuid(uuid);
+
+  if (isNil(profile)) {
+    return ERR.REQUIRED("프로필 사진");
+  }
+
+  if (!isString(email)) {
+    return ERR.ONLY_STRING("이메일");
+  }
+
+  if (isBlank(email)) {
+    return ERR.REQUIRED("이메일");
+  }
+
+  if (!isString(name)) {
+    return ERR.ONLY_STRING("이름");
+  }
+
+  if (isBlank(name)) {
+    return ERR.REQUIRED("이름");
+  }
+
+  if (!isString(birthday)) {
+    return ERR.ONLY_STRING("생년월일");
+  }
+
+  if (isBlank(birthday)) {
+    return ERR.REQUIRED("생년월일");
+  }
+
+  // 생년월일 유효성
+  const validBirthday = vBirthday(birthday);
+  if (isNotNil(validBirthday)) {
+    return validBirthday;
+  }
+
+  if (!isString(phone)) {
+    return ERR.ONLY_STRING("휴대폰");
+  }
+
+  if (isBlank(phone)) {
+    return ERR.REQUIRED("휴대폰");
+  }
+
+  // 휴대폰 번호 유효성
+  const validPhone = vPhone(phone);
+  if (isNotNil(validPhone)) {
+    return validPhone;
+  }
+
+  if (!isString(message)) {
+    return ERR.ONLY_STRING("상태 메세지");
+  }
+
+  if (isBlank(message)) {
+    return ERR.REQUIRED("상태 메세지");
+  }
+
+  if (!isString(introduce)) {
+    return ERR.ONLY_STRING("자기 소개");
+  }
+
+  return {
+    profile,
+    email,
+    name,
+    birthday: moment(birthday, "YYMMDD").toDate(),
+    phone,
+    message,
+    introduce,
+  };
+}
+
+export const showUserAction: ShowUserActionType = async () => {
+  const session = await auth();
+  const user = session?.user;
+
+  if (isNil(user)) {
+    return err(ERR.NOT_SIGN_USER);
+  }
+
+  const userData = await prisma.user.findUnique({
+    include: {
+      main_image: true,
+    },
+    where: {
+      pk: user.pk,
+    },
+  });
+
+  if (isNil(userData)) {
+    return err(ERR.NOT_FOUND("유저 데이터"));
+  }
+
+  return ok({
+    profile: awsModel.toFileSet(userData.main_image),
+    email: userData.email,
+    name: userData.name,
+    birthday: moment(userData.birthday).format("YYMMDD"),
+    phone: userData.phone,
+    message: userData.message,
+    introduce: userData.introduce,
+  });
+};
