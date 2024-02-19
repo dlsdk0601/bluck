@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MyPageUser } from "@/type/definitions";
+import { Urls } from "@/url/url.g";
 
 const MyPageProfileView = (props: { user: MyPageUser }) => {
   return (
@@ -17,7 +18,7 @@ const MyPageProfileView = (props: { user: MyPageUser }) => {
           <h3 className="mt-1 text-sm">{props.user.message}</h3>
           <p className="mb-2 mt-1 text-xs opacity-70">{props.user.introduce}</p>
         </div>
-        <Link href="/" className="text- text-sm mobile:text-xs">
+        <Link href={Urls["my-page"].edit.page.url()} className="text- text-sm mobile:text-xs">
           회원 정보 변경
         </Link>
       </div>

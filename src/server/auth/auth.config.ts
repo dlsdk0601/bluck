@@ -18,7 +18,7 @@ export const authConfig = {
       const user = auth?.user;
       const isSign = isNotNil(user);
 
-      const signOutExceptions = [Urls["my-page"].page.url()];
+      const signOutExceptions = [Urls["my-page"].show.page.url(), Urls["my-page"].edit.page.url()];
 
       // 비로그인 유저 접근 제한
       if (signOutExceptions.includes(nextUrl.pathname) && !isSign) {
