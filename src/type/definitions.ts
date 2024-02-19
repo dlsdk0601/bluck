@@ -32,6 +32,18 @@ export type FindPasswordActionType = BaseFormActionFunction<{ result: string }>;
 
 export type SignUpActionType = BaseFormActionFunction<{ result: boolean }>;
 
+export interface ShowUserActionRes {
+  profile: Fileset;
+  email: string;
+  name: string;
+  birthday: string;
+  phone: string;
+  message: string;
+  introduce: string;
+}
+
+export type ShowUserActionType = () => Promise<Res<ShowUserActionRes>>;
+
 export interface GetBlogsActionResItem {
   pk: number;
   title: string;
