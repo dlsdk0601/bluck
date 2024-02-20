@@ -7,7 +7,13 @@ import { isNotBlank, isNotNil } from "@/ex/utils";
 import { isLockState } from "@/store/isLock";
 
 const FindPasswordFormView = () => {
+  const { pending } = useFormStatus();
+  const setIsLock = isLockState((state) => state.setIsLock);
   const [res, dispatch] = useFormState(findPasswordAction, null);
+
+  useEffect(() => {
+    setIsLock(pending);
+  }, [pending]);
 
   if (isNotNil(res?.data?.result)) {
     return <p>{res.data.result}</p>;
@@ -42,27 +48,14 @@ const FindPasswordFormView = () => {
       {isNotBlank(res?.error) && (
         <p className="mt-2 text-xs text-cff4500 mobile:mt-1 mobile:text-[9px]">{res?.error}</p>
       )}
-      <FindPasswordButtonView />
+      <button
+        type="submit"
+        aria-disabled={pending}
+        className="mt-12 h-14 w-full cursor-pointer rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:mt-8 mobile:h-10 mobile:text-[12px]"
+      >
+        비밀번호 찾기
+      </button>
     </form>
-  );
-};
-
-const FindPasswordButtonView = () => {
-  const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
-
-  useEffect(() => {
-    setIsLock(pending);
-  }, [pending]);
-
-  return (
-    <button
-      type="submit"
-      aria-disabled={pending}
-      className="mt-12 h-14 w-full cursor-pointer rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:mt-8 mobile:h-10 mobile:text-[12px]"
-    >
-      비밀번호 찾기
-    </button>
   );
 };
 

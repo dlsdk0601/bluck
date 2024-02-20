@@ -8,7 +8,13 @@ import { isNotNil } from "@/ex/utils";
 import { isLockState } from "@/store/isLock";
 
 const SignInFormView = () => {
+  const { pending } = useFormStatus();
+  const setIsLock = isLockState((state) => state.setIsLock);
   const [res, dispatch] = useFormState(signInAction, null);
+
+  useEffect(() => {
+    setIsLock(pending);
+  }, [pending]);
 
   return (
     <form action={dispatch} className="w-4/5 mobile:w-full">
@@ -50,27 +56,14 @@ const SignInFormView = () => {
         </label>
         <input id="login-check" type="checkbox" className="hidden opacity-0" />
       </div>
-      <SignInButtonView />
+      <button
+        type="submit"
+        aria-disabled={pending}
+        className="mt-10 h-14 w-full rounded-xl border-2 border-solid border-c1f295a bg-none font-medium mobile:mt-8 mobile:h-8 mobile:text-lg"
+      >
+        로그인
+      </button>
     </form>
-  );
-};
-
-const SignInButtonView = () => {
-  const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
-
-  useEffect(() => {
-    setIsLock(pending);
-  }, [pending]);
-
-  return (
-    <button
-      type="submit"
-      aria-disabled={pending}
-      className="mt-10 h-14 w-full rounded-xl border-2 border-solid border-c1f295a bg-none font-medium mobile:mt-8 mobile:h-8 mobile:text-lg"
-    >
-      로그인
-    </button>
   );
 };
 
