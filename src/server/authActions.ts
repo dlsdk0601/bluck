@@ -216,7 +216,7 @@ export const signUpAction: SignUpActionType = async (prevState, formData) => {
       return err(validation);
     }
 
-    const { profile, email, name, birthday, phone, message, introduce } = validation;
+    const { profile, name, birthday, phone, message, introduce } = validation;
 
     await prisma.user.update({
       where: {
@@ -228,7 +228,6 @@ export const signUpAction: SignUpActionType = async (prevState, formData) => {
             pk: profile.pk,
           },
         },
-        email,
         name,
         birthday,
         phone,
@@ -440,7 +439,6 @@ async function editUserFieldValidate(formData: FormData): Promise<
   | string
   | {
       profile: asset;
-      email: string;
       name: string;
       birthday: Date;
       phone: string;
@@ -449,7 +447,6 @@ async function editUserFieldValidate(formData: FormData): Promise<
     }
 > {
   const uuid = formData.get("uuid");
-  const email = formData.get("email");
   const name = formData.get("name");
   const birthday = formData.get("birthday");
   const phone = formData.get("phone");
@@ -458,10 +455,6 @@ async function editUserFieldValidate(formData: FormData): Promise<
 
   if (isNil(uuid)) {
     return ERR.REQUIRED("프로필 사진");
-  }
-
-  if (isNil(email)) {
-    return ERR.REQUIRED("이메일");
   }
 
   if (isNil(name)) {
@@ -497,14 +490,6 @@ async function editUserFieldValidate(formData: FormData): Promise<
 
   if (isNil(profile)) {
     return ERR.REQUIRED("프로필 사진");
-  }
-
-  if (!isString(email)) {
-    return ERR.ONLY_STRING("이메일");
-  }
-
-  if (isBlank(email)) {
-    return ERR.REQUIRED("이메일");
   }
 
   if (!isString(name)) {
@@ -557,7 +542,6 @@ async function editUserFieldValidate(formData: FormData): Promise<
 
   return {
     profile,
-    email,
     name,
     birthday: moment(birthday, "YYMMDD").toDate(),
     phone,
