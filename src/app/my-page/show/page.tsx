@@ -19,7 +19,7 @@ const Page = async (props: { searchParams?: { tags: string[] } }) => {
           <p className="text-center">{res.error}</p>
           <Link
             href={Urls.page.url()}
-            className="mt-3 block rounded border-[1px] border-solid border-c1f295a py-2 text-center dark:border-cffffff"
+            className="mt-3 block rounded border-[1px] border-solid border-c1f295a px-1 py-2 text-center dark:border-cffffff"
           >
             Home 으로 가기
           </Link>
