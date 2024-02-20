@@ -32,6 +32,10 @@ export type FindPasswordActionType = BaseFormActionFunction<{ result: string }>;
 
 export type SignUpActionType = BaseFormActionFunction<{ result: boolean }>;
 
+export type CheckPasswordActionType = BaseFormActionFunction<{ result: boolean }>;
+
+export type EditPasswordActionType = BaseFormActionFunction<{ result: boolean }>;
+
 export interface ShowUserActionRes {
   profile: Fileset;
   email: string;

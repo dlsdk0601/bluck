@@ -12,6 +12,8 @@ import prisma from "@/lib/prisma";
 import { getHash } from "@/ex/bcryptEx";
 import { taskMailer } from "@/lib/taskMailer";
 import {
+  CheckPasswordActionType,
+  EditPasswordActionType,
   err,
   FindIdActionType,
   FindPasswordActionType,
@@ -22,6 +24,8 @@ import {
 } from "@/type/definitions";
 import { awsModel } from "@/lib/aws";
 import { auth, signIn } from "./auth/auth";
+
+// TODO :: 코드 중복이 많으니까 class 형으로 바꿔보자
 
 export const signInAction: SignInActionType = async (prevState, formData) => {
   try {
@@ -52,7 +56,8 @@ export const signInAction: SignInActionType = async (prevState, formData) => {
       }
     }
 
-    throw e;
+    console.error(e);
+    return err(ERR.INTERNAL_SERVER);
   }
 };
 
@@ -95,6 +100,7 @@ export const findIdAction: FindIdActionType = async (prevState, formData) => {
       return err(e.message);
     }
 
+    console.error(e);
     return err(ERR.INTERNAL_SERVER);
   }
 };
@@ -155,6 +161,8 @@ export const findPasswordAction: FindPasswordActionType = async (prevState, form
     if (e instanceof Error) {
       return err(e.message);
     }
+
+    console.error(e);
     return err(ERR.INTERNAL_SERVER);
   }
 };
@@ -242,6 +250,7 @@ export const signUpAction: SignUpActionType = async (prevState, formData) => {
       return err(e.message);
     }
 
+    console.error(e);
     return err(ERR.INTERNAL_SERVER);
   }
 };
@@ -551,33 +560,143 @@ async function editUserFieldValidate(formData: FormData): Promise<
 }
 
 export const showUserAction: ShowUserActionType = async () => {
-  const session = await auth();
-  const user = session?.user;
+  try {
+    const session = await auth();
+    const user = session?.user;
 
-  if (isNil(user)) {
+    if (isNil(user)) {
+      return err(ERR.NOT_SIGN_USER);
+    }
+
+    const userData = await prisma.user.findUnique({
+      include: {
+        main_image: true,
+      },
+      where: {
+        pk: user.pk,
+      },
+    });
+
+    if (isNil(userData)) {
+      return err(ERR.NOT_FOUND("유저 데이터"));
+    }
+
+    return ok({
+      profile: awsModel.toFileSet(userData.main_image),
+      email: userData.email,
+      name: userData.name,
+      birthday: moment(userData.birthday).format("YYMMDD"),
+      phone: userData.phone,
+      message: userData.message,
+      introduce: userData.introduce,
+    });
+  } catch (e) {
+    if (e instanceof Error) {
+      return err(e.message);
+    }
+
+    console.error(e);
+    return err(ERR.INTERNAL_SERVER);
+  }
+};
+
+export const checkPasswordAction: CheckPasswordActionType = async (prevState, formData) => {
+  try {
+    const session = await auth();
+    const globalUser = session?.user;
+
+    if (isNil(globalUser)) {
+      return err(ERR.NOT_SIGN_USER);
+    }
+
+    const password = formData.get("password");
+    const validPassword = vPassword(password);
+
+    if (!isString(password)) {
+      return err(ERR.ONLY_STRING("비밀번호"));
+    }
+
+    if (isNotNil(validPassword)) {
+      return err(validPassword);
+    }
+
+    const hashed = await getHash(password);
+    const user = await prisma.user.findUnique({
+      where: {
+        pk: globalUser.pk,
+      },
+    });
+
+    if (isNil(user)) {
+      return err(ERR.NOT_SIGN_USER);
+    }
+
+    if (user.password !== hashed) {
+      return err(ERR.PASSWORD_WRONG);
+    }
+
+    return ok({ result: true });
+  } catch (e) {
+    if (e instanceof Error) {
+      return err(e.message);
+    }
+
+    console.error(e);
+    return err(ERR.INTERNAL_SERVER);
+  }
+};
+
+export const editPasswordAction: EditPasswordActionType = async (prevState, formData) => {
+  const session = await auth();
+  const globalUser = session?.user;
+
+  if (isNil(globalUser)) {
     return err(ERR.NOT_SIGN_USER);
   }
 
-  const userData = await prisma.user.findUnique({
-    include: {
-      main_image: true,
-    },
-    where: {
-      pk: user.pk,
-    },
-  });
+  const password = formData.get("new-password");
+  const confirmPassword = formData.get("confirm-password");
 
-  if (isNil(userData)) {
-    return err(ERR.NOT_FOUND("유저 데이터"));
+  if (!isString(password)) {
+    return err(ERR.ONLY_STRING("비밀번호"));
   }
 
-  return ok({
-    profile: awsModel.toFileSet(userData.main_image),
-    email: userData.email,
-    name: userData.name,
-    birthday: moment(userData.birthday).format("YYMMDD"),
-    phone: userData.phone,
-    message: userData.message,
-    introduce: userData.introduce,
-  });
+  if (!isString(confirmPassword)) {
+    return err(ERR.ONLY_STRING("비밀번호"));
+  }
+
+  if (password !== confirmPassword) {
+    return err(ERR.PASSWORD_NOT_MATCH);
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        pk: globalUser.pk,
+      },
+    });
+
+    if (isNil(user)) {
+      return err(ERR.NOT_SIGN_USER);
+    }
+
+    const hashedPassword = await getHash(password);
+    await prisma.user.update({
+      where: {
+        pk: user.pk,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return ok({ result: true });
+  } catch (e) {
+    if (e instanceof Error) {
+      return err(e.message);
+    }
+
+    console.error(e);
+    return err(ERR.INTERNAL_SERVER);
+  }
 };
