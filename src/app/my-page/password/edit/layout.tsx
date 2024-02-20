@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "my-page",
+  title: "password",
 };
 
 const Layout = (props: PropsWithChildren) => {
