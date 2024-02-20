@@ -18,9 +18,20 @@ const MyPageProfileView = (props: { user: MyPageUser }) => {
           <h3 className="mt-1 text-sm">{props.user.message}</h3>
           <p className="mb-2 mt-1 text-xs opacity-70">{props.user.introduce}</p>
         </div>
-        <Link href={Urls["my-page"].edit.page.url()} className="text- text-sm mobile:text-xs">
-          회원 정보 변경
-        </Link>
+        <div>
+          <Link
+            href={Urls["my-page"].user.edit.page.url()}
+            className="mr-2 text-xs underline underline-offset-2 mobile:text-xs"
+          >
+            회원정보 변경
+          </Link>
+          <Link
+            href={Urls["my-page"].password.edit.page.url()}
+            className="text-xs underline underline-offset-2 mobile:text-xs"
+          >
+            비밀번호 변경
+          </Link>
+        </div>
       </div>
     </div>
   );
