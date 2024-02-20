@@ -14,6 +14,7 @@ export const ERR = {
   PERSONAL_INFORMATION_AGREE: "개인정보 수집에 동의 하셔야 합니다.",
   EMAIL_DUPLICATE: "이메일이 중복입니다.",
   NOT_SIGN_USER: "로그인 회원만 가능합니다.",
+  PASSWORD_WRONG: "비밀번호가 틀렸습니다.",
 };
 
 export type ApiRes<T> = NextResponse<T> | NextResponse<{ message: string }>;
