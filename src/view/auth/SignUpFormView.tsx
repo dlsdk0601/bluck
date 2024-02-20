@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { isNil, isString } from "lodash";
 import { blobToBase64String } from "blob-util";
 import classNames from "classnames";
@@ -20,7 +20,14 @@ import { ShowUserActionRes } from "@/type/definitions";
 
 const SignUpFormView = (props: { data?: ShowUserActionRes }) => {
   const router = useRouter();
+  const { pending } = useFormStatus();
+  const setIsLock = isLockState((state) => state.setIsLock);
+
   const [res, dispatch] = useFormState(signUpAction, null);
+
+  useEffect(() => {
+    setIsLock(pending);
+  }, [pending]);
 
   if (isNotNil(res?.data?.result) && res?.data?.result) {
     return (
@@ -68,6 +75,7 @@ const SignUpFormView = (props: { data?: ShowUserActionRes }) => {
             defaultValue={props.data?.email}
             className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
             placeholder="이메일을 입력해주세요."
+            disabled={isNotNil(props.data)}
           />
         </div>
         {isNil(props.data) && (
@@ -196,7 +204,13 @@ const SignUpFormView = (props: { data?: ShowUserActionRes }) => {
           >
             취소
           </button>
-          <SignUpButtonView isSign={isNotNil(props.data)} />
+          <button
+            type="submit"
+            aria-disabled={pending}
+            className="h-10 w-72 rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:h-8 mobile:text-[10px]"
+          >
+            {isNotNil(props.data) ? "수정" : "회원가입"}
+          </button>
         </div>
       </div>
     </form>
@@ -224,29 +238,16 @@ const SignUpPersonalInformationRadioBoxView = () => {
   );
 };
 
-const SignUpButtonView = (props: { isSign: boolean }) => {
-  const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
-
-  useEffect(() => {
-    setIsLock(pending);
-  }, [pending]);
-
-  return (
-    <button
-      type="submit"
-      aria-disabled={pending}
-      className="h-10 w-72 rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:h-8 mobile:text-[10px]"
-    >
-      {props.isSign ? "수정" : "회원가입"}
-    </button>
-  );
-};
-
 const FileUploadView = (props: { profile?: Fileset }) => {
+  // uuid input 을 ref 로 처리한 이유는 onChange 없이 value 를 바꾸면 react 가 error 를 뱉는다.
+  const ref = useRef<HTMLInputElement>(null);
   const [fileSet, setFileSet] = useState<Fileset | null>(props.profile ?? null);
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (isNil(ref.current)) {
+      return;
+    }
+
     const { files } = e.target;
 
     if (isNil(files)) {
@@ -273,13 +274,14 @@ const FileUploadView = (props: { profile?: Fileset }) => {
     }
 
     setFileSet(res.fileSet);
+    ref.current.value = res.fileSet.uuid;
   };
 
   return (
     <>
       <label
         htmlFor="profile"
-        style={{ backgroundImage: isNotNil(fileSet?.url) ? `url(${fileSet.url})` : undefined }}
+        style={isNotNil(fileSet?.url) ? { backgroundImage: `url(${fileSet.url})` } : undefined}
         className={classNames(
           "flex h-48 w-48 cursor-pointer items-center justify-center rounded-lg border-none mobile:mx-auto mobile:my-3 mobile:h-full mobile:w-full",
           {
@@ -298,7 +300,7 @@ const FileUploadView = (props: { profile?: Fileset }) => {
           className="hidden"
         />
       </label>
-      <input type="hidden" value={fileSet?.uuid} name="uuid" readOnly />
+      <input ref={ref} defaultValue={props.profile?.uuid} type="hidden" name="uuid" readOnly />
     </>
   );
 };
