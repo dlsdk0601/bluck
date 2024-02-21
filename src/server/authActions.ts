@@ -9,7 +9,7 @@ import { vBirthday, vEmail, vPassword, vPhone } from "@/ex/validate";
 import { isBlank, isNotNil } from "@/ex/utils";
 import { ERR } from "@/lib/errorEx";
 import prisma from "@/lib/prisma";
-import { getHash } from "@/ex/bcryptEx";
+import { compare, getHash } from "@/ex/bcryptEx";
 import { taskMailer } from "@/lib/taskMailer";
 import {
   CheckPasswordActionType,
@@ -620,7 +620,6 @@ export const checkPasswordAction: CheckPasswordActionType = async (prevState, fo
       return err(validPassword);
     }
 
-    const hashed = await getHash(password);
     const user = await prisma.user.findUnique({
       where: {
         pk: globalUser.pk,
@@ -631,7 +630,8 @@ export const checkPasswordAction: CheckPasswordActionType = async (prevState, fo
       return err(ERR.NOT_SIGN_USER);
     }
 
-    if (user.password !== hashed) {
+    const isMatch = await compare(password, user.password);
+    if (!isMatch) {
       return err(ERR.PASSWORD_WRONG);
     }
 
