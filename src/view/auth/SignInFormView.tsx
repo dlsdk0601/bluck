@@ -2,28 +2,26 @@
 
 import Image from "next/image";
 import { useFormState, useFormStatus } from "react-dom";
-import { useEffect } from "react";
+import { memo } from "react";
 import { signInAction } from "@/server/authActions";
 import { isNotNil } from "@/ex/utils";
 import { isLockState } from "@/store/isLock";
 
 const SignInFormView = () => {
-  const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  // TODO :: 로그인 잘 안되는데, 확인
   const [res, dispatch] = useFormState(signInAction, null);
-
-  useEffect(() => {
-    setIsLock(pending);
-  }, [pending]);
 
   return (
     <form action={dispatch} className="w-4/5 mobile:w-full">
       <div className="mt-5 flex items-center justify-center overflow-hidden rounded-xl bg-cedeff6">
-        <label htmlFor="id" className="bold w-1/5 pl-2 text-[14px] mobile:pl-3 mobile:text-[10px]">
+        <label
+          htmlFor="email"
+          className="bold w-1/5 pl-2 text-[14px] mobile:pl-3 mobile:text-[10px]"
+        >
           아이디
         </label>
         <input
-          id="id"
+          id="email"
           name="email"
           className="h-12 w-4/5 bg-cedeff6 text-sm font-light focus:bg-none focus:outline-none mobile:h-10 "
           type="email"
@@ -56,15 +54,26 @@ const SignInFormView = () => {
         </label>
         <input id="login-check" type="checkbox" className="hidden opacity-0" />
       </div>
-      <button
-        type="submit"
-        aria-disabled={pending}
-        className="mt-10 h-14 w-full rounded-xl border-2 border-solid border-c1f295a bg-none font-medium mobile:mt-8 mobile:h-8 mobile:text-lg"
-      >
-        로그인
-      </button>
+      <SignInButtonView />
     </form>
   );
 };
+
+const SignInButtonView = memo(() => {
+  const { pending } = useFormStatus();
+  const setIsLock = isLockState((state) => state.setIsLock);
+
+  setIsLock(pending);
+
+  return (
+    <button
+      type="submit"
+      aria-disabled={pending}
+      className="mt-10 h-14 w-full rounded-xl border-2 border-solid border-c1f295a bg-none font-medium mobile:mt-8 mobile:h-8 mobile:text-lg"
+    >
+      로그인
+    </button>
+  );
+});
 
 export default SignInFormView;
