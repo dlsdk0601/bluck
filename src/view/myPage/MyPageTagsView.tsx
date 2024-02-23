@@ -33,13 +33,16 @@ const MyPageTagsView = (props: { tags: MyPageTag[] }) => {
       <p className="mb-2 h-11 w-full rounded-xl bg-c1f295a py-2 text-center text-lg text-cffffff opacity-90">
         태그
       </p>
-      <ul className="h-[47vh] w-full rounded-xl bg-ccfd1dd px-3 py-6">
+      <ul className="h-[47vh] w-full rounded-xl bg-ccfd1dd px-3 py-6 dark:bg-c1f295a">
         {props.tags.map((tag) => (
           <li
             key={`my-page-tag-${tag.pk}`}
-            className={classNames("m-1 rounded bg-c1f295a px-2 py-1 text-center text-cffffff", {
-              "opacity-50": !tags.includes(tag.pk.toString()),
-            })}
+            className={classNames(
+              "m-1 rounded bg-c1f295a px-2 py-1 text-center text-cffffff dark:bg-ccfd1dd dark:text-c1f295a",
+              {
+                "opacity-50": !tags.includes(tag.pk.toString()),
+              },
+            )}
           >
             <button type="button" onClick={() => onClickTag(tag)}>
               {tag.name}

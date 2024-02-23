@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { memo } from "react";
 import { MyPageUser } from "@/type/definitions";
 import { Urls } from "@/url/url.g";
 
 const MyPageProfileView = (props: { user: MyPageUser }) => {
   return (
-    <div className="flex items-start justify-start bg-cedeff6 px-7 py-5">
+    <div className="flex items-start justify-start bg-cedeff6 px-7 py-5 dark:bg-c1f295a">
       <figure className="relative h-24 w-24">
         <Image src={props.user.profile.url} fill alt="porfile" />
       </figure>
@@ -37,4 +38,4 @@ const MyPageProfileView = (props: { user: MyPageUser }) => {
   );
 };
 
-export default MyPageProfileView;
+export default memo(MyPageProfileView);
