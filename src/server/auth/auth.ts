@@ -27,6 +27,7 @@ export const { auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials) {
+        // 이미 action 에서 validation 했지만 next-auth 에 맞춰줘야하니 한번더 진행
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string() })
           .safeParse(credentials);

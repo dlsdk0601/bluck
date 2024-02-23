@@ -57,7 +57,10 @@ export const signInAction: SignInActionType = async (prevState, formData) => {
     }
 
     console.error(e);
-    return err(ERR.INTERNAL_SERVER);
+    throw e;
+    // 렌더링인지 next-auth 이슈인지 모르겠지만, 여기서 자꾸 return 되서
+    // 주석 처리
+    // return err(ERR.INTERNAL_SERVER);
   }
 };
 
