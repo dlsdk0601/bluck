@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { isNil, isString } from "lodash";
 import { blobToBase64String } from "blob-util";
@@ -16,20 +16,19 @@ import { api } from "@/lib/axios";
 import { Fileset } from "@/lib/aws";
 import { Urls } from "@/url/url.g";
 import { isLockState } from "@/store/isLock";
-import { ShowUserActionRes } from "@/type/definitions";
+import { FormActionViewProps, ShowUserActionRes, SignUpActionRes } from "@/type/definitions";
+import FormActionView from "@/view/FormActionView";
 
-const SignUpFormView = (props: { data?: ShowUserActionRes }) => {
+const SignUpForm = (props: FormActionViewProps<SignUpActionRes> & { data?: ShowUserActionRes }) => {
   const router = useRouter();
   const { pending } = useFormStatus();
   const setIsLock = isLockState((state) => state.setIsLock);
-
-  const [res, dispatch] = useFormState(signUpAction, null);
 
   useEffect(() => {
     setIsLock(pending);
   }, [pending]);
 
-  if (isNotNil(res?.data?.result) && res?.data?.result) {
+  if (isNotNil(props.res?.data?.result) && props.res?.data?.result) {
     return (
       <div className="mx-auto flex h-4/5 w-2/5 flex-col items-center justify-center tablet:w-3/4 mobile:w-full">
         <p>
@@ -51,7 +50,7 @@ const SignUpFormView = (props: { data?: ShowUserActionRes }) => {
 
   return (
     <form
-      action={dispatch}
+      action={props.dispatch}
       className={classNames(
         "mx-auto flex h-4/6 max-w-4xl items-start justify-center overflow-y-auto overflow-x-hidden mobile:block",
         {
@@ -193,8 +192,8 @@ const SignUpFormView = (props: { data?: ShowUserActionRes }) => {
         </div>
         {isNil(props.data) && <SignUpPersonalInformationRadioBoxView />}
 
-        {isNotNil(res?.error) && (
-          <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">{res?.error}</span>
+        {isNotNil(props.res?.error) && (
+          <span className="mb-3 pl-2 text-[10px] text-cff4500 mobile:mb-2">{props.res?.error}</span>
         )}
         <div className="mt-10 flex w-full items-center justify-between mobile:mt-5">
           <button
@@ -304,5 +303,7 @@ const FileUploadView = (props: { profile?: Fileset }) => {
     </>
   );
 };
+
+const SignUpFormView = FormActionView(signUpAction, SignUpForm);
 
 export default SignUpFormView;

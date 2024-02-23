@@ -1,17 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useFormState, useFormStatus } from "react-dom";
-import { memo } from "react";
+import { useFormStatus } from "react-dom";
+import { memo, useEffect } from "react";
 import { signInAction } from "@/server/authActions";
 import { isNotNil } from "@/ex/utils";
+import FormActionView from "@/view/FormActionView";
+import { FormActionViewProps, SignInActionRes } from "@/type/definitions";
 import { isLockState } from "@/store/isLock";
 
-const SignInFormView = () => {
-  const [res, dispatch] = useFormState(signInAction, null);
-
+const SignInForm = (props: FormActionViewProps<SignInActionRes>) => {
   return (
-    <form action={dispatch} className="w-4/5 mobile:w-full">
+    <form action={props.dispatch} className="w-4/5 mobile:w-full">
       <div className="mt-5 flex items-center justify-center overflow-hidden rounded-xl bg-cedeff6">
         <label
           htmlFor="email"
@@ -41,8 +41,8 @@ const SignInFormView = () => {
           minLength={8}
         />
       </div>
-      {isNotNil(res?.error) && (
-        <p className="mt-2 text-[10px] text-cff4500 mobile:text-[8px]">{res?.error}</p>
+      {isNotNil(props.res?.error) && (
+        <p className="mt-2 text-[10px] text-cff4500 mobile:text-[8px]">{props.res?.error}</p>
       )}
       <div className="mt-2 flex cursor-pointer items-center justify-start tablet:w-3/5">
         <figure className="relative h-5 w-5 mobile:h-4 mobile:w-4">
@@ -62,7 +62,9 @@ const SignInButtonView = memo(() => {
   const { pending } = useFormStatus();
   const setIsLock = isLockState((state) => state.setIsLock);
 
-  setIsLock(pending);
+  useEffect(() => {
+    setIsLock(pending);
+  }, [pending]);
 
   return (
     <button
@@ -75,4 +77,6 @@ const SignInButtonView = memo(() => {
   );
 });
 
-export default SignInFormView;
+const SignFormView = FormActionView(signInAction, SignInForm);
+
+export default SignFormView;

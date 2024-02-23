@@ -1,26 +1,27 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { useEffect } from "react";
 import { findPasswordAction } from "@/server/authActions";
 import { isNotBlank, isNotNil } from "@/ex/utils";
 import { isLockState } from "@/store/isLock";
+import FormActionView from "@/view/FormActionView";
+import { FindPasswordActionRes, FormActionViewProps } from "@/type/definitions";
 
-const FindPasswordFormView = () => {
+const FindPasswordForm = (props: FormActionViewProps<FindPasswordActionRes>) => {
   const { pending } = useFormStatus();
   const setIsLock = isLockState((state) => state.setIsLock);
-  const [res, dispatch] = useFormState(findPasswordAction, null);
 
   useEffect(() => {
     setIsLock(pending);
   }, [pending]);
 
-  if (isNotNil(res?.data?.result)) {
-    return <p>{res.data.result}</p>;
+  if (isNotNil(props.res?.data?.result)) {
+    return <p>{props.res.data.result}</p>;
   }
 
   return (
-    <form action={dispatch} className="w-4/5 mobile:w-full">
+    <form action={props.dispatch} className="w-4/5 mobile:w-full">
       <div className="mt-3 flex items-center justify-center rounded-xl bg-ccfd1dd dark:bg-c000000">
         <label htmlFor="name" className="w-1/5 pl-2 text-sm mobile:pl-4 mobile:text-[10px]">
           이름
@@ -45,8 +46,10 @@ const FindPasswordFormView = () => {
           placeholder="아이디를 입력해주세요."
         />
       </div>
-      {isNotBlank(res?.error) && (
-        <p className="mt-2 text-xs text-cff4500 mobile:mt-1 mobile:text-[9px]">{res?.error}</p>
+      {isNotBlank(props.res?.error) && (
+        <p className="mt-2 text-xs text-cff4500 mobile:mt-1 mobile:text-[9px]">
+          {props.res?.error}
+        </p>
       )}
       <button
         type="submit"
@@ -58,5 +61,7 @@ const FindPasswordFormView = () => {
     </form>
   );
 };
+
+const FindPasswordFormView = FormActionView(findPasswordAction, FindPasswordForm);
 
 export default FindPasswordFormView;

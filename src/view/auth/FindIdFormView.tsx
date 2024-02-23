@@ -1,31 +1,31 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { useEffect } from "react";
 import { isNotBlank, isNotNil } from "@/ex/utils";
 import { findIdAction } from "@/server/authActions";
 import { isLockState } from "@/store/isLock";
+import FormActionView from "@/view/FormActionView";
+import { FindIdActionRes, FormActionViewProps } from "@/type/definitions";
 
-const FindIdFormView = () => {
+const FindIdForm = (props: FormActionViewProps<FindIdActionRes>) => {
   const { pending } = useFormStatus();
   const setIsLock = isLockState((state) => state.setIsLock);
-
-  const [res, dispatch] = useFormState(findIdAction, null);
 
   useEffect(() => {
     setIsLock(pending);
   }, [pending]);
 
-  if (isNotNil(res?.data?.id)) {
+  if (isNotNil(props.res?.data?.id)) {
     return (
       <p>
-        회원님의 아이디는 <br /> {res.data.id}입니다.
+        회원님의 아이디는 <br /> {props.res.data.id}입니다.
       </p>
     );
   }
 
   return (
-    <form action={dispatch} className="w-4/5 mobile:w-full">
+    <form action={props.dispatch} className="w-4/5 mobile:w-full">
       <div className="mt-3 flex items-center justify-center rounded-xl bg-ccfd1dd dark:bg-c000000">
         <label htmlFor="name" className="w-1/5 pl-2 text-sm mobile:pl-4 mobile:text-[10px]">
           이름
@@ -50,8 +50,10 @@ const FindIdFormView = () => {
           placeholder="휴대 전화를 입력해주세요."
         />
       </div>
-      {isNotBlank(res?.error) && (
-        <p className="mt-2 text-xs text-cff4500 mobile:mt-1 mobile:text-[9px]">{res?.error}</p>
+      {isNotBlank(props.res?.error) && (
+        <p className="mt-2 text-xs text-cff4500 mobile:mt-1 mobile:text-[9px]">
+          {props.res?.error}
+        </p>
       )}
       <button
         type="submit"
@@ -63,5 +65,7 @@ const FindIdFormView = () => {
     </form>
   );
 };
+
+const FindIdFormView = FormActionView(findIdAction, FindIdForm);
 
 export default FindIdFormView;
