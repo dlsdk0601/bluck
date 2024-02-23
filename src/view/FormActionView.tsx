@@ -10,7 +10,7 @@ const FormActionView = <T,>(
 ): (() => JSX.Element) => {
   return function FormAction() {
     const [res, dispatch] = useFormState(action, null);
-    const [child, setChild] = useState(() => <></>);
+    const [child, setChild] = useState(<Component res={res} dispatch={dispatch} />);
 
     useEffect(() => {
       setChild(<Component res={res} dispatch={dispatch} />);
