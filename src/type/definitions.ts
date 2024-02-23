@@ -22,19 +22,53 @@ export function err(error: string): Res<null> {
   return { error, data: null };
 }
 
-type BaseFormActionFunction<T> = (prevState: Res<T> | null, formData: FormData) => Promise<Res<T>>;
+export type BaseFormActionRes<T> = Res<T> | null;
 
-export type SignInActionType = BaseFormActionFunction<{ result: boolean }>;
+export interface FormActionViewProps<T> {
+  res: BaseFormActionRes<T>;
+  dispatch: (payload: FormData) => void;
+}
 
-export type FindIdActionType = BaseFormActionFunction<{ id: string }>;
+export type BaseFormActionFunction<T> = (
+  prevState: BaseFormActionRes<T>,
+  formData: FormData,
+) => Promise<Res<T>>;
 
-export type FindPasswordActionType = BaseFormActionFunction<{ result: string }>;
+export interface SignInActionRes {
+  result: boolean;
+}
 
-export type SignUpActionType = BaseFormActionFunction<{ result: boolean }>;
+export type SignInActionType = BaseFormActionFunction<SignInActionRes>;
 
-export type CheckPasswordActionType = BaseFormActionFunction<{ result: boolean }>;
+export interface FindIdActionRes {
+  id: string;
+}
 
-export type EditPasswordActionType = BaseFormActionFunction<{ result: boolean }>;
+export type FindIdActionType = BaseFormActionFunction<FindIdActionRes>;
+
+export interface FindPasswordActionRes {
+  result: boolean;
+}
+
+export type FindPasswordActionType = BaseFormActionFunction<FindPasswordActionRes>;
+
+export interface SignUpActionRes {
+  result: boolean;
+}
+
+export type SignUpActionType = BaseFormActionFunction<SignUpActionRes>;
+
+export interface CheckPasswordActionRes {
+  result: boolean;
+}
+
+export type CheckPasswordActionType = BaseFormActionFunction<CheckPasswordActionRes>;
+
+export interface EditPasswordActionRes {
+  result: boolean;
+}
+
+export type EditPasswordActionType = BaseFormActionFunction<EditPasswordActionRes>;
 
 // void 타입으로 반환할거라서 BaseFormAction 타입을 쓰지 않는다.
 // undefined 를 안쓰고 싶지만, useFormState 의 타입에 맞추려면 어쩔수 없다.
