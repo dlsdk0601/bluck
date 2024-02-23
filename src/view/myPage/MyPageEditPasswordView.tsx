@@ -3,11 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect } from "react";
-import Link from "next/link";
 import { isLockState } from "@/store/isLock";
 import { checkPasswordAction, editPasswordAction } from "@/server/authActions";
 import { isNotNil } from "@/ex/utils";
-import { Urls } from "@/url/url.g";
+import MyPageEditPasswordSuccessView from "@/view/myPage/MyPageEditPasswordSuccessView";
 
 const MyPageEditPasswordView = () => {
   const router = useRouter();
@@ -82,20 +81,7 @@ const EditPasswordView = () => {
   }, [pending]);
 
   if (isNotNil(res?.data?.result) && res?.data?.result) {
-    return (
-      <div className="mx-auto flex h-4/5 w-2/5 flex-col items-center justify-center tablet:w-3/4 mobile:w-full">
-        <p>
-          비밀번호가 정상적으로 수정되었습니다. <br />
-          다시 로그인을 해주세요.
-        </p>
-        <Link
-          className="mt-5 cursor-pointer text-xs font-medium tablet:text-[10px] mobile:text-[9px]"
-          href={Urls["sign-in"].page.url()}
-        >
-          로그인
-        </Link>
-      </div>
-    );
+    return <MyPageEditPasswordSuccessView />;
   }
 
   return (
@@ -114,7 +100,7 @@ const EditPasswordView = () => {
           <input
             id="new-password"
             name="new-password"
-            type="new-password"
+            type="password"
             className="h-10 w-4/5 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
             placeholder="비밀번호를 입력해주세요."
           />
