@@ -36,6 +36,13 @@ export type CheckPasswordActionType = BaseFormActionFunction<{ result: boolean }
 
 export type EditPasswordActionType = BaseFormActionFunction<{ result: boolean }>;
 
+// void 타입으로 반환할거라서 BaseFormAction 타입을 쓰지 않는다.
+// undefined 를 안쓰고 싶지만, useFormState 의 타입에 맞추려면 어쩔수 없다.
+export type EditPasswordSuccessActionType = (
+  prevState: undefined,
+  formData: FormData,
+) => Promise<undefined>;
+
 export interface ShowUserActionRes {
   profile: Fileset;
   email: string;

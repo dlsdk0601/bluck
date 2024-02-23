@@ -5,6 +5,7 @@ import { isNil, isString } from "lodash";
 import { faker } from "@faker-js/faker/locale/ko";
 import { asset } from "@prisma/client";
 import moment from "moment";
+import { redirect } from "next/navigation";
 import { vBirthday, vEmail, vPassword, vPhone } from "@/ex/validate";
 import { isBlank, isNotNil } from "@/ex/utils";
 import { ERR } from "@/lib/errorEx";
@@ -14,6 +15,7 @@ import { taskMailer } from "@/lib/taskMailer";
 import {
   CheckPasswordActionType,
   EditPasswordActionType,
+  EditPasswordSuccessActionType,
   err,
   FindIdActionType,
   FindPasswordActionType,
@@ -23,7 +25,8 @@ import {
   SignUpActionType,
 } from "@/type/definitions";
 import { awsModel } from "@/lib/aws";
-import { auth, signIn } from "./auth/auth";
+import { Urls } from "@/url/url.g";
+import { auth, signIn, signOut } from "./auth/auth";
 
 // TODO :: 코드 중복이 많으니까 class 형으로 바꿔보자
 
@@ -702,4 +705,13 @@ export const editPasswordAction: EditPasswordActionType = async (prevState, form
     console.error(e);
     return err(ERR.INTERNAL_SERVER);
   }
+};
+
+export const editPasswordSuccessAction: EditPasswordSuccessActionType = async (
+  prevState,
+  formData,
+) => {
+  await signOut();
+
+  redirect(Urls["sign-in"].page.url());
 };
