@@ -11,6 +11,23 @@ const MyPageTagsView = (props: { tags: MyPageTag[] }) => {
   const query = useSearchParams();
   const tags = query.getAll("tags");
 
+  const onClickTag = (tag: MyPageTag) => {
+    if (tags.includes(tag.pk.toString())) {
+      pull(tags, tag.pk.toString());
+    } else {
+      tags.push(tag.pk.toString());
+    }
+
+    let queryString = "";
+
+    // array 형으로 query 를 set 해주는 method 가 따로 없어서 string 으로 바로 처리 한다.
+    for (let i = 0; i < tags.length; i++) {
+      queryString += `tags=${tags[i]}${i === tags.length - 1 ? "" : "&"}`;
+    }
+
+    router.replace(`${Urls["my-page"].show.page.url()}?${queryString}`);
+  };
+
   return (
     <div className="h-full w-1/6">
       <p className="mb-2 h-11 w-full rounded-xl bg-c1f295a py-2 text-center text-lg text-cffffff opacity-90">
@@ -24,25 +41,7 @@ const MyPageTagsView = (props: { tags: MyPageTag[] }) => {
               "opacity-50": !tags.includes(tag.pk.toString()),
             })}
           >
-            <button
-              type="button"
-              onClick={() => {
-                if (tags.includes(tag.pk.toString())) {
-                  pull(tags, tag.pk.toString());
-                } else {
-                  tags.push(tag.pk.toString());
-                }
-
-                let queryString = "";
-
-                // array 형으로 query 를 set 해주는 method 가 따로 없어서 string 으로 바로 처리 한다.
-                for (let i = 0; i < tags.length; i++) {
-                  queryString += `tags=${tags[i]}${i === tags.length - 1 ? "" : "&"}`;
-                }
-
-                router.replace(`${Urls["my-page"].page.url()}?${queryString}`);
-              }}
-            >
+            <button type="button" onClick={() => onClickTag(tag)}>
               {tag.name}
             </button>
           </li>
