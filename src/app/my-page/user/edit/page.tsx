@@ -1,9 +1,9 @@
 import { isNil } from "lodash";
 import Link from "next/link";
 import { showUserAction } from "@/server/authActions";
-import SignUpFormView from "@/view/auth/SignUpFormView";
 import { isNotNil } from "@/ex/utils";
 import { Urls } from "@/url/url.g";
+import MyPageEditUserDataView from "@/view/myPage/MyPageEditUserDataView";
 
 const Page = async () => {
   const res = await showUserAction();
@@ -24,7 +24,7 @@ const Page = async () => {
     );
   }
 
-  return <SignUpFormView data={res.data} />;
+  return <MyPageEditUserDataView data={res.data} />;
 };
 
 export default Page;
