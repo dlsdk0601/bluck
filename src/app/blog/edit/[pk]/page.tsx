@@ -1,5 +1,9 @@
 const BlogEditPage = () => {
-  return <div>Edit</div>;
+  return (
+    <div>
+      <BlogEditPage />
+    </div>
+  );
 };
 
 export default BlogEditPage;
