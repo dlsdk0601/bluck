@@ -1,11 +1,12 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckCircleIcon as OutlineCheckCircleIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { isNil } from "lodash";
 import { signUpAction } from "@/server/authActions";
 import { isNotNil } from "@/ex/utils";
 import { Urls } from "@/url/url.g";
@@ -13,9 +14,11 @@ import { isLockState } from "@/store/isLock";
 import { FormActionViewProps, SignUpActionRes } from "@/type/definitions";
 import FormActionView from "@/view/FormActionView";
 import FileUploadView from "@/view/FileUploadView";
+import { Fileset } from "@/lib/aws";
 
 const SignUpForm = (props: FormActionViewProps<SignUpActionRes>) => {
   const router = useRouter();
+  const ref = useRef<HTMLInputElement>(null);
   const { pending } = useFormStatus();
   const setIsLock = isLockState((state) => state.setIsLock);
 
@@ -37,12 +40,21 @@ const SignUpForm = (props: FormActionViewProps<SignUpActionRes>) => {
     );
   }
 
+  const onChangeProfile = (fileSet: Fileset) => {
+    if (isNil(ref.current)) {
+      return;
+    }
+
+    ref.current.value = fileSet.uuid;
+  };
+
   return (
     <form
       action={props.dispatch}
       className="mx-auto flex h-4/6 max-w-4xl items-start justify-center overflow-y-auto overflow-x-hidden mobile:block"
     >
-      <FileUploadView />
+      <FileUploadView onChange={(fileSet) => onChangeProfile(fileSet)} />
+      <input ref={ref} type="hidden" name="uuid" readOnly />
       <div className="mx-5 flex w-8/12 flex-wrap items-center justify-between mobile:mx-auto mobile:w-5/6">
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label

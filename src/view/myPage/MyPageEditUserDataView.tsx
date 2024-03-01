@@ -2,15 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { isNil } from "lodash";
 import { isLockState } from "@/store/isLock";
 import { isNotNil } from "@/ex/utils";
 import { ShowUserActionRes } from "@/type/definitions";
 import { signUpAction } from "@/server/authActions";
 import FileUploadView from "@/view/FileUploadView";
+import { Fileset } from "@/lib/aws";
 
 const MyPageEditUserDataView = (props: { data: ShowUserActionRes }) => {
   const router = useRouter();
+  const ref = useRef<HTMLInputElement>(null);
   const { pending } = useFormStatus();
   const setIsLock = isLockState((state) => state.setIsLock);
   const [res, dispatch] = useFormState(signUpAction, null);
@@ -27,12 +30,24 @@ const MyPageEditUserDataView = (props: { data: ShowUserActionRes }) => {
     );
   }
 
+  const onChangeProfile = (fileSet: Fileset) => {
+    if (isNil(ref.current)) {
+      return;
+    }
+
+    ref.current.value = fileSet.uuid;
+  };
+
   return (
     <form
       action={dispatch}
       className="mx-auto mt-16 flex h-4/6 max-w-4xl items-start justify-center overflow-y-auto overflow-x-hidden mobile:block"
     >
-      <FileUploadView profile={props.data.profile} />
+      <FileUploadView
+        profile={props.data.profile}
+        onChange={(fileSet) => onChangeProfile(fileSet)}
+      />
+      <input ref={ref} type="hidden" name="uuid" readOnly />
       <div className="mx-5 flex w-8/12 flex-wrap items-center justify-between mobile:mx-auto mobile:w-5/6">
         <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
           <label
