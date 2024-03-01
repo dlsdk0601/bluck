@@ -1,7 +1,9 @@
+import BlogEditorView from "@/view/blog/BlogEditorView";
+
 const BlogEditPage = () => {
   return (
     <div>
-      <BlogEditPage />
+      <BlogEditorView />
     </div>
   );
 };
