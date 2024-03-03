@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { isEmpty, isNil } from "lodash";
-import { ValueField } from "../ex/field";
-import { isBlank, isNotNil } from "../ex/utils";
-import { k } from "../ex/korean-postposition";
+import { isBlank, isNotNil } from "@/ex/utils";
+import { k } from "@/ex/korean-postposition";
+
+export type ValueField<T> = {
+  value: T;
+  error: string;
+  name: string;
+};
 
 type Validator<T> = (value: T) => string | undefined;
 
