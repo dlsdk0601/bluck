@@ -6,9 +6,12 @@ import "react-quill/dist/quill.snow.css";
 import { isNil, isString } from "lodash";
 import { blobToBase64String } from "blob-util";
 import { RangeStatic } from "quill";
+import classNames from "classnames";
 import { vFileExtension } from "@/ex/validate";
 import { isNotNil } from "@/ex/utils";
 import { api } from "@/lib/axios";
+import { newFileSet } from "@/ex/base64Ex";
+import { Fileset } from "@/lib/aws";
 
 // image 참고
 // https://mingeesuh.tistory.com/entry/Quill-React-%EC%97%90%EB%94%94%ED%84%B0-%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C-%EB%B0%8F-%EC%82%AC%EC%9D%B4%EC%A6%88-%EC%A1%B0%EC%A0%88
@@ -122,14 +125,49 @@ const BlogEditorView = () => {
 
   // TODO :: 이미지 처리
   return (
-    <ReactQuill
-      ref={ref}
-      theme="snow"
-      className="h-[45vh]"
-      modules={modules}
-      formats={formats}
-      onChange={(value) => setValues(value)}
-    />
+    <>
+      <BlogBannerView onChange={(fileSet) => {}} />
+      <ReactQuill
+        ref={ref}
+        theme="snow"
+        className="h-[45vh] w-full"
+        modules={modules}
+        formats={formats}
+        onChange={(value) => setValues(value)}
+      />
+    </>
+  );
+};
+
+const BlogBannerView = (props: { onChange: (fileSet: Fileset) => void }) => {
+  const [fileSet, setFileSet] = useState<Fileset | null>(null);
+  const onChange = (fileSet: Fileset) => {
+    setFileSet(fileSet);
+    props.onChange(fileSet);
+  };
+
+  return (
+    <label
+      htmlFor="profile"
+      style={isNotNil(fileSet?.url) ? { backgroundImage: `url(${fileSet.url})` } : undefined}
+      className={classNames(
+        "mb-3 flex h-48 w-full cursor-pointer items-center justify-center rounded-lg border-none mobile:mx-auto mobile:my-3 mobile:h-full mobile:w-full",
+        {
+          "bg-ccfd1dd dark:bg-c000000": isNil(fileSet),
+          "bg-cover bg-center bg-no-repeat": isNotNil(fileSet),
+        },
+      )}
+    >
+      {isNil(fileSet) ? "\u002B" : ""}
+      <input
+        type="file"
+        onChange={(e) => newFileSet(e, onChange)}
+        accept="image/*"
+        id="profile"
+        name="profile"
+        className="hidden"
+      />
+    </label>
   );
 };
 
