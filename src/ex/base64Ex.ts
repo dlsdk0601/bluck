@@ -1,3 +1,11 @@
+import { ChangeEvent } from "react";
+import { isNil, isString } from "lodash";
+import { blobToBase64String } from "blob-util";
+import { Fileset } from "@/lib/aws";
+import { vFileExtension } from "@/ex/validate";
+import { isNotNil } from "@/ex/utils";
+import { api } from "@/lib/axios";
+
 export type ImageType = {
   id?: number;
   type: string;
@@ -29,4 +37,36 @@ export const fileToBase64 = async (
     fileName: file.name,
     fileBase64: dataUri.split(",")[1] ?? "",
   };
+};
+
+export const newFileSet = async (
+  e: ChangeEvent<HTMLInputElement>,
+  callBack: (fileSet: Fileset) => void,
+) => {
+  const { files } = e.target;
+
+  if (isNil(files)) {
+    return;
+  }
+
+  const file = files[0];
+  const validFileExtension = vFileExtension(file.type, ["IMAGE"]);
+  if (isNotNil(validFileExtension)) {
+    alert(validFileExtension);
+    return;
+  }
+
+  const base64 = await blobToBase64String(file);
+
+  const res = await api.newAsset({ base64, name: file.name });
+
+  if (isNil(res)) {
+    return;
+  }
+
+  if (isString(res)) {
+    return alert(res);
+  }
+
+  callBack(res.fileSet);
 };
