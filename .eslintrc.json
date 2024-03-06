@@ -198,7 +198,11 @@
     // 상황에 따라 다르지만 @ path 를 사용하기 위해 비활성화
     "import/no-unresolved": 0,
     // faker 에서 loop 안에 await 사용을 위해 
-    "no-await-in-loop": 0
+    "no-await-in-loop": 0,
+    // server action 에서 console.error 의 warning 을 막는다.
+    "no-console": ["warn", {
+      "allow": ["error"]
+    }]
   },
   "settings": {
     "import/resolver": {
