@@ -1,5 +1,5 @@
 import { ParsedUrlQueryInput } from "querystring";
-import { head, isArray, isNil } from "lodash";
+import _ from "lodash";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { isBlank, removeSuffix } from "@/ex/utils";
 import { config } from "@/config/config";
@@ -33,7 +33,7 @@ export class PageUrl {
   }
 
   url(query?: ParsedUrlQueryInput) {
-    if (isNil(query)) {
+    if (_.isNil(query)) {
       return this.pathname;
     }
 
@@ -64,15 +64,15 @@ export class PageUrl {
       | null
       | undefined,
   ) {
-    if (isNil(value)) {
+    if (_.isNil(value)) {
       return "";
     }
 
-    if (isArray(value)) {
+    if (_.isArray(value)) {
       // 굳이 복사 하는 이유는 ts 가 타입 추적을 못함..
       const newValue: readonly string[] | readonly number[] | readonly boolean[] = [...value];
       const arr = newValue.map((item) => item.toString());
-      return head(arr)?.toString() ?? "";
+      return _.head(arr)?.toString() ?? "";
     }
 
     return value.toString();

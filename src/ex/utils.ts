@@ -1,16 +1,6 @@
 import { ParsedUrlQuery } from "querystring";
 import { BaseSyntheticEvent } from "react";
-import {
-  head,
-  isArray,
-  isDate,
-  isEmpty,
-  isNil,
-  isNull,
-  isNumber,
-  isString,
-  isUndefined,
-} from "lodash";
+import _ from "lodash";
 import moment, { Moment } from "moment";
 
 export const returnTo = (query: ParsedUrlQuery): string | undefined => {
@@ -38,16 +28,16 @@ export const isBlank = (value: any): value is null | undefined => {
     return true;
   }
 
-  if (isNull(value)) {
+  if (_.isNull(value)) {
     return true;
   }
 
-  if (isUndefined(value)) {
+  if (_.isUndefined(value)) {
     return true;
   }
 
   // noinspection RedundantIfStatementJS
-  if (isArray(value) && isEmpty(value)) {
+  if (_.isArray(value) && _.isEmpty(value)) {
     return true;
   }
 
@@ -91,26 +81,26 @@ export const ignorePromise = <T>(block: () => Promise<T>) => {
 export type NotNil<T> = T extends null | undefined | void ? never : T;
 
 export function isNotNil<T>(value: T): value is NotNil<T> {
-  return !isNil(value);
+  return !_.isNil(value);
 }
 
 export function dateFormatter(
   datetime: Date | string | number | Moment | null | undefined,
   format: string = "YYYY-MM-DD",
 ): string {
-  if (isNil(datetime)) {
+  if (_.isNil(datetime)) {
     return "";
   }
 
-  if (isNumber(datetime)) {
+  if (_.isNumber(datetime)) {
     return dateFormatter(moment(datetime), format);
   }
 
-  if (isString(datetime)) {
+  if (_.isString(datetime)) {
     return dateFormatter(moment(datetime), format);
   }
 
-  if (isDate(datetime)) {
+  if (_.isDate(datetime)) {
     return dateFormatter(moment(datetime), format);
   }
 
@@ -118,7 +108,7 @@ export function dateFormatter(
 }
 
 export function phoneNum(phone: string | null): string {
-  if (isNil(phone)) {
+  if (_.isNil(phone)) {
     return "";
   }
   const cleaned = phone.replace(/\D/g, "");
@@ -150,7 +140,7 @@ export function phoneOnlyNumber(phone: string | null) {
 }
 
 export function validatePageQuery(page: string | string[] | undefined): number | null {
-  if (isNil(page) || isArray(page)) {
+  if (_.isNil(page) || _.isArray(page)) {
     return null;
   }
 
@@ -164,7 +154,7 @@ export function validatePageQuery(page: string | string[] | undefined): number |
 }
 
 export function validatePk(pk: string | string[] | undefined): number | null {
-  if (isNil(pk) || isArray(pk)) {
+  if (_.isNil(pk) || _.isArray(pk)) {
     return null;
   }
 
@@ -184,12 +174,12 @@ export function validatePk(pk: string | string[] | undefined): number | null {
 // 제일 기본 query 처리 함수
 export function queryFilter(query: string | string[] | undefined): string {
   // undefined 나 query[0] 이 제대로 된값이 아니면 어차피 에러 처리가 되어야 한다.
-  if (isNil(query)) {
+  if (_.isNil(query)) {
     return "";
   }
 
-  if (isArray(query)) {
-    return head(query) ?? "";
+  if (_.isArray(query)) {
+    return _.head(query) ?? "";
   }
 
   return query;
