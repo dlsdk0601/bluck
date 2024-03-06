@@ -28,8 +28,6 @@ import { awsModel } from "@/lib/aws";
 import { Urls } from "@/url/url.g";
 import { auth, signIn, signOut } from "./auth/auth";
 
-// TODO :: 코드 중복이 많으니까 class 형으로 바꿔보자
-
 export const signInAction: SignInActionType = async (prevState, formData) => {
   try {
     const email = formData.get("email");
