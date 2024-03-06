@@ -3,9 +3,16 @@ import { z } from "zod";
 import { isNil } from "lodash";
 import Credentials from "next-auth/providers/credentials";
 import { user } from "@prisma/client";
+import { AdapterUser } from "@auth/core/adapters";
 import { compare } from "@/ex/bcryptEx";
 import prisma from "@/lib/prisma";
 import { authConfig } from "./auth.config";
+
+declare module "next-auth" {
+  interface User {
+    pk: number;
+  }
+}
 
 async function getUser(email: string): Promise<user | undefined> {
   try {
@@ -58,14 +65,8 @@ export const { auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async session({ session, token }) {
-      session.user = token.user as User;
+      session.user = token.user as AdapterUser & User;
       return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.user = user;
-      }
-      return token;
     },
   },
 });
