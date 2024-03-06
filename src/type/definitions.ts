@@ -41,7 +41,7 @@ export interface FindIdActionRes {
 export type FindIdActionType = BaseFormActionFunction<FindIdActionRes>;
 
 export interface FindPasswordActionRes {
-  result: boolean;
+  result: string;
 }
 
 export type FindPasswordActionType = BaseFormActionFunction<FindPasswordActionRes>;
