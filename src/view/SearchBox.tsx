@@ -3,14 +3,12 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import useDarkMode from "@/hooks/useDarkMode";
 import { Urls } from "@/url/url.g";
 import { SearchType } from "@/type/definitions";
 import { preventDefaulted } from "@/ex/utils";
 import { SelectBoxView } from "./SelectBoxView";
 
 const SearchBox = (props: { search?: string; searchType?: SearchType }) => {
-  const { isDarkMode } = useDarkMode();
   const router = useRouter();
   const searchParams = useSearchParams();
 
