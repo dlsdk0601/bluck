@@ -93,18 +93,18 @@ export const vFileExtension = (value: any, types: FileType[]): string | undefine
 
   let isValid = true;
   let error = "";
-  // eslint-disable-next-line array-callback-return
-  const _ignore = types.map((type) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const type of types) {
     switch (type) {
       case "PDF": {
         isValid = isNotNil(value.match(/^application\/pdf$/));
         error = "PDF 확장자가 아닙니다.";
-        return;
+        break;
       }
       case "VIDEO": {
         isValid = isNotNil(value.match(/^video\/(mp4|webm)$/));
         error = "비디오 확장자가 아닙니다.";
-        return;
+        break;
       }
       case "IMAGE":
       default: {
@@ -112,7 +112,7 @@ export const vFileExtension = (value: any, types: FileType[]): string | undefine
         isValid = isNotNil(value.match(/^image\/(jpeg|png|jpg)$/));
       }
     }
-  });
+  }
 
   if (!isValid) {
     return error;
