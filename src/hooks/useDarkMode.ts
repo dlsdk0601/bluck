@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from "react";
-import { isNil } from "lodash";
 import { isDarkState } from "@/store/isDark";
 
 const useDarkMode = (): {
@@ -9,24 +8,18 @@ const useDarkMode = (): {
   const { isDark: isDarkMode, setIsDark: setIsDarkMode } = isDarkState((state) => state);
 
   useEffect(() => {
-    if (isNil(localStorage.theme)) {
-      setIsDarkMode(false);
-      return;
-    }
-
-    setIsDarkMode(localStorage.theme === "dark");
-  }, []);
-
-  useEffect(() => {
     if (
       localStorage.theme === "dark" ||
       (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
+      setIsDarkMode(true);
       document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+      return;
     }
-  }, [isDarkMode]);
+
+    document.documentElement.classList.remove("dark");
+    setIsDarkMode(false);
+  }, []);
 
   const onClickToggleButton = useCallback(() => {
     const updateMode = !isDarkMode;
