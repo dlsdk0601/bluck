@@ -2,7 +2,6 @@ import Image from "next/image";
 import { isNil } from "lodash";
 import parse from "html-react-parser";
 import Link from "next/link";
-import { ShareIcon } from "@heroicons/react/24/solid";
 import { ChatBubbleBottomCenterTextIcon, EyeIcon } from "@heroicons/react/24/outline";
 import BlogButtonBoxView from "@/view/blog/BlogButtonBoxView";
 import { getBlogShowAction } from "@/server/blogActions";
@@ -11,6 +10,7 @@ import Replace from "@/view/layout/Replace";
 import { Urls } from "@/url/url.g";
 import { mf1 } from "@/ex/numberEx";
 import BlogLikeButtonView from "@/view/blog/BlogLikeButtonView";
+import ShareButtonView from "@/view/ShareButtonView";
 
 const BlogShowPage = async (props: { params: { pk: string } }) => {
   const pk = validatePk(props.params.pk);
@@ -59,10 +59,11 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-center mobile:mr-2">
-            <figure className="relative ml-3 h-[20px] w-[20px] cursor-pointer mobile:h-[15px] mobile:w-[15px]">
-              <ShareIcon className="w-full" />
-            </figure>
+          <div className="mobile:mr-2">
+            <ShareButtonView />
+            {/* <figure className="relative ml-3 h-[20px] w-[20px] cursor-pointer mobile:h-[15px] mobile:w-[15px]"> */}
+            {/*  <ShareIcon className="w-full" /> */}
+            {/* </figure> */}
           </div>
         </div>
 
