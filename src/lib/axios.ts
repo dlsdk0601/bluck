@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { sleep } from "sleepjs";
 import { config } from "@/config/config";
 import { NewAssetReq, NewAssetRes } from "@/app/api/asset/new/route";
+import { NewBlogReviewReq, NewBlogReviewRes } from "@/app/api/blog/review/route";
 
 export const axiosInstance = axios.create({
   baseURL: `${config.baseUrl}/api`,
@@ -128,6 +129,7 @@ class ApiBase {
 
 class Api extends ApiBase {
   newAsset = (req: NewAssetReq) => this.post<NewAssetRes>("/asset/new", req);
+  newBlogReview = (req: NewBlogReviewReq) => this.post<NewBlogReviewRes>("/blog/review", req);
 }
 
 export const api = new Api();
