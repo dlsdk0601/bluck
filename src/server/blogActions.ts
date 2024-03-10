@@ -226,6 +226,9 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
               },
             },
           },
+          orderBy: {
+            created_at: "desc",
+          },
         },
         blog_like: true,
         tags: { select: { tag: true } },
