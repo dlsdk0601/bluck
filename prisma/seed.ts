@@ -49,6 +49,11 @@ async function main() {
     skipDuplicates: true,
   });
 
+  await prisma.blog_review.createMany({
+    data: await blogReviews(faker),
+    skipDuplicates: true,
+  });
+
   console.log("----------------Faker Insert Success----------------");
 }
 
@@ -191,6 +196,20 @@ async function blogLikes(faker: Faker) {
   }
 
   return blogLikes;
+}
+
+async function blogReviews(faker: Faker) {
+  const reviews: Prisma.blog_reviewCreateManyInput[] = [];
+
+  for (let i = 0; i < 200; i++) {
+    reviews.push({
+      review: faker.lorem.sentences(),
+      blog_pk: (await getBlog(faker)).pk,
+      user_pk: (await getUser(faker)).pk,
+    });
+  }
+
+  return reviews;
 }
 
 async function getUser(faker: Faker): Promise<user> {
