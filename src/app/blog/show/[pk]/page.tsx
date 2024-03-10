@@ -11,6 +11,7 @@ import { Urls } from "@/url/url.g";
 import { mf1 } from "@/ex/numberEx";
 import BlogLikeButtonView from "@/view/blog/BlogLikeButtonView";
 import ShareButtonView from "@/view/ShareButtonView";
+import BlogReviewView from "@/view/blog/BlogReviewView";
 
 const BlogShowPage = async (props: { params: { pk: string } }) => {
   const pk = validatePk(props.params.pk);
@@ -87,7 +88,7 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
           <figure className="mx-[5px] flex items-center justify-between">
             <ChatBubbleBottomCenterTextIcon className="w-5" />
             <figcaption className="ml-[10px] text-[14px]  mobile:ml-[2px] mobile:text-[10px]">
-              1000
+              {res.data.reviews.length}
             </figcaption>
           </figure>
           <BlogLikeButtonView
@@ -110,6 +111,8 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
           prevBlogPk={res.data.recommendBlogs[1].pk}
           prevBlogTitle={res.data.recommendBlogs[1].title}
         />
+
+        <BlogReviewView reviews={res.data.reviews} />
       </div>
     </div>
   );
