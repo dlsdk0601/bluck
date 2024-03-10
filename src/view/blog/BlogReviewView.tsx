@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { isNil, isString } from "lodash";
+import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { ReviewBlog } from "@/type/definitions";
 import { d1 } from "@/ex/dateEx";
 import { api } from "@/lib/axios";
@@ -72,6 +73,11 @@ const BlogReviewView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
                 <p>{review.user.name}</p>
                 <p className="mt-2 text-xs">{d1(review.createAt)}</p>
               </div>
+              {user?.pk === review.user.pk && (
+                <figure className="ms-auto cursor-pointer">
+                  <EllipsisVerticalIcon className="w-5" />
+                </figure>
+              )}
             </div>
             <p className="mt-5 whitespace-pre-wrap">{review.review}</p>
           </li>
