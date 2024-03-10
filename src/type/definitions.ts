@@ -120,6 +120,17 @@ export interface RecommendBlog {
   title: string;
 }
 
+export interface ReviewBlog {
+  pk: number;
+  review: string;
+  createAt: Date;
+  user: {
+    pk: number;
+    name: string;
+    mainImage: Fileset;
+  };
+}
+
 export interface GetBlogShowActionRes {
   pk: number;
   banner: Fileset;
@@ -134,6 +145,7 @@ export interface GetBlogShowActionRes {
   viewCount: number;
   likeCount: number;
   hasLike: boolean;
+  reviews: ReviewBlog[];
   recommendBlogs: RecommendBlog[];
 }
 
