@@ -38,6 +38,7 @@ const BlogReviewView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
     setIsLock(false);
   };
 
+  // TODO :: 삭제 수정 버튼 및 로직 추가
   return (
     <div className="mx-auto w-11/12">
       <form onSubmit={preventDefaulted(() => onSubmit())}>
