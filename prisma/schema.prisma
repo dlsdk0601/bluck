@@ -24,11 +24,12 @@ model user {
   main_image                    asset    @relation(fields: [main_image_pk], references: [pk])
   is_personal_information_agree Boolean
 
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  blog       blog[]
-  blog_view  blog_view[]
-  blog_like  blog_like[]
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  blog        blog[]
+  blog_view   blog_view[]
+  blog_like   blog_like[]
+  blog_review blog_review[]
 }
 
 model asset {
@@ -61,9 +62,10 @@ model blog {
   user_pk         Int   @db.Integer
   user            user  @relation(fields: [user_pk], references: [pk])
 
-  tags      blog_tag[]
-  blog_view blog_view[]
-  blog_like blog_like[]
+  tags        blog_tag[]
+  blog_view   blog_view[]
+  blog_like   blog_like[]
+  blog_review blog_review[]
 }
 
 model blog_tag {
@@ -91,4 +93,16 @@ model blog_like {
   user    user @relation(fields: [user_pk], references: [pk])
 
   @@id([blog_pk, user_pk])
+}
+
+model blog_review {
+  pk         Int      @id @default(autoincrement())
+  review     String   @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  blog_pk Int  @db.Integer
+  blog    blog @relation(fields: [blog_pk], references: [pk])
+  user_pk Int  @db.Integer
+  user    user @relation(fields: [user_pk], references: [pk])
 }
