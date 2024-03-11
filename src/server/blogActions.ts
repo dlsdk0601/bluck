@@ -113,6 +113,7 @@ function setBlogWhere(
   searchDateType: SearchDataType,
 ): Prisma.blogWhereInput {
   const where: Prisma.blogWhereInput = {};
+  where.deleted_at = null;
 
   switch (searchType) {
     case "AUTHOR": {
@@ -209,6 +210,7 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
         banner_image: true,
         user: {
           select: {
+            pk: true,
             name: true,
             main_image: true,
           },
@@ -241,6 +243,7 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
       },
       where: {
         pk,
+        deleted_at: null,
       },
     });
 
@@ -269,6 +272,7 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
       banner: awsModel.toFileSet(blog.banner_image),
       createAt: d1(blog.created_at),
       user: {
+        pk: blog.user.pk,
         profile: awsModel.toFileSet(blog.user.main_image),
         name: blog.user.name,
       },
@@ -298,6 +302,7 @@ const getRecommendBlogs = async (pk: number, tags: { pk: number; name: string }[
       title: true,
     },
     where: {
+      deleted_at: null,
       NOT: {
         pk,
       },
@@ -316,6 +321,9 @@ const getRecommendBlogs = async (pk: number, tags: { pk: number; name: string }[
       select: {
         pk: true,
         title: true,
+      },
+      where: {
+        deleted_at: null,
       },
       orderBy: {
         created_at: "desc",
@@ -340,7 +348,7 @@ export const blogLikeActionType: BlogLikeActionType = async (pk: number) => {
     return err(ERR.NOT_SIGN_USER);
   }
 
-  const blog = await prisma.blog.findUnique({ where: { pk } });
+  const blog = await prisma.blog.findUnique({ where: { pk, deleted_at: null } });
 
   if (isNil(blog)) {
     return err(ERR.NOT_FOUND("블로그"));
