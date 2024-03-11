@@ -138,6 +138,7 @@ export interface GetBlogShowActionRes {
   body: string;
   createAt: string;
   user: {
+    pk: number;
     profile: Fileset;
     name: string;
   };
