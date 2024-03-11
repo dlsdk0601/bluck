@@ -96,10 +96,11 @@ model blog_like {
 }
 
 model blog_review {
-  pk         Int      @id @default(autoincrement())
-  review     String   @db.Text
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  pk         Int       @id @default(autoincrement())
+  review     String    @db.Text
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
 
   blog_pk Int  @db.Integer
   blog    blog @relation(fields: [blog_pk], references: [pk])
