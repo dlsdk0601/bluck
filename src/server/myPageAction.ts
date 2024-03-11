@@ -83,7 +83,6 @@ export const myPageBlogsAction: MyPageBlogsActionType = async (tagPks) => {
       };
     }
 
-    // TODO :: in PK 처리
     const blogs = await prisma.blog.findMany({
       select: {
         pk: true,
@@ -107,6 +106,7 @@ export const myPageBlogsAction: MyPageBlogsActionType = async (tagPks) => {
       where: {
         user_pk: session.user.pk,
         tags,
+        deleted_at: null,
       },
       orderBy: {
         created_at: "desc",
