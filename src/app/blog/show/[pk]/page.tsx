@@ -3,6 +3,7 @@ import { isNil } from "lodash";
 import parse from "html-react-parser";
 import Link from "next/link";
 import { ChatBubbleBottomCenterTextIcon, EyeIcon } from "@heroicons/react/24/outline";
+import React from "react";
 import BlogButtonBoxView from "@/view/blog/BlogButtonBoxView";
 import { getBlogShowAction } from "@/server/blogActions";
 import { isNotNil, validatePk } from "@/ex/utils";
@@ -11,7 +12,8 @@ import { Urls } from "@/url/url.g";
 import { mf1 } from "@/ex/numberEx";
 import BlogLikeButtonView from "@/view/blog/BlogLikeButtonView";
 import ShareButtonView from "@/view/ShareButtonView";
-import BlogReviewView from "@/view/blog/BlogReviewView";
+import BlogReviewsView from "@/view/blog/BlogReviewsView";
+import EditBlogButtonView from "@/view/blog/EditBlogButtonView";
 
 const BlogShowPage = async (props: { params: { pk: string } }) => {
   const pk = validatePk(props.params.pk);
@@ -43,7 +45,6 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
       <div className="overflow-hidden rounded-t-3xl">
         {/* 이미지 */}
         <figure className="relative h-[300px] w-full mobile:h-[200px]">
-          {/* <Image fill src="/assets/img/dog.png" alt="blog-show-banner" sizes="100%" /> */}
           <Image fill src={res.data.banner.url} alt="blog-show-banner" sizes="100%" />
         </figure>
         {/* 작성자 */}
@@ -60,11 +61,9 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
             </div>
           </div>
 
-          <div className="mobile:mr-2">
+          <div className="flex justify-end mobile:mr-2">
             <ShareButtonView />
-            {/* <figure className="relative ml-3 h-[20px] w-[20px] cursor-pointer mobile:h-[15px] mobile:w-[15px]"> */}
-            {/*  <ShareIcon className="w-full" /> */}
-            {/* </figure> */}
+            <EditBlogButtonView blogPk={res.data.pk} userPk={res.data.user.pk} />
           </div>
         </div>
 
