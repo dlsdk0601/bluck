@@ -132,7 +132,13 @@ class ApiBase {
 
 class Api extends ApiBase {
   newAsset = (req: NewAssetReq) => this.post<NewAssetRes>("/asset/new", req);
-  newBlogReview = (req: NewBlogReviewReq) => this.post<NewBlogReviewRes>("/blog/review", req);
+  newBlogReview = (req: NewBlogReviewReq) => this.post<NewBlogReviewRes>("/blog/review/new", req);
+  editBlogReview = (req: EditBlogReviewReq) =>
+    this.post<EditBlogReviewRes>("/blog/review/edit", req);
+  deleteBlogReview = (req: DeleteBlogReviewReq) =>
+    this.post<DeleteBlogReviewRes>("/blog/review/delete", req);
+
+  deleteBlog = (req: DeleteBlogReq) => this.post<DeleteBlogRes>("/blog/delete", req);
 }
 
 export const api = new Api();
