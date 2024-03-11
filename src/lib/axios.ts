@@ -2,7 +2,10 @@ import axios, { AxiosRequestConfig } from "axios";
 import { sleep } from "sleepjs";
 import { config } from "@/config/config";
 import { NewAssetReq, NewAssetRes } from "@/app/api/asset/new/route";
-import { NewBlogReviewReq, NewBlogReviewRes } from "@/app/api/blog/review/route";
+import { NewBlogReviewReq, NewBlogReviewRes } from "@/app/api/blog/review/new/route";
+import { EditBlogReviewReq, EditBlogReviewRes } from "@/app/api/blog/review/edit/route";
+import { DeleteBlogReviewReq, DeleteBlogReviewRes } from "@/app/api/blog/review/delete/route";
+import { DeleteBlogReq, DeleteBlogRes } from "@/app/api/blog/delete/route";
 
 export const axiosInstance = axios.create({
   baseURL: `${config.baseUrl}/api`,

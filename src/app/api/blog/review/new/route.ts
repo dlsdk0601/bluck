@@ -24,7 +24,7 @@ export async function POST(req: NextRequest): Promise<ApiRes<NewBlogReviewRes>> 
 
   const body: NewBlogReviewReq = await req.json();
 
-  const blog = await prisma.blog.findUnique({ where: { pk: body.pk } });
+  const blog = await prisma.blog.findUnique({ where: { pk: body.pk, deleted_at: null } });
 
   if (isNil(blog)) {
     return notFoundException(ERR.NOT_FOUND("블로그"));
