@@ -113,22 +113,6 @@ const BlogEditorView = (props: { title?: string; values?: string }) => {
 
   return (
     <>
-      <div className="mb-3 flex w-full items-center justify-start overflow-hidden rounded-xl mobile:mb-1">
-        <label
-          htmlFor="title"
-          className="flex h-10 w-1/6 items-center bg-ccfd1dd pl-2 text-sm font-medium leading-3 dark:bg-c000000 mobile:pl-4 mobile:text-[10px]"
-        >
-          title
-        </label>
-        <input
-          id="title"
-          type="text"
-          name="title"
-          defaultValue={props.title}
-          className="h-10 w-5/6 rounded-r-xl border-none bg-ccfd1dd focus:outline-none dark:bg-c000000"
-          placeholder="제목을 입력해주세요."
-        />
-      </div>
       <ReactQuill
         ref={ref}
         theme="snow"
