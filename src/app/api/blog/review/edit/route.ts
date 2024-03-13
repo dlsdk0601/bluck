@@ -22,7 +22,9 @@ export async function POST(req: NextRequest): Promise<ApiRes<EditBlogReviewRes>>
 
   const body: EditBlogReviewReq = await req.json();
 
-  const blogReview = await prisma.blog_review.findUnique({ where: { pk: body.pk } });
+  const blogReview = await prisma.blog_review.findUnique({
+    where: { pk: body.pk, deleted_at: null },
+  });
 
   if (isNil(blogReview)) {
     return notFoundException(ERR.NOT_FOUND("블로그 댓글"));

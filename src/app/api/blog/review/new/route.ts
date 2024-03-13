@@ -53,6 +53,7 @@ export async function POST(req: NextRequest): Promise<ApiRes<NewBlogReviewRes>> 
     },
     where: {
       blog_pk: blog.pk,
+      deleted_at: null,
     },
     orderBy: {
       created_at: "desc",
