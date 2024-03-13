@@ -12,7 +12,7 @@ const BlogButtonBoxView = (props: {
   prevBlogTitle: string;
 }) => {
   const router = useRouter();
-  const { isDarkMode } = useDarkMode();
+  const { isDark } = useDarkMode();
 
   return (
     <div className="flex items-center justify-around border-t-2 border-solid border-ccfd1dd px-0 py-10">
@@ -24,7 +24,7 @@ const BlogButtonBoxView = (props: {
         <figure className="relative h-[50px] w-[50px] tablet:h-[40px] tablet:w-[40px]">
           <Image
             fill
-            src={isDarkMode ? "/assets/img/BlackLeftArrow.png" : "/assets/img/whiteLeftArrow.png"}
+            src={isDark ? "/assets/img/BlackLeftArrow.png" : "/assets/img/whiteLeftArrow.png"}
             sizes="100%"
             alt="left-arrow"
           />
@@ -54,7 +54,7 @@ const BlogButtonBoxView = (props: {
         <figure className="relative h-[50px] w-[50px] tablet:h-[40px] tablet:w-[40px]">
           <Image
             fill
-            src={isDarkMode ? "/assets/img/blackRightArrow.png" : "/assets/img/whiteRightArrow.png"}
+            src={isDark ? "/assets/img/blackRightArrow.png" : "/assets/img/whiteRightArrow.png"}
             sizes="100%"
             alt="left-arrow"
           />

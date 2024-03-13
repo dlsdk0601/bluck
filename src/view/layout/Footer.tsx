@@ -20,7 +20,7 @@ const FooterView = () => {
 };
 
 const DarkModeButtonView = () => {
-  const { isDarkMode, onClickToggleButton } = useDarkMode();
+  const { isDark, onClickToggleButton } = useDarkMode();
   return (
     <button
       type="button"
@@ -28,9 +28,9 @@ const DarkModeButtonView = () => {
       onClick={() => onClickToggleButton()}
     >
       <figure className="relative h-[20px] w-[20px] mobile:h-[15px] mobile:w-[15px]">
-        {isDarkMode ? <SunIcon className="w-full" /> : <MoonIcon className="w-full" />}
+        {isDark ? <SunIcon className="w-full" /> : <MoonIcon className="w-full" />}
       </figure>
-      {isDarkMode ? "라이트모드" : "다크모드"}
+      {isDark ? "라이트모드" : "다크모드"}
     </button>
   );
 };
