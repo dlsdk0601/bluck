@@ -14,6 +14,7 @@ import BlogLikeButtonView from "@/view/blog/BlogLikeButtonView";
 import ShareButtonView from "@/view/ShareButtonView";
 import BlogReviewsView from "@/view/blog/BlogReviewsView";
 import EditBlogButtonView from "@/view/blog/EditBlogButtonView";
+import BlogReviewCountView from "@/view/blog/BlogReviewCountView";
 
 const BlogShowPage = async (props: { params: { pk: string } }) => {
   const pk = validatePk(props.params.pk);
@@ -86,9 +87,7 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
         <div className="my-16 mr-3 flex items-center justify-end mobile:ml-2 mobile:w-[60%]">
           <figure className="mx-[5px] flex items-center justify-between">
             <ChatBubbleBottomCenterTextIcon className="w-5" />
-            <figcaption className="ml-[10px] text-[14px]  mobile:ml-[2px] mobile:text-[10px]">
-              {res.data.reviews.length}
-            </figcaption>
+            <BlogReviewCountView />
           </figure>
           <BlogLikeButtonView
             pk={res.data.pk}

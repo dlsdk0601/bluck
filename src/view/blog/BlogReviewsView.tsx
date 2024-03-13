@@ -13,15 +13,18 @@ import { isLockState } from "@/store/isLock";
 import { userState } from "@/store/user";
 import { ERR } from "@/lib/errorEx";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { reviewCountSate } from "@/store/reviewCount";
 
 const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
   const setIsLock = isLockState((state) => state.setIsLock);
   const user = userState((state) => state.user);
+  const setReviewCount = reviewCountSate((state) => state.setReviewCount);
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState<ReviewBlog[]>([]);
 
   useEffect(() => {
     setReviews([...props.reviews]);
+    setReviewCount(props.reviews.length);
   }, [props]);
 
   const onSubmit = async () => {
@@ -38,6 +41,7 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
 
     setReviews([...res.reviews]);
     setReview("");
+    setReviewCount(res.reviews.length);
     setIsLock(false);
   };
 
@@ -60,6 +64,7 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
     }
 
     setReviews([...res.reviews]);
+    setReviewCount(res.reviews.length);
     setIsLock(false);
   };
 
