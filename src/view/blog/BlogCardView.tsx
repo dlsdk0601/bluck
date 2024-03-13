@@ -73,7 +73,7 @@ const BlogCardView = (props: { blog: GetBlogsActionResItem; isFull?: boolean }) 
             <figure className="mx-[5px] flex items-center justify-between">
               <ChatBubbleBottomCenterTextIcon className="w-5" />
               <figcaption className="ml-[10px] text-[14px]  mobile:ml-[2px] mobile:text-[10px]">
-                1000
+                {mf1(props.blog.reviewCount)}
               </figcaption>
             </figure>
             <figure className="mx-[5px] flex items-center justify-between">

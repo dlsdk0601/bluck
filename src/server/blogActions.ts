@@ -48,6 +48,7 @@ export const getBlogListAction: getBlogListActionType = async (
             select: {
               blog_view: true,
               blog_like: true,
+              blog_review: true,
             },
           },
         },
@@ -72,6 +73,7 @@ export const getBlogListAction: getBlogListActionType = async (
       banner: awsModel.toFileSet(blog.banner_image),
       viewCount: blog._count.blog_view,
       likeCount: blog._count.blog_like,
+      reviewCount: blog._count.blog_review,
     }));
 
     return ok({
@@ -227,6 +229,9 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
                 main_image: true,
               },
             },
+          },
+          where: {
+            deleted_at: null,
           },
           orderBy: {
             created_at: "desc",

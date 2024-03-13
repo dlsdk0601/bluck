@@ -94,6 +94,7 @@ export interface GetBlogsActionResItem {
   };
   viewCount: number;
   likeCount: number;
+  reviewCount: number;
   banner: Fileset;
 }
 
