@@ -200,3 +200,20 @@ interface MyPageBlogsRes {
 }
 
 export type MyPageBlogsActionType = (tagPks: string | string[]) => Promise<Res<MyPageBlogsRes>>;
+
+interface GetEditBlog {
+  pk: number;
+  banner: Fileset;
+  title: string;
+  body: string;
+  tags: number[];
+}
+
+export type Option = { value: number; label: string };
+
+interface GetEditBlogActionRes {
+  blog: GetEditBlog | null;
+  tags: Option[];
+}
+
+export type getEditBlogActionType = (pk: number | null) => Promise<Res<GetEditBlogActionRes>>;
