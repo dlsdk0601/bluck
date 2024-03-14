@@ -6,6 +6,7 @@ import { NewBlogReviewReq, NewBlogReviewRes } from "@/app/api/blog/review/new/ro
 import { EditBlogReviewReq, EditBlogReviewRes } from "@/app/api/blog/review/edit/route";
 import { DeleteBlogReviewReq, DeleteBlogReviewRes } from "@/app/api/blog/review/delete/route";
 import { DeleteBlogReq, DeleteBlogRes } from "@/app/api/blog/delete/route";
+import { NewTagReq, NewTagRes } from "@/app/api/blog/tag/new/route";
 
 export const axiosInstance = axios.create({
   baseURL: `${config.baseUrl}/api`,
@@ -137,8 +138,8 @@ class Api extends ApiBase {
     this.post<EditBlogReviewRes>("/blog/review/edit", req);
   deleteBlogReview = (req: DeleteBlogReviewReq) =>
     this.post<DeleteBlogReviewRes>("/blog/review/delete", req);
-
   deleteBlog = (req: DeleteBlogReq) => this.post<DeleteBlogRes>("/blog/delete", req);
+  newTag = (req: NewTagReq) => this.post<NewTagRes>("/tag/new", req);
 }
 
 export const api = new Api();
