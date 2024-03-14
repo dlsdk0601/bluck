@@ -9,6 +9,7 @@ import {
   getBlogListActionType,
   GetBlogsActionResItem,
   getBlogShowActionType,
+  getEditBlogActionType,
   ok,
   SearchDataType,
   SearchOrderByType,
@@ -339,7 +340,7 @@ const getRecommendBlogs = async (pk: number, tags: { pk: number; name: string }[
   return recommendBlobs;
 };
 
-export const blogLikeActionType: BlogLikeActionType = async (pk: number) => {
+export const blogLikeActionType: BlogLikeActionType = async (pk) => {
   let hasLike = false;
   const session = await auth();
 
@@ -404,4 +405,10 @@ export const blogLikeActionType: BlogLikeActionType = async (pk: number) => {
     console.error(e);
     return err(ERR.INTERNAL_SERVER);
   }
+};
+
+export const getEditBlogShowAction: getEditBlogActionType = async (pk) => {
+  const tags = await prisma.tag.findMany();
+
+  return ok({ blog: null, tags: tags.map((t) => ({ value: t.pk, label: t.name })) });
 };
