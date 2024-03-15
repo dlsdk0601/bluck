@@ -139,7 +139,7 @@ class Api extends ApiBase {
   deleteBlogReview = (req: DeleteBlogReviewReq) =>
     this.post<DeleteBlogReviewRes>("/blog/review/delete", req);
   deleteBlog = (req: DeleteBlogReq) => this.post<DeleteBlogRes>("/blog/delete", req);
-  newTag = (req: NewTagReq) => this.post<NewTagRes>("/tag/new", req);
+  newTag = (req: NewTagReq) => this.post<NewTagRes>("blog/tag/new", req);
 }
 
 export const api = new Api();
