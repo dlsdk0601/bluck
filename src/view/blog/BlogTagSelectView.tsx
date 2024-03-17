@@ -1,46 +1,63 @@
 "use client";
 
 import React, { useState } from "react";
-import Select, { SingleValue } from "react-select";
+import { ActionMeta, MultiValue } from "react-select";
+import makeAnimated from "react-select/animated";
+import CreatableSelect from "react-select/creatable";
+import { isNil, isString, last } from "lodash";
+import { Option } from "@/type/definitions";
+import { api } from "@/lib/axios";
+import { useFetch } from "@/hooks/useFetch";
 
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-];
+const animatedComponents = makeAnimated();
 
-const BlogTagSelectView = () => {
-  const [selectedOption, setSelectedOption] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
+const BlogTagSelectView = (props: { allTag: Option[] }) => {
+  const [tags, setTags] = useState<Option[]>([]);
+  const onNewTag = useFetch(api.newTag);
 
-  // TODO :: use-debounce 추가
-  // TODO :: 새로운 태그 등록
+  const onChange = async (newValue: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+    switch (actionMeta.action) {
+      case "select-option":
+      case "remove-value":
+        setTags([...newValue]);
+        break;
+      case "create-option": {
+        const newTag = last(newValue);
+        if (isNil(newTag)) {
+          return;
+        }
+
+        const res = await onNewTag({ name: newTag.label });
+
+        if (isString(res)) {
+          return alert(res);
+        }
+
+        setTags([...tags, { label: newTag.label, value: res.pk }]);
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
   return (
-    <Select
+    <CreatableSelect
+      isMulti
       styles={{
-        control: (baseStyles, state) => ({
+        control: (baseStyles) => ({
           ...baseStyles,
-          borderColor: state.isFocused ? "none" : "none",
+          borderColor: "none",
           marginBottom: "0.75rem",
         }),
       }}
-      onInputChange={(value) => {
-        console.log(value);
-      }}
-      defaultValue={selectedOption}
-      onChange={(newValue) => setSelectedOption(newValue)}
-      options={options}
+      components={animatedComponents}
+      value={tags}
+      defaultValue={tags}
+      onChange={onChange}
+      options={props.allTag}
       placeholder="태그를 선택해주세요."
-      noOptionsMessage={NoOptionView}
     />
-  );
-};
-
-const NoOptionView = (value: { inputValue: string }) => {
-  return (
-    <button type="button" className="text-c1f295a">
-      {value.inputValue} 생성하기
-    </button>
   );
 };
 
