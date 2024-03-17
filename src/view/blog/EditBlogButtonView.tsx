@@ -10,14 +10,16 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 import { Urls } from "@/url/url.g";
 import { ERR } from "@/lib/errorEx";
 import { api } from "@/lib/axios";
-import { isLockState } from "@/store/isLock";
+import { useFetch } from "@/hooks/useFetch";
 
 const EditBlogButtonView = (props: { blogPk: number; userPk: number }) => {
   const router = useRouter();
-  const user = userState((state) => state.user);
-  const setIsLock = isLockState((state) => state.setIsLock);
   const ref = useRef<HTMLDivElement>(null);
+
+  const user = userState((state) => state.user);
+
   const { isOpen, setIsOpen } = useClickOutside(ref);
+  const onDeleteBlog = useFetch(api.deleteBlog);
 
   if (props.userPk !== user?.pk) {
     return <></>;
@@ -40,8 +42,7 @@ const EditBlogButtonView = (props: { blogPk: number; userPk: number }) => {
       return;
     }
 
-    setIsLock(true);
-    const res = await api.deleteBlog({
+    const res = await onDeleteBlog({
       pk: props.blogPk,
     });
 
@@ -49,7 +50,6 @@ const EditBlogButtonView = (props: { blogPk: number; userPk: number }) => {
       return alert(res);
     }
 
-    setIsLock(false);
     router.refresh();
   };
 
