@@ -9,16 +9,19 @@ import { ReviewBlog } from "@/type/definitions";
 import { d1 } from "@/ex/dateEx";
 import { api } from "@/lib/axios";
 import { preventDefaulted } from "@/ex/utils";
-import { isLockState } from "@/store/isLock";
 import { userState } from "@/store/user";
 import { ERR } from "@/lib/errorEx";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { reviewCountSate } from "@/store/reviewCount";
+import { useFetch } from "@/hooks/useFetch";
 
 const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
-  const setIsLock = isLockState((state) => state.setIsLock);
   const user = userState((state) => state.user);
   const setReviewCount = reviewCountSate((state) => state.setReviewCount);
+
+  const onNewBlogReview = useFetch(api.newBlogReview);
+  const onDeleteBlogReview = useFetch(api.deleteBlogReview);
+
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState<ReviewBlog[]>([]);
 
@@ -32,8 +35,7 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
       return alert(ERR.NOT_SIGN_USER);
     }
 
-    setIsLock(true);
-    const res = await api.newBlogReview({ pk: props.blogPk, review });
+    const res = await onNewBlogReview({ pk: props.blogPk, review });
 
     if (isString(res)) {
       return alert(res);
@@ -42,7 +44,6 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
     setReviews([...res.reviews]);
     setReview("");
     setReviewCount(res.reviews.length);
-    setIsLock(false);
   };
 
   const onDelete = async (pk: number) => {
@@ -54,8 +55,7 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
       return;
     }
 
-    setIsLock(true);
-    const res = await api.deleteBlogReview({
+    const res = await onDeleteBlogReview({
       pk,
     });
 
@@ -65,7 +65,6 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
 
     setReviews([...res.reviews]);
     setReviewCount(res.reviews.length);
-    setIsLock(false);
   };
 
   return (
@@ -169,13 +168,11 @@ const BlogReviewsItemView = memo(
 
 const BlogReviewEditView = memo(
   (props: { pk: number; isEdit: boolean; review: string; callBack: () => void }) => {
-    const setIsLock = isLockState((state) => state.setIsLock);
     const [editReview, setEditReview] = useState(props.review);
+    const onEditBlogReview = useFetch(api.editBlogReview);
 
     const onEdit = async () => {
-      setIsLock(true);
-
-      const res = await api.editBlogReview({
+      const res = await onEditBlogReview({
         pk: props.pk,
         review: editReview,
       });
@@ -184,7 +181,6 @@ const BlogReviewEditView = memo(
         return alert(res);
       }
 
-      setIsLock(false);
       props.callBack();
     };
 
