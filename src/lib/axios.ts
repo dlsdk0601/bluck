@@ -89,15 +89,26 @@ class ApiBase {
     });
   };
 
-  delete = async (url: string, axiosRequestConfig?: AxiosRequestConfig<any>) => {
+  delete = async <T>(
+    url: string,
+    req: { pk: number },
+    axiosRequestConfig?: AxiosRequestConfig<any>,
+  ): Promise<T | string> => {
     return this.with(async () => {
-      if (config.apiDelay) {
-        await sleep(config.apiDelay);
+      try {
+        if (config.apiDelay) {
+          await sleep(config.apiDelay);
+        }
+
+        // path variable 로 pk 말고는 딱히 붙을게 없다. 있다면 params 로 붙인다.
+        const pathUrl = url.replace("pk", req.pk.toString());
+
+        const res = await axiosInstance.delete(pathUrl, axiosRequestConfig);
+
+        return res.data;
+      } catch (e) {
+        return this.errorHandle(e);
       }
-
-      const res = await axiosInstance.delete(url, axiosRequestConfig);
-
-      return res.data;
     });
   };
 
@@ -112,11 +123,10 @@ class ApiBase {
 
   errorHandle(err: unknown): string {
     if (axios.isAxiosError(err)) {
-      const message = err.response?.data.message ?? err.message;
       // 디자인에 에러 메세지가 존재하기 때문에 alert 은 일단 주석 처리
       // alert(message);
       // throw new Error(message);
-      return message;
+      return err.response?.data.message ?? err.message;
     }
 
     return "서버 통신이 원활하지 않습니다. 잠시후 다시 이용해주세요";
