@@ -11,8 +11,8 @@ import { useFetch } from "@/hooks/useFetch";
 
 const animatedComponents = makeAnimated();
 
-const BlogTagSelectView = (props: { allTag: Option[] }) => {
-  const [tags, setTags] = useState<Option[]>([]);
+const BlogTagSelectView = (props: { allTag: Option[]; defaultTags?: Option[] }) => {
+  const [tags, setTags] = useState<Option[]>(props.defaultTags ?? []);
   const onNewTag = useFetch(api.newTag);
 
   const onChange = async (newValue: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
@@ -42,22 +42,26 @@ const BlogTagSelectView = (props: { allTag: Option[] }) => {
   };
 
   return (
-    <CreatableSelect
-      isMulti
-      styles={{
-        control: (baseStyles) => ({
-          ...baseStyles,
-          borderColor: "none",
-          marginBottom: "0.75rem",
-        }),
-      }}
-      components={animatedComponents}
-      value={tags}
-      defaultValue={tags}
-      onChange={onChange}
-      options={props.allTag}
-      placeholder="태그를 선택해주세요."
-    />
+    <>
+      <CreatableSelect
+        isMulti
+        styles={{
+          control: (baseStyles) => ({
+            ...baseStyles,
+            borderColor: "none",
+            marginBottom: "0.75rem",
+          }),
+        }}
+        components={animatedComponents}
+        value={tags}
+        onChange={onChange}
+        options={props.allTag}
+        placeholder="태그를 선택해주세요."
+      />
+      {tags.map((tag) => (
+        <input type="hidden" value={tag.value} name="tags[]" />
+      ))}
+    </>
   );
 };
 
