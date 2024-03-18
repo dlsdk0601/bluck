@@ -59,7 +59,7 @@ const BlogTagSelectView = (props: { allTag: Option[]; defaultTags?: Option[] }) 
         placeholder="태그를 선택해주세요."
       />
       {tags.map((tag) => (
-        <input type="hidden" value={tag.value} name="tags[]" />
+        <input type="hidden" value={tag.value} name="tags" />
       ))}
     </>
   );
