@@ -1,3 +1,4 @@
+import "react-quill/dist/quill.snow.css";
 import Image from "next/image";
 import { isNil } from "lodash";
 import parse from "html-react-parser";
@@ -81,7 +82,7 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
         </div>
 
         {/* 본문 */}
-        <div className="mx-auto h-full w-11/12">{parse(res.data.body)}</div>
+        <div className="ql-editor mx-auto h-full w-11/12">{parse(res.data.body)}</div>
 
         {/* 코멘트 */}
         <div className="my-16 mr-3 flex items-center justify-end mobile:ml-2 mobile:w-[60%]">
