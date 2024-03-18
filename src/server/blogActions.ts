@@ -4,10 +4,10 @@ import { Prisma } from "@prisma/client";
 import moment from "moment";
 import { isNil } from "lodash";
 import {
+  BlogData,
   BlogLikeActionType,
   err,
   getBlogListActionType,
-  GetBlogsActionResItem,
   getBlogShowActionType,
   getEditBlogActionType,
   ok,
@@ -61,7 +61,7 @@ export const getBlogListAction: getBlogListActionType = async (
       prisma.blog.count({ where: setBlogWhere(search, searchType, searchDateType) }),
     ]);
 
-    const pagination = new Pagination<GetBlogsActionResItem>(count, page);
+    const pagination = new Pagination<BlogData>(count, page);
     pagination.rows = blogs.map((blog) => ({
       pk: blog.pk,
       title: blog.title,

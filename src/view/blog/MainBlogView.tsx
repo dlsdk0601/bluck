@@ -6,17 +6,12 @@ import { isNil } from "lodash";
 import { getBlogListAction } from "@/server/blogActions";
 import { ignorePromise, isNotBlank, isNotNil } from "@/ex/utils";
 import { MainContentsCardSkeleton } from "@/view/skeleton/MainContentsSkeleton";
-import {
-  GetBlogsActionResItem,
-  SearchDataType,
-  SearchOrderByType,
-  SearchType,
-} from "@/type/definitions";
+import { BlogData, SearchDataType, SearchOrderByType, SearchType } from "@/type/definitions";
 import { PaginationType } from "@/ex/paginationEx";
 import BlogCardView from "./BlogCardView";
 
 const MainBlogView = (props: {
-  initBlogs: PaginationType<GetBlogsActionResItem>;
+  initBlogs: PaginationType<BlogData>;
   search?: string;
   searchType?: SearchType;
   searchOrderByType?: SearchOrderByType;
@@ -24,7 +19,7 @@ const MainBlogView = (props: {
 }) => {
   const { ref, inView } = useInView();
   const [page, setPage] = useState(1);
-  const [blogs, setBlogs] = useState<GetBlogsActionResItem[]>([]);
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [hasNext, setHasNext] = useState(true);
   const [error, setError] = useState("");
   const onFetch = async () => {
