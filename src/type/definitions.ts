@@ -83,23 +83,23 @@ export interface ShowUserActionRes {
 
 export type ShowUserActionType = () => Promise<Res<ShowUserActionRes>>;
 
-export interface GetBlogsActionResItem {
+export interface BlogData {
   pk: number;
+  banner: Fileset;
   title: string;
   body: string;
-  createAt: string;
   user: {
     profile: Fileset;
     name: string;
   };
+  createAt: string;
   viewCount: number;
   likeCount: number;
   reviewCount: number;
-  banner: Fileset;
 }
 
 export interface GetBlogsActionRes {
-  blogs: PaginationType<GetBlogsActionResItem>;
+  blogs: PaginationType<BlogData>;
 }
 
 export type SearchOrderByType = "LIKE" | "LATEST" | "VIEW";
@@ -181,22 +181,8 @@ interface MyPageInitRes {
 
 export type MyPageInitActionType = () => Promise<Res<MyPageInitRes>>;
 
-export interface MyPageBlog {
-  pk: number;
-  banner: Fileset;
-  title: string;
-  body: string;
-  user: {
-    profile: Fileset;
-    name: string;
-  };
-  createAt: string;
-  viewCount: number;
-  likeCount: number;
-}
-
 interface MyPageBlogsRes {
-  blogs: MyPageBlog[];
+  blogs: BlogData[];
 }
 
 export type MyPageBlogsActionType = (tagPks: string | string[]) => Promise<Res<MyPageBlogsRes>>;
