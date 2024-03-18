@@ -58,7 +58,7 @@ const modules = {
   },
 };
 
-const BlogEditorView = (props: { title?: string; values?: string }) => {
+const BlogEditorView = (props: { values?: string }) => {
   const ref = useRef<ReactQuill>(null);
   const [values, setValues] = useState(props.values ?? "");
 
@@ -120,6 +120,7 @@ const BlogEditorView = (props: { title?: string; values?: string }) => {
         modules={modules}
         formats={formats}
         onChange={(value) => setValues(value)}
+        defaultValue={props.values}
       />
       <input type="hidden" name="body" value={values} />
     </>
