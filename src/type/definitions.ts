@@ -187,15 +187,15 @@ interface MyPageBlogsRes {
 
 export type MyPageBlogsActionType = (tagPks: string | string[]) => Promise<Res<MyPageBlogsRes>>;
 
+export type Option = { value: number; label: string };
+
 interface GetEditBlog {
   pk: number;
   banner: Fileset;
   title: string;
   body: string;
-  tags: number[];
+  tags: Option[];
 }
-
-export type Option = { value: number; label: string };
 
 interface GetEditBlogActionRes {
   blog: GetEditBlog | null;
