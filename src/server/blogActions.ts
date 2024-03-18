@@ -428,17 +428,16 @@ export const editBlogAction: EditBlogActionType = async (prevState, formData) =>
   const tags = formData.getAll("tags");
   const body = formData.get("body");
 
-  // pk 는 string | null 이여야 한다.
-  if (formPk instanceof File) {
-    return err(ERR.INTERNAL_SERVER);
-  }
-
   if (isNil(uuid)) {
     return err(ERR.REQUIRED("배너 이미지"));
   }
 
   if (!isString(uuid)) {
     return err(ERR.ONLY_STRING("배너 이미지"));
+  }
+
+  if (isBlank(uuid)) {
+    return err(ERR.REQUIRED("배너 이미지"));
   }
 
   // 배너 유효성
@@ -456,8 +455,8 @@ export const editBlogAction: EditBlogActionType = async (prevState, formData) =>
     return err(ERR.ONLY_STRING("블로그 제목"));
   }
 
-  if (!isBlank(title)) {
-    return err(ERR.ONLY_STRING("블로그 제목"));
+  if (isBlank(title)) {
+    return err(ERR.REQUIRED("블로그 제목"));
   }
 
   if (isNil(body)) {
@@ -468,8 +467,8 @@ export const editBlogAction: EditBlogActionType = async (prevState, formData) =>
     return err(ERR.ONLY_STRING("블로그 본문"));
   }
 
-  if (!isBlank(body)) {
-    return err(ERR.ONLY_STRING("블로그 본문"));
+  if (isBlank(body)) {
+    return err(ERR.REQUIRED("블로그 본문"));
   }
 
   if (!tags.every((tag) => isString(tag))) {
@@ -477,23 +476,41 @@ export const editBlogAction: EditBlogActionType = async (prevState, formData) =>
   }
 
   try {
-    const pk = isNotNil(formPk) ? parseInt(formPk, 10) : undefined;
-    const blog = await prisma.blog.upsert({
-      create: {
-        banner_image_pk: banner.pk,
-        title,
-        body,
-        user_pk: globalUser.pk,
-      },
-      update: {
-        banner_image_pk: banner.pk,
-        title,
-        body,
-      },
-      where: {
-        pk,
-      },
-    });
+    const pk = isNotNil(formPk) && isString(formPk) ? parseInt(formPk, 10) : undefined;
+    let blog: {
+      pk: number;
+      title: string;
+      body: string;
+      created_at: Date;
+      updated_at: Date;
+      deleted_at: Date | null;
+      banner_image_pk: number;
+      user_pk: number;
+    };
+
+    if (isNil(pk)) {
+      // new
+      blog = await prisma.blog.create({
+        data: {
+          banner_image_pk: banner.pk,
+          title,
+          body,
+          user_pk: globalUser.pk,
+        },
+      });
+    } else {
+      // update
+      blog = await prisma.blog.update({
+        data: {
+          banner_image_pk: banner.pk,
+          title,
+          body,
+        },
+        where: {
+          pk,
+        },
+      });
+    }
 
     await prisma.blog_tag.deleteMany({
       where: {
