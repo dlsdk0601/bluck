@@ -409,9 +409,50 @@ export const blogLikeActionType: BlogLikeActionType = async (pk) => {
 };
 
 export const getEditBlogShowAction: getEditBlogActionType = async (pk) => {
-  const tags = await prisma.tag.findMany();
+  const session = await auth();
+  const globalUser = session?.user;
 
-  return ok({ blog: null, tags: tags.map((t) => ({ value: t.pk, label: t.name })) });
+  if (isNil(globalUser)) {
+    return err(ERR.NOT_SIGN_USER);
+  }
+  const allTags = await prisma.tag.findMany();
+  const tags = allTags.map((tag) => ({ value: tag.pk, label: tag.name }));
+
+  if (isNil(pk)) {
+    return ok({ blog: null, tags });
+  }
+
+  const blog = await prisma.blog.findUnique({
+    select: {
+      pk: true,
+      banner_image: true,
+      title: true,
+      body: true,
+      tags: {
+        select: {
+          tag: true,
+        },
+      },
+    },
+    where: {
+      pk,
+    },
+  });
+
+  if (isNil(blog)) {
+    return err(ERR.NOT_FOUND("블로그"));
+  }
+
+  return ok({
+    blog: {
+      pk: blog.pk,
+      banner: awsModel.toFileSet(blog.banner_image),
+      title: blog.title,
+      body: blog.body,
+      tags: blog.tags.map((tag) => ({ value: tag.tag.pk, label: tag.tag.name })),
+    },
+    tags,
+  });
 };
 
 export const editBlogAction: EditBlogActionType = async (prevState, formData) => {
