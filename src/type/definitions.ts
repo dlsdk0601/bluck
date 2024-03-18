@@ -197,7 +197,7 @@ interface GetEditBlog {
   tags: Option[];
 }
 
-interface GetEditBlogActionRes {
+export interface GetEditBlogActionRes {
   blog: GetEditBlog | null;
   tags: Option[];
 }
