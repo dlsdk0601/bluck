@@ -7,6 +7,7 @@ import BlogBannerView from "@/view/blog/BlogBannerView";
 import BlogTagSelectView from "@/view/blog/BlogTagSelectView";
 import { isNotNil, validatePk } from "@/ex/utils";
 import { getEditBlogShowAction } from "@/server/blogActions";
+import BlogSubmitButtonView from "@/view/blog/BlogSubmitButtonView";
 
 const BlogEditPage = async (props: { params?: { pk: string | "new" } }) => {
   const pk = validatePk(props.params?.pk);
@@ -47,22 +48,9 @@ const BlogEditPage = async (props: { params?: { pk: string | "new" } }) => {
             placeholder="제목을 입력해주세요."
           />
         </div>
-        <BlogTagSelectView allTag={res.data.tags} />
+        <BlogTagSelectView allTag={res.data.tags} defaultTags={res.data.blog?.tags} />
         <BlogEditorView />
-        <div className="mt-10 flex h-20 w-full items-center justify-between mobile:mt-5">
-          <Link
-            className="flex h-10 w-[40%] items-center justify-center rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:h-8 mobile:text-[10px]"
-            href={Urls.page.url()}
-          >
-            취소
-          </Link>
-          <button
-            type="submit"
-            className="h-10 w-[40%] rounded-2xl border-2 border-solid border-c1f295a dark:border-cffffff mobile:h-8 mobile:text-[10px]"
-          >
-            등록
-          </button>
-        </div>
+        <BlogSubmitButtonView />
       </form>
     </div>
   );
