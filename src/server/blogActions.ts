@@ -2,10 +2,11 @@
 
 import { Prisma } from "@prisma/client";
 import moment from "moment";
-import { isNil } from "lodash";
+import { isNil, isString } from "lodash";
 import {
   BlogData,
   BlogLikeActionType,
+  EditBlogActionType,
   err,
   getBlogListActionType,
   getBlogShowActionType,
@@ -21,7 +22,7 @@ import prisma from "@/lib/prisma";
 import { PAGE_LIMIT, Pagination } from "@/ex/paginationEx";
 import { ERR } from "@/lib/errorEx";
 import { auth } from "@/server/auth/auth";
-import { isNotNil } from "@/ex/utils";
+import { isBlank, isNotNil } from "@/ex/utils";
 
 export const getBlogListAction: getBlogListActionType = async (
   page,
@@ -411,4 +412,107 @@ export const getEditBlogShowAction: getEditBlogActionType = async (pk) => {
   const tags = await prisma.tag.findMany();
 
   return ok({ blog: null, tags: tags.map((t) => ({ value: t.pk, label: t.name })) });
+};
+
+export const editBlogAction: EditBlogActionType = async (prevState, formData) => {
+  const session = await auth();
+  const globalUser = session?.user;
+
+  if (isNil(globalUser)) {
+    return err(ERR.NOT_SIGN_USER);
+  }
+
+  const formPk = formData.get("pk");
+  const uuid = formData.get("uuid");
+  const title = formData.get("title");
+  const tags = formData.getAll("tags");
+  const body = formData.get("body");
+
+  // pk 는 string | null 이여야 한다.
+  if (formPk instanceof File) {
+    return err(ERR.INTERNAL_SERVER);
+  }
+
+  if (isNil(uuid)) {
+    return err(ERR.REQUIRED("배너 이미지"));
+  }
+
+  if (!isString(uuid)) {
+    return err(ERR.ONLY_STRING("배너 이미지"));
+  }
+
+  // 배너 유효성
+  const banner = await awsModel.assetFromUuid(uuid);
+
+  if (isNil(banner)) {
+    return err(ERR.REQUIRED("배너 이미지"));
+  }
+
+  if (isNil(title)) {
+    return err(ERR.REQUIRED("블로그 제목"));
+  }
+
+  if (!isString(title)) {
+    return err(ERR.ONLY_STRING("블로그 제목"));
+  }
+
+  if (!isBlank(title)) {
+    return err(ERR.ONLY_STRING("블로그 제목"));
+  }
+
+  if (isNil(body)) {
+    return err(ERR.REQUIRED("블로그 본문"));
+  }
+
+  if (!isString(body)) {
+    return err(ERR.ONLY_STRING("블로그 본문"));
+  }
+
+  if (!isBlank(body)) {
+    return err(ERR.ONLY_STRING("블로그 본문"));
+  }
+
+  if (!tags.every((tag) => isString(tag))) {
+    return err(ERR.ONLY_STRING("태그"));
+  }
+
+  try {
+    const pk = isNotNil(formPk) ? parseInt(formPk, 10) : undefined;
+    const blog = await prisma.blog.upsert({
+      create: {
+        banner_image_pk: banner.pk,
+        title,
+        body,
+        user_pk: globalUser.pk,
+      },
+      update: {
+        banner_image_pk: banner.pk,
+        title,
+        body,
+      },
+      where: {
+        pk,
+      },
+    });
+
+    await prisma.blog_tag.deleteMany({
+      where: {
+        blog_pk: blog.pk,
+      },
+    });
+    await prisma.blog_tag.createMany({
+      data: tags.map((tag) => ({
+        blog_pk: blog.pk,
+        tag_pk: parseInt(tag as string, 10),
+      })),
+    });
+
+    return ok({ pk: blog.pk });
+  } catch (e) {
+    if (e instanceof Error) {
+      return err(e.message);
+    }
+
+    return err(ERR.INTERNAL_SERVER);
+  }
 };
