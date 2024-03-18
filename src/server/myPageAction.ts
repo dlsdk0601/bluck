@@ -100,6 +100,7 @@ export const myPageBlogsAction: MyPageBlogsActionType = async (tagPks) => {
           select: {
             blog_view: true,
             blog_like: true,
+            blog_review: true,
           },
         },
       },
@@ -123,6 +124,7 @@ export const myPageBlogsAction: MyPageBlogsActionType = async (tagPks) => {
         createAt: d1(blog.created_at),
         viewCount: blog._count.blog_view,
         likeCount: blog._count.blog_like,
+        reviewCount: blog._count.blog_review,
       })),
     });
   } catch (e) {
