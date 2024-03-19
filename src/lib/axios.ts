@@ -7,6 +7,7 @@ import { EditBlogReviewReq, EditBlogReviewRes } from "@/app/api/blog/review/edit
 import { DeleteBlogReviewReq, DeleteBlogReviewRes } from "@/app/api/blog/review/delete/route";
 import { DeleteBlogReq, DeleteBlogRes } from "@/app/api/blog/delete/route";
 import { NewTagReq, NewTagRes } from "@/app/api/blog/tag/new/route";
+import { isLockState } from "@/store/isLock";
 
 export const axiosInstance = axios.create({
   baseURL: `${config.baseUrl}/api`,
@@ -112,13 +113,11 @@ class ApiBase {
     });
   };
 
-  with = <T>(block: () => Promise<T>) => {
-    this.increaseCounter();
-    try {
-      return block();
-    } finally {
-      this.decreaseCounter();
-    }
+  with = async <T>(block: () => Promise<T>) => {
+    // TODO :: await 를 사용하면 뭔가 꼬인다.
+    return this.increaseCounter()
+      .then(() => block())
+      .finally(() => this.decreaseCounter());
   };
 
   errorHandle(err: unknown): string {
@@ -132,11 +131,13 @@ class ApiBase {
     return "서버 통신이 원활하지 않습니다. 잠시후 다시 이용해주세요";
   }
 
-  private increaseCounter = () => {
+  private increaseCounter = async () => {
+    await isLockState.getState().increase();
     this.counter++;
   };
 
-  private decreaseCounter = () => {
+  private decreaseCounter = async () => {
+    await isLockState.getState().decrease();
     this.counter--;
   };
 }
