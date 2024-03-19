@@ -10,7 +10,6 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 import { Urls } from "@/url/url.g";
 import { ERR } from "@/lib/errorEx";
 import { api } from "@/lib/axios";
-import { useFetch } from "@/hooks/useFetch";
 
 const EditBlogButtonView = (props: { blogPk: number; userPk: number }) => {
   const router = useRouter();
@@ -19,7 +18,6 @@ const EditBlogButtonView = (props: { blogPk: number; userPk: number }) => {
   const user = userState((state) => state.user);
 
   const { isOpen, setIsOpen } = useClickOutside(ref);
-  const onDeleteBlog = useFetch(api.deleteBlog);
 
   if (props.userPk !== user?.pk) {
     return <></>;
@@ -42,7 +40,7 @@ const EditBlogButtonView = (props: { blogPk: number; userPk: number }) => {
       return;
     }
 
-    const res = await onDeleteBlog({
+    const res = await api.deleteBlog({
       pk: props.blogPk,
     });
 

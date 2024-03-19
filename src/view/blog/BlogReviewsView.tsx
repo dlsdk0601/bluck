@@ -13,14 +13,10 @@ import { userState } from "@/store/user";
 import { ERR } from "@/lib/errorEx";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { reviewCountSate } from "@/store/reviewCount";
-import { useFetch } from "@/hooks/useFetch";
 
 const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
   const user = userState((state) => state.user);
   const setReviewCount = reviewCountSate((state) => state.setReviewCount);
-
-  const onNewBlogReview = useFetch(api.newBlogReview);
-  const onDeleteBlogReview = useFetch(api.deleteBlogReview);
 
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState<ReviewBlog[]>([]);
@@ -35,7 +31,7 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
       return alert(ERR.NOT_SIGN_USER);
     }
 
-    const res = await onNewBlogReview({ pk: props.blogPk, review });
+    const res = await api.newBlogReview({ pk: props.blogPk, review });
 
     if (isString(res)) {
       return alert(res);
@@ -55,7 +51,7 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
       return;
     }
 
-    const res = await onDeleteBlogReview({
+    const res = await api.deleteBlogReview({
       pk,
     });
 
@@ -169,10 +165,9 @@ const BlogReviewsItemView = memo(
 const BlogReviewEditView = memo(
   (props: { pk: number; isEdit: boolean; review: string; callBack: () => void }) => {
     const [editReview, setEditReview] = useState(props.review);
-    const onEditBlogReview = useFetch(api.editBlogReview);
 
     const onEdit = async () => {
-      const res = await onEditBlogReview({
+      const res = await api.editBlogReview({
         pk: props.pk,
         review: editReview,
       });

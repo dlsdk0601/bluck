@@ -7,13 +7,11 @@ import CreatableSelect from "react-select/creatable";
 import { isNil, isString, last } from "lodash";
 import { Option } from "@/type/definitions";
 import { api } from "@/lib/axios";
-import { useFetch } from "@/hooks/useFetch";
 
 const animatedComponents = makeAnimated();
 
 const BlogTagSelectView = (props: { allTag: Option[]; defaultTags?: Option[] }) => {
   const [tags, setTags] = useState<Option[]>(props.defaultTags ?? []);
-  const onNewTag = useFetch(api.newTag);
 
   const onChange = async (newValue: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
     switch (actionMeta.action) {
@@ -27,7 +25,7 @@ const BlogTagSelectView = (props: { allTag: Option[]; defaultTags?: Option[] }) 
           return;
         }
 
-        const res = await onNewTag({ name: newTag.label });
+        const res = await api.newTag({ name: newTag.label });
 
         if (isString(res)) {
           return alert(res);
