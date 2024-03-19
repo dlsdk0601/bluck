@@ -4,7 +4,7 @@ import { ClipLoader } from "react-spinners";
 import { isLockState } from "@/store/isLock";
 
 const BlockView = () => {
-  const isLock = isLockState((state) => state.isLock);
+  const isLock = isLockState((state) => state.isLock());
   return (
     <div
       style={{
