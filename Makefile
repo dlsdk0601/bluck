@@ -6,7 +6,7 @@ setup:
 	nix-shell --run 'bun i'
 
 watch:
-	bun --watch bin/generateUrl.ts
+	bun --watch bin/generateUrl.ts bin/generateApiUrl.ts
 
 # --bun 옵션을 넣으면 에러가 난다. 아직 bun 에서 app route 구현이 안됨
 # https://bun.sh/guides/ecosystem/nextjs
