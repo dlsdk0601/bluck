@@ -15,7 +15,7 @@ const MyPageEditUserDataView = (props: { data: ShowUserActionRes }) => {
   const router = useRouter();
   const ref = useRef<HTMLInputElement>(null);
   const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
   const [res, dispatch] = useFormState(signUpAction, null);
 
   useEffect(() => {

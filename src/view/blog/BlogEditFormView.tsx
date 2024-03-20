@@ -14,7 +14,7 @@ import { Urls } from "@/url/url.g";
 import { isLockState } from "@/store/isLock";
 
 const BlogEditFormView = (props: { res: GetEditBlogActionRes }) => {
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
   const [res, dispatch] = useFormState(editBlogAction, null);
 
   if (isNotNil(res?.data?.pk)) {

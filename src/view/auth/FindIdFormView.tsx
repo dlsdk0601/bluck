@@ -10,7 +10,7 @@ import { FindIdActionRes, FormActionViewProps } from "@/type/definitions";
 
 const FindIdForm = (props: FormActionViewProps<FindIdActionRes>) => {
   const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
 
   useEffect(() => {
     setIsLock(pending);

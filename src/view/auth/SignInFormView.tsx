@@ -60,7 +60,7 @@ const SignInForm = (props: FormActionViewProps<SignInActionRes>) => {
 
 const SignInButtonView = memo(() => {
   const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
 
   useEffect(() => {
     setIsLock(pending);

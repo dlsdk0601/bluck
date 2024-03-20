@@ -7,7 +7,7 @@ import { isNotBlank } from "@/ex/utils";
 
 const BlogSubmitButtonView = (props: { error?: string | null }) => {
   const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
 
   useEffect(() => {
     setIsLock(pending);

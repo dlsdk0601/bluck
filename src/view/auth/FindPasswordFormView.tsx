@@ -10,7 +10,7 @@ import { FindPasswordActionRes, FormActionViewProps } from "@/type/definitions";
 
 const FindPasswordForm = (props: FormActionViewProps<FindPasswordActionRes>) => {
   const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
 
   useEffect(() => {
     setIsLock(pending);

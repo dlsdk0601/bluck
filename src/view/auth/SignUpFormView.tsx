@@ -20,7 +20,7 @@ const SignUpForm = (props: FormActionViewProps<SignUpActionRes>) => {
   const router = useRouter();
   const ref = useRef<HTMLInputElement>(null);
   const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
 
   useEffect(() => {
     setIsLock(pending);

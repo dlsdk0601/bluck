@@ -11,7 +11,7 @@ import MyPageEditPasswordSuccessView from "@/view/myPage/MyPageEditPasswordSucce
 const MyPageEditPasswordView = () => {
   const router = useRouter();
   const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
 
   const [res, dispatch] = useFormState(checkPasswordAction, null);
 
@@ -72,7 +72,7 @@ const MyPageEditPasswordView = () => {
 const EditPasswordView = () => {
   const router = useRouter();
   const { pending } = useFormStatus();
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLock = isLockState((state) => state.setIsLoading);
 
   const [res, dispatch] = useFormState(editPasswordAction, null);
 

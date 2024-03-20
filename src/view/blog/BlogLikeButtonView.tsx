@@ -10,12 +10,12 @@ import { isNotNil } from "@/ex/utils";
 import { mf1 } from "@/ex/numberEx";
 
 const BlogLikeButtonView = (props: { pk: number; likeCount: number; hasLike: boolean }) => {
-  const setIsLock = isLockState((state) => state.setIsLock);
+  const setIsLoading = isLockState((state) => state.setIsLoading);
   const [count, setCount] = useState(props.likeCount);
   const [hasLike, setHasLike] = useState(props.hasLike);
 
   const onClickLikeButton = async () => {
-    setIsLock(true);
+    setIsLoading(true);
     try {
       const res = await blogLikeActionType(props.pk);
 
@@ -33,7 +33,7 @@ const BlogLikeButtonView = (props: { pk: number; likeCount: number; hasLike: boo
       console.error(e);
       alert("잠시 후 다시 시도해주세요.");
     } finally {
-      setIsLock(false);
+      setIsLoading(false);
     }
   };
 
