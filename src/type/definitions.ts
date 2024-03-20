@@ -28,6 +28,8 @@ export type BaseFormActionFunction<T> = (
   formData: FormData,
 ) => Promise<Res<T>>;
 
+// action interface -------------------------------------------------------
+
 export interface SignInActionRes {
   result: boolean;
 }
@@ -209,3 +211,56 @@ export interface GetEditBlogActionRes {
 }
 
 export type getEditBlogActionType = (pk: number | null) => Promise<Res<GetEditBlogActionRes>>;
+
+// api interface -------------------------------------------------------
+
+export interface AssetNewReq {
+  base64: string;
+  name: string;
+}
+
+export interface AssetNewRes {
+  fileSet: Fileset;
+}
+
+export interface BlogDeleteReq {
+  pk: number;
+}
+
+export interface BlogDeleteRes {
+  pk: number;
+}
+
+export interface ReviewDeleteReq {
+  pk: number;
+}
+
+export interface ReviewDeleteRes {
+  reviews: ReviewBlog[];
+}
+
+export interface ReviewEditReq {
+  pk: number;
+  review: string;
+}
+
+export interface ReviewEditRes {
+  pk: number;
+}
+
+export interface ReviewNewReq {
+  pk: number;
+  review: string;
+}
+
+export interface ReviewNewRes {
+  reviews: ReviewBlog[];
+}
+
+export interface TagNewReq {
+  name: string;
+}
+
+export interface TagNewRes {
+  pk: number;
+}
