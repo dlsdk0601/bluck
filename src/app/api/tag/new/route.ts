@@ -4,23 +4,16 @@ import { ApiRes, badRequestException, ERR, unAuthorizedException } from "@/lib/e
 import { auth } from "@/server/auth/auth";
 import prisma from "@/lib/prisma";
 import { isNotNil } from "@/ex/utils";
+import { TagNewReq, TagNewRes } from "@/type/definitions";
 
-export interface NewTagReq {
-  name: string;
-}
-
-export interface NewTagRes {
-  pk: number;
-}
-
-export async function POST(req: NextRequest): Promise<ApiRes<NewTagRes>> {
+export async function POST(req: NextRequest): Promise<ApiRes<TagNewRes>> {
   const session = await auth();
 
   if (isNil(session?.user)) {
     return unAuthorizedException(ERR.NOT_SIGN_USER);
   }
 
-  const body: NewTagReq = await req.json();
+  const body: TagNewReq = await req.json();
 
   const tag = await prisma.tag.findFirst({
     where: {

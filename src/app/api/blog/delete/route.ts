@@ -2,25 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { isNil } from "lodash";
 import { ApiRes, ERR, notFoundException, unAuthorizedException } from "@/lib/errorEx";
 import { auth } from "@/server/auth/auth";
-import { NewBlogReviewReq } from "@/app/api/blog/review/new/route";
 import prisma from "@/lib/prisma";
+import { BlogDeleteReq, BlogDeleteRes } from "@/type/definitions";
 
-export interface DeleteBlogReq {
-  pk: number;
-}
-
-export interface DeleteBlogRes {
-  pk: number;
-}
-
-export async function POST(req: NextRequest): Promise<ApiRes<DeleteBlogRes>> {
+export async function POST(req: NextRequest): Promise<ApiRes<BlogDeleteRes>> {
   const session = await auth();
 
   if (isNil(session?.user)) {
     return unAuthorizedException(ERR.NOT_SIGN_USER);
   }
 
-  const body: NewBlogReviewReq = await req.json();
+  const body: BlogDeleteReq = await req.json();
 
   const blog = await prisma.blog.findUnique({
     where: {

@@ -1,45 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isNil } from "lodash";
-import { ReviewBlog } from "@/type/definitions";
 import { ApiRes, ERR, notFoundException, unAuthorizedException } from "@/lib/errorEx";
 import { auth } from "@/server/auth/auth";
-import { NewBlogReviewReq } from "@/app/api/blog/review/new/route";
 import prisma from "@/lib/prisma";
+import { ReviewNewReq, ReviewNewRes } from "@/type/definitions";
 import { awsModel } from "@/lib/aws";
 
-export interface DeleteBlogReviewReq {
-  pk: number;
-}
-
-export interface DeleteBlogReviewRes {
-  reviews: ReviewBlog[];
-}
-
-export async function POST(req: NextRequest): Promise<ApiRes<DeleteBlogReviewRes>> {
+export async function POST(req: NextRequest): Promise<ApiRes<ReviewNewRes>> {
   const session = await auth();
 
   if (isNil(session?.user)) {
     return unAuthorizedException(ERR.NOT_SIGN_USER);
   }
 
-  const body: NewBlogReviewReq = await req.json();
+  const body: ReviewNewReq = await req.json();
 
-  const blogReview = await prisma.blog_review.findUnique({
-    where: { pk: body.pk, deleted_at: null },
-  });
+  const blog = await prisma.blog.findUnique({ where: { pk: body.pk, deleted_at: null } });
 
-  if (isNil(blogReview)) {
-    return notFoundException(ERR.NOT_FOUND("블로그 댓글"));
+  if (isNil(blog)) {
+    return notFoundException(ERR.NOT_FOUND("블로그"));
   }
 
-  await prisma.blog_review.update({
+  await prisma.blog_review.create({
     data: {
-      deleted_at: {
-        set: new Date(),
-      },
-    },
-    where: {
-      pk: body.pk,
+      blog_pk: blog.pk,
+      user_pk: session.user.pk,
+      review: body.review,
     },
   });
 
@@ -57,7 +43,7 @@ export async function POST(req: NextRequest): Promise<ApiRes<DeleteBlogReviewRes
       },
     },
     where: {
-      blog_pk: blogReview.blog_pk,
+      blog_pk: blog.pk,
       deleted_at: null,
     },
     orderBy: {
