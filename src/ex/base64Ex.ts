@@ -4,7 +4,7 @@ import { blobToBase64String } from "blob-util";
 import { Fileset } from "@/lib/aws";
 import { vFileExtension } from "@/ex/validate";
 import { isNotNil } from "@/ex/utils";
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api.g";
 
 export type ImageType = {
   id?: number;
@@ -58,7 +58,7 @@ export const newFileSet = async (
 
   const base64 = await blobToBase64String(file);
 
-  const res = await api.newAsset({ base64, name: file.name });
+  const res = await api.assetNew({ base64, name: file.name });
 
   if (isNil(res)) {
     return;

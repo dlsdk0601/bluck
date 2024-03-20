@@ -9,7 +9,7 @@ import { blobToBase64String } from "blob-util";
 import ImageResize from "quill-image-resize-module-react";
 import { vFileExtension } from "@/ex/validate";
 import { isNotNil } from "@/ex/utils";
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api.g";
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -89,7 +89,7 @@ const BlogEditorView = (props: { values?: string }) => {
         try {
           const base64 = await blobToBase64String(file);
 
-          const res = await api.newAsset({ base64, name: file.name });
+          const res = await api.assetNew({ base64, name: file.name });
 
           if (isNil(res)) {
             return;

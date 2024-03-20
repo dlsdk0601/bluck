@@ -9,7 +9,7 @@ import { userState } from "@/store/user";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { Urls } from "@/url/url.g";
 import { ERR } from "@/lib/errorEx";
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api.g";
 
 const EditBlogButtonView = (props: { blogPk: number; userPk: number }) => {
   const router = useRouter();
@@ -40,7 +40,7 @@ const EditBlogButtonView = (props: { blogPk: number; userPk: number }) => {
       return;
     }
 
-    const res = await api.deleteBlog({
+    const res = await api.blogDelete({
       pk: props.blogPk,
     });
 

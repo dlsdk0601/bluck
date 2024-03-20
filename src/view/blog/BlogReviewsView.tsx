@@ -7,12 +7,12 @@ import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import { ReviewBlog } from "@/type/definitions";
 import { d1 } from "@/ex/dateEx";
-import { api } from "@/lib/axios";
 import { preventDefaulted } from "@/ex/utils";
 import { userState } from "@/store/user";
 import { ERR } from "@/lib/errorEx";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { reviewCountSate } from "@/store/reviewCount";
+import { api } from "@/lib/api.g";
 
 const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
   const user = userState((state) => state.user);
@@ -31,7 +31,7 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
       return alert(ERR.NOT_SIGN_USER);
     }
 
-    const res = await api.newBlogReview({ pk: props.blogPk, review });
+    const res = await api.reviewNew({ pk: props.blogPk, review });
 
     if (isString(res)) {
       return alert(res);
@@ -51,7 +51,7 @@ const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
       return;
     }
 
-    const res = await api.deleteBlogReview({
+    const res = await api.reviewDelete({
       pk,
     });
 
@@ -167,7 +167,7 @@ const BlogReviewEditView = memo(
     const [editReview, setEditReview] = useState(props.review);
 
     const onEdit = async () => {
-      const res = await api.editBlogReview({
+      const res = await api.reviewEdit({
         pk: props.pk,
         review: editReview,
       });
