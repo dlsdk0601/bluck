@@ -219,26 +219,6 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
             main_image: true,
           },
         },
-        blog_review: {
-          select: {
-            pk: true,
-            review: true,
-            created_at: true,
-            user: {
-              select: {
-                pk: true,
-                name: true,
-                main_image: true,
-              },
-            },
-          },
-          where: {
-            deleted_at: null,
-          },
-          orderBy: {
-            created_at: "desc",
-          },
-        },
         blog_like: true,
         tags: { select: { tag: true } },
         _count: {
@@ -261,17 +241,6 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
     const tags = blog.tags.map((item) => item.tag);
     const recommendBlogs = await getRecommendBlogs(blog.pk, tags);
 
-    const reviews = blog.blog_review.map((rv) => ({
-      pk: rv.pk,
-      review: rv.review,
-      createAt: rv.created_at,
-      user: {
-        pk: rv.user.pk,
-        name: rv.user.name,
-        mainImage: awsModel.toFileSet(rv.user.main_image),
-      },
-    }));
-
     return ok({
       pk: blog.pk,
       title: blog.title,
@@ -283,7 +252,6 @@ export const getBlogShowAction: getBlogShowActionType = async (pk) => {
         profile: awsModel.toFileSet(blog.user.main_image),
         name: blog.user.name,
       },
-      reviews,
       tags,
       viewCount: blog._count.blog_view,
       likeCount: blog._count.blog_like,

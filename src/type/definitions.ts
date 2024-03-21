@@ -155,7 +155,6 @@ export interface GetBlogShowActionRes {
   viewCount: number;
   likeCount: number;
   hasLike: boolean;
-  reviews: ReviewBlog[];
   recommendBlogs: RecommendBlog[];
 }
 
