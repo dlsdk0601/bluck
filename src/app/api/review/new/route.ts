@@ -4,7 +4,6 @@ import { ApiRes, ERR, notFoundException, unAuthorizedException } from "@/lib/err
 import { auth } from "@/server/auth/auth";
 import prisma from "@/lib/prisma";
 import { ReviewNewReq, ReviewNewRes } from "@/type/definitions";
-import { awsModel } from "@/lib/aws";
 
 export async function POST(req: NextRequest): Promise<ApiRes<ReviewNewRes>> {
   const session = await auth();
@@ -21,7 +20,7 @@ export async function POST(req: NextRequest): Promise<ApiRes<ReviewNewRes>> {
     return notFoundException(ERR.NOT_FOUND("블로그"));
   }
 
-  await prisma.blog_review.create({
+  const res = await prisma.blog_review.create({
     data: {
       blog_pk: blog.pk,
       user_pk: session.user.pk,
@@ -29,38 +28,7 @@ export async function POST(req: NextRequest): Promise<ApiRes<ReviewNewRes>> {
     },
   });
 
-  const reviews = await prisma.blog_review.findMany({
-    select: {
-      pk: true,
-      review: true,
-      created_at: true,
-      user: {
-        select: {
-          pk: true,
-          name: true,
-          main_image: true,
-        },
-      },
-    },
-    where: {
-      blog_pk: blog.pk,
-      deleted_at: null,
-    },
-    orderBy: {
-      created_at: "desc",
-    },
-  });
-
   return NextResponse.json({
-    reviews: reviews.map((rv) => ({
-      pk: rv.pk,
-      review: rv.review,
-      createAt: rv.created_at,
-      user: {
-        pk: rv.user.pk,
-        name: rv.user.name,
-        mainImage: awsModel.toFileSet(rv.user.main_image),
-      },
-    })),
+    pk: res.pk,
   });
 }

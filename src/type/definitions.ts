@@ -235,7 +235,7 @@ export interface ReviewDeleteReq {
 }
 
 export interface ReviewDeleteRes {
-  reviews: ReviewBlog[];
+  pk: number;
 }
 
 export interface ReviewEditReq {
@@ -253,7 +253,7 @@ export interface ReviewNewReq {
 }
 
 export interface ReviewNewRes {
-  reviews: ReviewBlog[];
+  pk: number;
 }
 
 export interface TagNewReq {
@@ -262,4 +262,12 @@ export interface TagNewReq {
 
 export interface TagNewRes {
   pk: number;
+}
+
+export interface ReviewGetReq {
+  pk: number;
+}
+
+export interface ReviewGetRes {
+  reviews: ReviewBlog[];
 }
