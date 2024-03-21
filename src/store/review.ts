@@ -5,7 +5,7 @@ import { api } from "@/lib/api.g";
 import { userState } from "@/store/user";
 import { ERR } from "@/lib/errorEx";
 
-interface ReviewState {
+interface ReviewModelImpl {
   review: string;
   reviews: ReviewBlog[];
   reviewsCount: () => number;
@@ -23,7 +23,7 @@ interface ReviewState {
   };
 }
 
-export const reviewState = create<ReviewState>((set, get) => ({
+export const reviewModel = create<ReviewModelImpl>((set, get) => ({
   review: "",
   reviews: [],
   reviewsCount: () => get().reviews.length,
