@@ -75,11 +75,11 @@ function getGenerateLine(route: Route | Dir, parents: string[], type: SourceType
   const newParentsLines = [...parents, route.name];
   switch (route.kind) {
     case "file": {
-      const pathname = `/${newParentsLines.join("/")}`;
+      const pathname = `/${newParentsLines.join("/").replace("/route", "")}`;
       const { key, interfaceName } = getEntryInfo(pathname);
       if (type === "SOURCE") {
         lines.push(
-          `${key} = (req: ${interfaceName}Req) => this.post<${interfaceName}Res>("${pathname}");`,
+          `${key} = (req: ${interfaceName}Req) => this.post<${interfaceName}Res>("${pathname}", req);`,
         );
         break;
       }
