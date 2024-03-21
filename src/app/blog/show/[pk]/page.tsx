@@ -111,7 +111,7 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
           prevBlogTitle={res.data.recommendBlogs[1].title}
         />
 
-        <BlogReviewsView blogPk={res.data.pk} reviews={res.data.reviews} />
+        <BlogReviewsView blogPk={res.data.pk} />
       </div>
     </div>
   );
