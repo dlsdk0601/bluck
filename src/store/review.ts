@@ -6,6 +6,7 @@ import { userState } from "@/store/user";
 import { ERR } from "@/lib/errorEx";
 
 interface ReviewModelImpl {
+  blogPk: number | null;
   review: string;
   reviews: ReviewBlog[];
   reviewsCount: () => number;
@@ -17,13 +18,15 @@ interface ReviewModelImpl {
     setIsEdit: (editReviewPk: number) => void;
   };
   fetch: {
-    newReview: (blogPk: number) => Promise<void>;
+    getReviews: (blogPk: number) => Promise<void>;
+    newReview: () => Promise<void>;
     deleteReview: (pk: number) => Promise<void>;
     editReview: (review: string) => Promise<void>;
   };
 }
 
 export const reviewModel = create<ReviewModelImpl>((set, get) => ({
+  blogPk: null,
   review: "",
   reviews: [],
   reviewsCount: () => get().reviews.length,
@@ -35,7 +38,23 @@ export const reviewModel = create<ReviewModelImpl>((set, get) => ({
     setIsEdit: (editReviewPk) => set({ editReviewPk }),
   },
   fetch: {
-    newReview: async (blogPk) => {
+    getReviews: async (blogPk) => {
+      const res = await api.reviewGet({ pk: blogPk });
+
+      if (isString(res)) {
+        alert(res);
+        return;
+      }
+
+      set({ reviews: res.reviews, review: "", blogPk });
+    },
+    newReview: async () => {
+      const blogPk = get().blogPk;
+
+      if (isNil(blogPk)) {
+        return;
+      }
+
       const user = userState.getState().user;
 
       if (isNil(user)) {
@@ -50,9 +69,15 @@ export const reviewModel = create<ReviewModelImpl>((set, get) => ({
         return;
       }
 
-      set({ reviews: res.reviews, review: "" });
+      await get().fetch.getReviews(blogPk);
     },
     deleteReview: async (pk) => {
+      const blogPk = get().blogPk;
+
+      if (isNil(blogPk)) {
+        return;
+      }
+
       const user = userState.getState().user;
 
       if (isNil(user)) {
@@ -72,10 +97,11 @@ export const reviewModel = create<ReviewModelImpl>((set, get) => ({
         return alert(res);
       }
 
-      set({ reviews: res.reviews });
+      await get().fetch.getReviews(blogPk);
     },
     editReview: async (review) => {
       const pk = get().editReviewPk;
+
       if (isNil(pk)) {
         return;
       }
