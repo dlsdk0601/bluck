@@ -6,7 +6,7 @@ import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import { ReviewBlog } from "@/type/definitions";
 import { d1 } from "@/ex/dateEx";
-import { preventDefaulted } from "@/ex/utils";
+import { ignorePromise, preventDefaulted } from "@/ex/utils";
 import { userState } from "@/store/user";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { reviewModel } from "@/store/review";
@@ -22,7 +22,7 @@ const BlogReviewsView = (props: { blogPk: number }) => {
 
   return (
     <div className="mx-auto w-11/12">
-      <form onSubmit={preventDefaulted(() => onSubmit(props.blogPk))}>
+      <form onSubmit={preventDefaulted(() => onSubmit())}>
         <p>{reviewsCount}개의 댓글</p>
         <BlogReviewTextAreaView />
         <div className="mt-2 flex justify-end">
