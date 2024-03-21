@@ -11,13 +11,13 @@ import { userState } from "@/store/user";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { reviewModel } from "@/store/review";
 
-const BlogReviewsView = (props: { blogPk: number; reviews: ReviewBlog[] }) => {
+const BlogReviewsView = (props: { blogPk: number }) => {
   const reviewsCount = reviewModel((state) => state.reviewsCount());
-  const setReviews = reviewModel((state) => state.action.setReviews);
+  const getReviews = reviewModel((state) => state.fetch.getReviews);
   const onSubmit = reviewModel((state) => state.fetch.newReview);
 
   useEffect(() => {
-    setReviews([...props.reviews]);
+    ignorePromise(() => getReviews(props.blogPk));
   }, [props]);
 
   return (
