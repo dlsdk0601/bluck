@@ -11,6 +11,7 @@ export const axiosInstance = axios.create({
 // jwt 방식이 아니라서 API interceptors 에 굳이 별다른 설정을 하지 않는다.
 axiosInstance.interceptors.request.use(
   async (config) => {
+    config.headers["Access-Control-Allow-Origin"] = "*";
     return config;
   },
   (err) => {
