@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { reviewCountSate } from "@/store/reviewCount";
 import { mf1 } from "@/ex/numberEx";
+import { reviewModel } from "@/store/review";
 
 const BlogReviewCountView = () => {
-  const reviewCount = reviewCountSate((state) => state.reviewCount);
+  const reviewCount = reviewModel((state) => state.reviewsCount());
   return (
     <figcaption className="ml-[10px] text-[14px]  mobile:ml-[2px] mobile:text-[10px]">
       {mf1(reviewCount ?? 0)}
