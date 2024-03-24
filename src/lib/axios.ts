@@ -4,7 +4,7 @@ import { config } from "@/config/config";
 import { isLockState } from "@/store/isLock";
 
 export const axiosInstance = axios.create({
-  baseURL: `${config.baseUrl}/api`,
+  baseURL: "/api",
   withCredentials: true,
 });
 
@@ -61,7 +61,11 @@ export class ApiBase {
           await sleep(config.apiDelay);
         }
 
-        const res = await axiosInstance.post(url, data, axiosRequestConfig);
+        // const res = await fetch(`http://localhost:3000/api${url}`, {
+        //   method: "post",
+        //   body: JSON.stringify(data),
+        // }).then((res) => res.json());
+        const res = await axiosInstance.post(url, data, { ...axiosRequestConfig });
         return res.data;
       } catch (e) {
         return this.errorHandle(e);
