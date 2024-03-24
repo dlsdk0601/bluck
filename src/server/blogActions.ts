@@ -3,7 +3,7 @@
 import { Prisma } from "@prisma/client";
 import moment from "moment";
 import { isNil, isString } from "lodash";
-import { unstable_noStore } from "next/cache";
+import { unstable_noStore as noStore } from "next/cache";
 import {
   BlogData,
   BlogLikeActionType,
@@ -187,7 +187,7 @@ function setBlogWhere(
 }
 
 export const getBlogShowAction: getBlogShowActionType = async (pk) => {
-  unstable_noStore();
+  noStore();
   try {
     const session = await auth();
     if (isNotNil(session?.user)) {
