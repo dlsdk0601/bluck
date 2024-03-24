@@ -34,7 +34,3 @@ export async function POST(req: NextRequest): Promise<ApiRes<AssetNewRes>> {
     });
   }
 }
-
-export async function OPTIONS(req: Request, res: Response): Promise<void> {
-  console.log("test");
-}
