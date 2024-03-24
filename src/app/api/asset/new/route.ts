@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isNil } from "lodash";
-import { NextApiResponse } from "next";
 import { awsModel } from "@/lib/aws";
 import { ApiRes, badRequestException, ERR, internalServerException } from "@/lib/errorEx";
 import { isBlank } from "@/ex/utils";
@@ -36,6 +35,6 @@ export async function POST(req: NextRequest): Promise<ApiRes<AssetNewRes>> {
   }
 }
 
-export async function OPTIONS(req: Request, res: NextApiResponse) {
-  return res.end();
+export async function OPTIONS(req: Request, res: Response): Promise<void> {
+  console.log("test");
 }
