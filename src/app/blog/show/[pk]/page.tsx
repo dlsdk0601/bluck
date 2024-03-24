@@ -101,14 +101,12 @@ export default async function Page(props: { params: { pk: string } }) {
         </div>
 
         {/* 버튼 박스 */}
-        {res.data?.recommendBlogs.length === 2 && (
-          <BlogButtonBoxView
-            nextBlogPk={res.data.recommendBlogs[0].pk}
-            nextBlogTitle={res.data.recommendBlogs[0].title}
-            prevBlogPk={res.data.recommendBlogs[1].pk}
-            prevBlogTitle={res.data.recommendBlogs[1].title}
-          />
-        )}
+        <BlogButtonBoxView
+          nextBlogPk={res.data.recommendBlogs[0].pk}
+          nextBlogTitle={res.data.recommendBlogs[0].title}
+          prevBlogPk={res.data.recommendBlogs[1].pk}
+          prevBlogTitle={res.data.recommendBlogs[1].title}
+        />
 
         <BlogReviewsView blogPk={res.data.pk} />
       </div>
