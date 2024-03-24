@@ -23,6 +23,9 @@ export async function generateStaticParams() {
 export default async function Page(props: { params: { pk: string } }) {
   const res = await getBlogShowAction(Number(props.params.pk));
 
+  console.log("res");
+  console.log(res);
+
   if (isNil(res.data) || isNotNil(res.error)) {
     return (
       <div className="mx-auto flex h-[75vh] w-3/5 items-center justify-center mobile:w-[95%]">
