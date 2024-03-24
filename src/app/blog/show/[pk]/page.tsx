@@ -25,6 +25,13 @@ async function getBlog(params: { pk: string }) {
 }
 
 const BlogShowPage = async (props: { params: { pk: string } }) => {
+  console.log("props");
+  console.log(props);
+  console.log("props.params");
+  console.log(props.params);
+  console.log("props.params.pk");
+  console.log(typeof props.params.pk);
+  console.log(props.params.pk);
   // const pk = validatePk(props.params?.pk);
   //
   // if (isNil(pk)) {
