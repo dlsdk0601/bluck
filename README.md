@@ -5,13 +5,12 @@
 ```
 
 ## version
-``
-"react": "^18",
-"react-dom": "^18",
-"next": "14.0.3",
-"react-query": "^3.39.3",
-"recoil": "^0.7.7",
-``
+```
+"react": "^18"
+"react-dom": "^18"
+"next": "14.0.3"
+"zustand": "^4.4.7"
+```
 
 ## Getting Started
 
@@ -20,7 +19,7 @@
 make setup
 ```
 
-### url generate
+### url & endpoint generate
 ```bash
 make watch
 ```
