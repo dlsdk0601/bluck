@@ -13,11 +13,11 @@ import { Urls } from "@/url/url.g";
 import { mf1 } from "@/ex/numberEx";
 import BlogLikeButtonView from "@/view/blog/BlogLikeButtonView";
 import ShareButtonView from "@/view/ShareButtonView";
-import BlogReviewsView from "@/view/blog/BlogReviewsView";
 import EditBlogButtonView from "@/view/blog/EditBlogButtonView";
 import BlogReviewCountView from "@/view/blog/BlogReviewCountView";
 
 const BlogShowPage = async (props: { params?: { pk: string } }) => {
+  console.log(props);
   const pk = validatePk(props.params?.pk);
 
   if (isNil(pk)) {
@@ -111,7 +111,7 @@ const BlogShowPage = async (props: { params?: { pk: string } }) => {
           prevBlogTitle={res.data.recommendBlogs[1].title}
         />
 
-        <BlogReviewsView blogPk={res.data.pk} />
+        {/* <BlogReviewsView blogPk={res.data.pk} /> */}
       </div>
     </div>
   );
