@@ -17,8 +17,8 @@ import BlogReviewsView from "@/view/blog/BlogReviewsView";
 import EditBlogButtonView from "@/view/blog/EditBlogButtonView";
 import BlogReviewCountView from "@/view/blog/BlogReviewCountView";
 
-const BlogShowPage = async (props: { params: { pk: string } }) => {
-  const pk = validatePk(props.params.pk);
+const BlogShowPage = async (props: { params?: { pk: string } }) => {
+  const pk = validatePk(props.params?.pk);
 
   if (isNil(pk)) {
     return <Replace url={Urls.page.url()} />;
