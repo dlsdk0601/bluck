@@ -293,8 +293,7 @@ const getRecommendBlogs = async (pk: number, tags: { pk: number; name: string }[
 
   // 갯수가 충족되지 않으면 그냥 최신순으로 추천 해준다.
   if (recommendBlobs.length !== 2) {
-    return prisma.blog.findMany({
-      take: 2,
+    const blogs = await prisma.blog.findMany({
       select: {
         pk: true,
         title: true,
@@ -306,6 +305,14 @@ const getRecommendBlogs = async (pk: number, tags: { pk: number; name: string }[
         created_at: "desc",
       },
     });
+
+    // 블로그가 2개 이상이 안될수도 있다. (처음 오픈 했을때)
+    // 이럴 경우 하나만 똑같은거를 두개 보낸다.
+    if (blogs.length !== 2) {
+      return [...blogs, ...blogs];
+    }
+
+    return blogs;
   }
 
   return recommendBlobs;

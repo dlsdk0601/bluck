@@ -22,13 +22,6 @@ export async function generateStaticParams() {
 
 export default async function Page(props: { params: { pk: string } }) {
   const res = await getBlogShowAction(Number(props.params.pk));
-  console.log("res.data?.pk");
-  console.log(res.data?.pk);
-  console.log("res.data?.tags");
-  console.log(res.data?.tags.map((item) => item.pk));
-  console.log("res.data?.user.pk");
-  console.log(res.data?.user.pk);
-  console.log(res.data?.recommendBlogs.map((item) => item.pk));
 
   if (isNil(res.data) || isNotNil(res.error)) {
     return (
@@ -108,12 +101,14 @@ export default async function Page(props: { params: { pk: string } }) {
         </div>
 
         {/* 버튼 박스 */}
-        <BlogButtonBoxView
-          nextBlogPk={res.data.recommendBlogs[0].pk}
-          nextBlogTitle={res.data.recommendBlogs[0].title}
-          prevBlogPk={res.data.recommendBlogs[1].pk}
-          prevBlogTitle={res.data.recommendBlogs[1].title}
-        />
+        {res.data?.recommendBlogs.length === 2 && (
+          <BlogButtonBoxView
+            nextBlogPk={res.data.recommendBlogs[0].pk}
+            nextBlogTitle={res.data.recommendBlogs[0].title}
+            prevBlogPk={res.data.recommendBlogs[1].pk}
+            prevBlogTitle={res.data.recommendBlogs[1].title}
+          />
+        )}
 
         <BlogReviewsView blogPk={res.data.pk} />
       </div>
