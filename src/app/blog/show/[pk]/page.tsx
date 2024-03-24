@@ -20,25 +20,8 @@ export async function generateStaticParams() {
   return [{ pk: "1" }, { pk: "2" }];
 }
 
-async function getBlog(params: { pk: string }) {
-  return getBlogShowAction(Number(params.pk));
-}
-
-const BlogShowPage = async (props: { params: { pk: string } }) => {
-  console.log("props");
-  console.log(props);
-  console.log("props.params");
-  console.log(props.params);
-  console.log("props.params.pk");
-  console.log(typeof props.params.pk);
-  console.log(props.params.pk);
-  // const pk = validatePk(props.params?.pk);
-  //
-  // if (isNil(pk)) {
-  //   return <Replace url={Urls.page.url()} />;
-  // }
-
-  const res = await getBlog(props.params);
+export default async function Page(props: { params: { pk: string } }) {
+  const res = await getBlogShowAction(Number(props.params.pk));
 
   if (isNil(res.data) || isNotNil(res.error)) {
     return (
@@ -129,6 +112,4 @@ const BlogShowPage = async (props: { params: { pk: string } }) => {
       </div>
     </div>
   );
-};
-
-export default BlogShowPage;
+}
