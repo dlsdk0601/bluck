@@ -4,7 +4,7 @@ import { config } from "@/config/config";
 import { isLockState } from "@/store/isLock";
 
 export const axiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: `${config.baseUrl}/api`,
   withCredentials: true,
 });
 
