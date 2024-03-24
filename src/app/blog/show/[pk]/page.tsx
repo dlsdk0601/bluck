@@ -7,24 +7,31 @@ import { ChatBubbleBottomCenterTextIcon, EyeIcon } from "@heroicons/react/24/out
 import React from "react";
 import BlogButtonBoxView from "@/view/blog/BlogButtonBoxView";
 import { getBlogShowAction } from "@/server/blogActions";
-import { isNotNil, validatePk } from "@/ex/utils";
-import Replace from "@/view/layout/Replace";
+import { isNotNil } from "@/ex/utils";
 import { Urls } from "@/url/url.g";
 import { mf1 } from "@/ex/numberEx";
 import BlogLikeButtonView from "@/view/blog/BlogLikeButtonView";
 import ShareButtonView from "@/view/ShareButtonView";
 import EditBlogButtonView from "@/view/blog/EditBlogButtonView";
 import BlogReviewCountView from "@/view/blog/BlogReviewCountView";
+import BlogReviewsView from "@/view/blog/BlogReviewsView";
 
-const BlogShowPage = async (props: { params?: { pk: string } }) => {
-  console.log(props);
-  const pk = validatePk(props.params?.pk);
+export async function generateStaticParams() {
+  return [{ pk: "1" }, { pk: "2" }];
+}
 
-  if (isNil(pk)) {
-    return <Replace url={Urls.page.url()} />;
-  }
+async function getBlog(params: { pk: string }) {
+  return getBlogShowAction(Number(params.pk));
+}
 
-  const res = await getBlogShowAction(pk);
+const BlogShowPage = async (props: { params: { pk: string } }) => {
+  // const pk = validatePk(props.params?.pk);
+  //
+  // if (isNil(pk)) {
+  //   return <Replace url={Urls.page.url()} />;
+  // }
+
+  const res = await getBlog(props.params);
 
   if (isNil(res.data) || isNotNil(res.error)) {
     return (
@@ -111,7 +118,7 @@ const BlogShowPage = async (props: { params?: { pk: string } }) => {
           prevBlogTitle={res.data.recommendBlogs[1].title}
         />
 
-        {/* <BlogReviewsView blogPk={res.data.pk} /> */}
+        <BlogReviewsView blogPk={res.data.pk} />
       </div>
     </div>
   );
