@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { memo, useEffect } from "react";
 import { signInAction } from "@/server/authActions";
@@ -44,15 +43,6 @@ const SignInForm = (props: FormActionViewProps<SignInActionRes>) => {
       {isNotNil(props.res?.error) && (
         <p className="mt-2 text-[10px] text-cff4500 mobile:text-[8px]">{props.res?.error}</p>
       )}
-      <div className="mt-2 flex cursor-pointer items-center justify-start tablet:w-3/5">
-        <figure className="relative h-5 w-5 mobile:h-4 mobile:w-4">
-          <Image fill src="/assets/img/check.png" alt="check" />
-        </figure>
-        <label htmlFor="login-check" className="ml-2 cursor-pointer mobile:text-[10px]">
-          로그인 상태 유지
-        </label>
-        <input id="login-check" type="checkbox" className="hidden opacity-0" />
-      </div>
       <SignInButtonView />
     </form>
   );
