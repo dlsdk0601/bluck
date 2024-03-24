@@ -12,6 +12,8 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 import { reviewModel } from "@/store/review";
 
 const BlogReviewsView = (props: { blogPk: number }) => {
+  console.log("props.blogPk");
+  console.log(props.blogPk);
   const reviewsCount = reviewModel((state) => state.reviewsCount());
   const getReviews = reviewModel((state) => state.fetch.getReviews);
   const onSubmit = reviewModel((state) => state.fetch.newReview);

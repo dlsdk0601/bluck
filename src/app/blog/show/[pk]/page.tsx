@@ -22,9 +22,13 @@ export async function generateStaticParams() {
 
 export default async function Page(props: { params: { pk: string } }) {
   const res = await getBlogShowAction(Number(props.params.pk));
-
-  console.log("res");
-  console.log(res);
+  console.log("res.data?.pk");
+  console.log(res.data?.pk);
+  console.log("res.data?.tags");
+  console.log(res.data?.tags.map((item) => item.pk));
+  console.log("res.data?.user.pk");
+  console.log(res.data?.user.pk);
+  console.log(res.data?.recommendBlogs.map((item) => item.pk));
 
   if (isNil(res.data) || isNotNil(res.error)) {
     return (
